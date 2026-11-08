@@ -1,0 +1,386 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "space": {
+    "1": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } },
+    "2": { "$type": "dimension", "$value": { "value": 16, "unit": "px" } },
+    "3": { "$type": "dimension", "$value": { "value": 24, "unit": "px" } },
+    "4": { "$type": "dimension", "$value": { "value": 32, "unit": "px" } },
+    "6": { "$type": "dimension", "$value": { "value": 48, "unit": "px" } },
+    "8": { "$type": "dimension", "$value": { "value": 64, "unit": "px" } },
+    "12": { "$type": "dimension", "$value": { "value": 96, "unit": "px" } },
+    "16": { "$type": "dimension", "$value": { "value": 128, "unit": "px" } },
+    "half": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } },
+    "touch": {
+      "$type": "dimension",
+      "$value": { "value": 44, "unit": "px" },
+      "$extensions": {
+        "design.judarn": { "apple": "44px", "web": "44px", "android": "48dp" }
+      }
+    }
+  },
+  "measure": {
+    "body": {
+      "$type": "number",
+      "$value": 65,
+      "$extensions": {
+        "design.judarn": {
+          "unit": "ch",
+          "points": { "value": 640, "unit": "px" }
+        }
+      }
+    },
+    "compact": {
+      "$type": "number",
+      "$value": 45,
+      "$extensions": {
+        "design.judarn": {
+          "unit": "ch",
+          "points": { "value": 440, "unit": "px" }
+        }
+      }
+    },
+    "sidebar": {
+      "$type": "dimension",
+      "$value": { "value": 260, "unit": "px" },
+      "$extensions": {
+        "design.judarn": {
+          "points": { "value": 260, "unit": "px" }
+        }
+      }
+    }
+  },
+  "border": {
+    "rule": { "$type": "dimension", "$value": { "value": 1, "unit": "px" } },
+    "ruleBold": { "$type": "dimension", "$value": { "value": 2, "unit": "px" } },
+    "ruleHeavy": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } }
+  },
+  "radius": {
+    "card": { "$type": "dimension", "$value": { "value": 16, "unit": "px" } },
+    "control": { "$type": "dimension", "$value": { "value": 10, "unit": "px" } },
+    "badge": { "$type": "dimension", "$value": { "value": 9999, "unit": "px" } },
+    "subtle": { "$type": "dimension", "$value": { "value": 6, "unit": "px" } }
+  },
+  "font": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"]
+    },
+    "display": { "$type": "fontFamily", "$value": "{font.sans}" },
+    "body": { "$type": "fontFamily", "$value": "{font.sans}" },
+    "data": { "$type": "fontFamily", "$value": "{font.sans}" },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+    }
+  },
+  "tracking": {
+    "display": {
+      "$type": "number",
+      "$value": -0.02,
+      "$description": "Letter spacing in em; the multiplier of the role font size."
+    },
+    "head": {
+      "$type": "number",
+      "$value": -0.01,
+      "$description": "Letter spacing in em; the multiplier of the role font size."
+    },
+    "body": { "$type": "number", "$value": 0, "$description": "Letter spacing in em; the multiplier of the role font size." },
+    "label": {
+      "$type": "number",
+      "$value": 0.06,
+      "$description": "Letter spacing in em; the multiplier of the role font size."
+    },
+    "micro": {
+      "$type": "number",
+      "$value": 0.08,
+      "$description": "Letter spacing in em; the multiplier of the role font size."
+    }
+  },
+  "typography": {
+    "display": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.display}",
+        "fontSize": { "value": 96, "unit": "px" },
+        "fontWeight": 900,
+        "letterSpacing": { "value": -1.92, "unit": "px" },
+        "lineHeight": 1
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.display}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "display",
+          "appleTextStyle": "largeTitle",
+          "textWrap": "balance"
+        }
+      }
+    },
+    "h1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.display}",
+        "fontSize": { "value": 64, "unit": "px" },
+        "fontWeight": 800,
+        "letterSpacing": { "value": -0.64, "unit": "px" },
+        "lineHeight": 1.0625
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.head}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "display",
+          "appleTextStyle": "largeTitle",
+          "textWrap": "balance"
+        }
+      }
+    },
+    "h2": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.display}",
+        "fontSize": { "value": 44, "unit": "px" },
+        "fontWeight": 800,
+        "letterSpacing": { "value": -0.44, "unit": "px" },
+        "lineHeight": 1.0909090909090908
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.head}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "display",
+          "appleTextStyle": "title",
+          "textWrap": "balance"
+        }
+      }
+    },
+    "h3": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.display}",
+        "fontSize": { "value": 32, "unit": "px" },
+        "fontWeight": 800,
+        "letterSpacing": { "value": -0.32, "unit": "px" },
+        "lineHeight": 1.125
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.head}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "display",
+          "appleTextStyle": "title2",
+          "textWrap": "balance"
+        }
+      }
+    },
+    "h4": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.body}",
+        "fontSize": { "value": 24, "unit": "px" },
+        "fontWeight": 800,
+        "letterSpacing": { "value": -0.24, "unit": "px" },
+        "lineHeight": 1.1666666666666667
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.head}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "body",
+          "appleTextStyle": "title3",
+          "textWrap": "balance"
+        }
+      }
+    },
+    "bodyLg": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.body}",
+        "fontSize": { "value": 20, "unit": "px" },
+        "fontWeight": 400,
+        "letterSpacing": { "value": 0, "unit": "px" },
+        "lineHeight": 1.2
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.body}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "body",
+          "appleTextStyle": "title3",
+          "textWrap": "pretty"
+        }
+      }
+    },
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.body}",
+        "fontSize": { "value": 16, "unit": "px" },
+        "fontWeight": 400,
+        "letterSpacing": { "value": 0, "unit": "px" },
+        "lineHeight": 1.25
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.body}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "body",
+          "appleTextStyle": "body",
+          "textWrap": "pretty"
+        }
+      }
+    },
+    "small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.body}",
+        "fontSize": { "value": 14, "unit": "px" },
+        "fontWeight": 400,
+        "letterSpacing": { "value": 0, "unit": "px" },
+        "lineHeight": 1.1428571428571428
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.body}",
+          "appleLeading": "tight",
+          "cssColor": "var(--jd-ink-60)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": false,
+          "slot": "body",
+          "appleTextStyle": "callout"
+        }
+      }
+    },
+    "label": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.body}",
+        "fontSize": { "value": 12, "unit": "px" },
+        "fontWeight": 800,
+        "letterSpacing": { "value": 0.72, "unit": "px" },
+        "lineHeight": 1.3333333333333333
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.label}",
+          "appleLeading": "standard",
+          "cssColor": "var(--jd-ink-60)",
+          "isUppercase": true,
+          "caseFeature": 1,
+          "tabularNums": false,
+          "slot": "body",
+          "appleTextStyle": "footnote",
+          "appleTextStyleMacOS": "subheadline"
+        }
+      }
+    },
+    "micro": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.body}",
+        "fontSize": { "value": 10, "unit": "px" },
+        "fontWeight": 500,
+        "letterSpacing": { "value": 0.8, "unit": "px" },
+        "lineHeight": 1.2
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.micro}",
+          "appleLeading": "standard",
+          "cssColor": "var(--jd-ink-60)",
+          "isUppercase": true,
+          "caseFeature": 1,
+          "tabularNums": false,
+          "slot": "body",
+          "appleTextStyle": "caption2"
+        }
+      }
+    },
+    "data": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.data}",
+        "fontSize": { "value": 14, "unit": "px" },
+        "fontWeight": 400,
+        "letterSpacing": { "value": 0, "unit": "px" },
+        "lineHeight": 1.4285714285714286
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.body}",
+          "appleLeading": "standard",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": true,
+          "slot": "data",
+          "appleTextStyle": "callout"
+        }
+      }
+    },
+    "mono": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.mono}",
+        "fontSize": { "value": 12, "unit": "px" },
+        "fontWeight": 400,
+        "letterSpacing": { "value": 0, "unit": "px" },
+        "lineHeight": 1.3333333333333333
+      },
+      "$extensions": {
+        "design.judarn": {
+          "tracking": "{tracking.body}",
+          "appleLeading": "standard",
+          "cssColor": "var(--jd-ink-100)",
+          "isUppercase": false,
+          "caseFeature": 0,
+          "tabularNums": true,
+          "slot": "mono",
+          "appleTextStyle": "caption"
+        }
+      }
+    }
+  },
+  "theme": {
+    "$description": "Optional Sanzo Wada color harmonies: an opt-in add-on, not part of Judarn's core identity. Core contrast guarantees cover only Judarn's own surfaces.",
+    "wada119": {
+      "$extensions": {
+        "design.judarn": { "id": 119, "title": "Sanzo Wada Harmony #119" }
+      }
+    },
+    "wada264": {
+      "$extensions": {
+        "design.judarn": { "id": 264, "title": "Sanzo Wada Harmony #264" }
+      }
+    }
+  }
+}

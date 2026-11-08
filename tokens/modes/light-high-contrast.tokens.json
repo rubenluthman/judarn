@@ -1,0 +1,8 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "color": {
+    "ink60": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.08, 0, 0], "hex": "#020202" } },
+    "ink30": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.08, 0, 0], "hex": "#020202" } },
+    "signalError": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.415, 0.168, 25], "hex": "#920014" } }
+  }
+}

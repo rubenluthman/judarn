@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Judarn Design Foundation – Component Inspection Catalog</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <style>
+    /* Catalog Frame & Layout */
+    body {
+      background-color: #FFFFFF;
+      color: var(--jd-ink-100);
+      font-family: var(--jd-font-body);
+      margin: 0;
+      padding: var(--jd-space-4);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .catalog-header {
+      border-bottom: var(--jd-rule-bold) solid var(--jd-ink-100);
+      padding-bottom: var(--jd-space-3);
+      margin-bottom: var(--jd-space-6);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: var(--jd-space-2);
+    }
+
+    .catalog-controls {
+      display: flex;
+      gap: var(--jd-space-1);
+      align-items: center;
+    }
+
+    .catalog-section {
+      margin-bottom: var(--jd-space-8);
+    }
+
+    .section-title {
+      font-family: var(--jd-font-display);
+      font-size: var(--jd-size-h3);
+      font-weight: var(--jd-weight-bold);
+      letter-spacing: var(--jd-track-head);
+      margin: 0 0 var(--jd-space-2) 0;
+      border-bottom: var(--jd-rule) solid var(--jd-ink-100);
+      padding-bottom: var(--jd-space-1);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .section-meta {
+      font-size: var(--jd-size-label);
+      font-family: var(--jd-font-mono);
+      color: var(--jd-ink-60);
+      font-weight: normal;
+    }
+
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--jd-space-3);
+      align-items: start;
+    }
+
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--jd-space-2);
+      align-items: center;
+      margin-bottom: var(--jd-space-2);
+    }
+
+    .compression-container {
+      max-width: 360px;
+      border: 1px dashed var(--jd-ink-60);
+      padding: var(--jd-space-1);
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header & Inspection Controls -->
+  <header class="catalog-header">
+    <div>
+      <div class="t-label">@judarn/ui Component Inspection</div>
+      <h1 class="t-h2" style="margin: 4px 0 0 0;">Host-Adaptive Foundation</h1>
+    </div>
+    <div class="catalog-controls">
+      <span class="t-label" style="margin-right: 8px;">Mode:</span>
+      <button class="btn btn--sm" onclick="setTheme('light')">Light</button>
+      <button class="btn btn--sm btn--secondary" onclick="setTheme('dark')">Dark</button>
+      <button class="btn btn--sm btn--outline" onclick="toggleContrast()">High Contrast</button>
+    </div>
+  </header>
+
+  <!-- 1. BUTTONS -->
+  <section class="catalog-section" id="buttons">
+    <div class="section-title">
+      <span>01 / Button Hierarchy</span>
+      <span class="section-meta">Hover Inversion & Touch Compliance</span>
+    </div>
+    <div class="demo-row">
+      <button class="btn">Primary Button</button>
+      <button class="btn btn--outline">Outline Button</button>
+      <button class="btn btn--secondary">Secondary Button</button>
+      <button class="btn btn--ghost">Ghost Action</button>
+      <button class="btn btn--accent">Accent Action</button>
+      <button class="btn" disabled>Disabled State</button>
+    </div>
+    <div class="demo-row" style="margin-top: 16px;">
+      <button class="btn btn--sm">Small (44px HIG)</button>
+      <button class="btn">Medium Default</button>
+      <button class="btn btn--lg">Large Display</button>
+    </div>
+  </section>
+
+  <!-- 2. BADGE & TAG -->
+  <section class="catalog-section" id="badges">
+    <div class="section-title">
+      <span>02 / Badge & Tag Variants</span>
+      <span class="section-meta">Luminance Contrasting Ink</span>
+    </div>
+    <div class="demo-row">
+      <span class="badge">Outline Default</span>
+      <span class="badge badge--solid">Solid Status</span>
+      <span class="badge badge--accent">Accent Indicator</span>
+      <span class="badge badge--accent-outline">Accent Outline</span>
+      <span class="tag">Sentence Case Tag</span>
+      <span class="tag">Tabular Tag #42</span>
+    </div>
+  </section>
+
+  <!-- 3. DATA MATRIX -->
+  <section class="catalog-section" id="matrix">
+    <div class="section-title">
+      <span>03 / Data Matrix</span>
+      <span class="section-meta">Hairline Rules, Baseline Preservation & Fixed Column Sizing</span>
+    </div>
+    <div class="grid-demo" style="grid-template-columns: 2fr 1fr;">
+      <div>
+        <table class="matrix" role="table" aria-label="System Metrics Matrix">
+          <thead role="rowgroup">
+            <tr role="row" aria-rowindex="1">
+              <th scope="col" role="columnheader" aria-colindex="1" style="width: 140px; min-width: 140px;">METRIC</th>
+              <th scope="col" role="columnheader" aria-colindex="2" class="num" style="width: 110px; min-width: 110px;">TARGET</th>
+              <th scope="col" role="columnheader" aria-colindex="3" class="num" style="width: 110px; min-width: 110px;">ACTUAL</th>
+              <th scope="col" role="columnheader" aria-colindex="4" class="num" style="width: 90px; min-width: 90px;">VARIANCE</th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <tr role="row" aria-rowindex="2">
+              <td role="cell" aria-colindex="1" style="width: 140px; min-width: 140px;">Volume Load</td>
+              <td role="cell" aria-colindex="2" class="num" style="width: 110px; min-width: 110px;">12,500 kg</td>
+              <td role="cell" aria-colindex="3" class="num" style="width: 110px; min-width: 110px;">13,200 kg</td>
+              <td role="cell" aria-colindex="4" class="num" style="width: 90px; min-width: 90px;">+5.6%</td>
+            </tr>
+            <tr role="row" aria-rowindex="3">
+              <td role="cell" aria-colindex="1" style="width: 140px; min-width: 140px;">Recovery Rate</td>
+              <td role="cell" aria-colindex="2" class="num" style="width: 110px; min-width: 110px;">90.0%</td>
+              <td role="cell" aria-colindex="3" class="num" style="width: 110px; min-width: 110px;">94.2%</td>
+              <td role="cell" aria-colindex="4" class="num" style="width: 90px; min-width: 90px;">+4.2%</td>
+            </tr>
+            <tr role="row" aria-rowindex="4">
+              <td role="cell" aria-colindex="1" style="width: 140px; min-width: 140px;">Sparse Metric</td>
+              <td role="cell" aria-colindex="2" class="num" style="width: 110px; min-width: 110px;">50.0</td>
+              <td role="cell" aria-colindex="3" class="num" aria-label="ACTUAL: Empty" style="width: 110px; min-width: 110px;">&#x200B;</td>
+              <td role="cell" aria-colindex="4" class="num" aria-label="VARIANCE: Empty" style="width: 90px; min-width: 90px;">&#x200B;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Compression Test Container -->
+      <div class="compression-container">
+        <div class="t-label" style="margin-bottom: 8px;">Compression Sizing Test (360px)</div>
+        <table class="matrix" role="table" aria-label="Compressed Matrix">
+          <thead>
+            <tr>
+              <th style="width: 120px; min-width: 120px;">KEY</th>
+              <th class="num" style="width: 120px; min-width: 120px;">VALUE</th>
+              <th class="num" style="width: 100px; min-width: 100px;">DELTA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 120px; min-width: 120px;">Fixed Col</td>
+              <td class="num" style="width: 120px; min-width: 120px;">8,420</td>
+              <td class="num" style="width: 100px; min-width: 100px;">+1.2%</td>
+            </tr>
+            <tr>
+              <td style="width: 120px; min-width: 120px;">Empty Baseline</td>
+              <td class="num" aria-label="VALUE: Empty" style="width: 120px; min-width: 120px;">&#x200B;</td>
+              <td class="num" style="width: 100px; min-width: 100px;">0.0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TEXTFIELD & FORMS -->
+  <section class="catalog-section" id="forms">
+    <div class="section-title">
+      <span>04 / Form Controls</span>
+      <span class="section-meta">Sharp Boundaries & Validation</span>
+    </div>
+    <div class="grid-demo" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="field">
+        <label class="field__label" for="demo-name">Full Name</label>
+        <input class="field__input" id="demo-name" type="text" placeholder="Karl Gerstner" value="Max Bill">
+        <span class="field__hint">Primary identifier</span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="demo-err">Identifier</label>
+        <input class="field__input is-invalid" id="demo-err" type="text" aria-invalid="true" value="INVALID_TOKEN">
+        <span class="field__hint is-error">Must conform to alphanumeric token format</span>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="demo-dis">Disabled Register</label>
+        <input class="field__input" id="demo-dis" type="text" disabled value="Locked Substrate">
+        <span class="field__hint">Read-only system attribute</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CARD SUBSTRATES -->
+  <section class="catalog-section" id="cards">
+    <div class="section-title">
+      <span>05 / Card Substrates</span>
+      <span class="section-meta">Solid Elevated Surfaces & Unbound Contrast</span>
+    </div>
+    <div class="grid-demo" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="card">
+        <div class="card__eyebrow">Architecture Tier 1</div>
+        <div class="card__title">Solid Elevated Substrate</div>
+        <div class="card__body">
+          Card content body retains full optical black ink contrast, allowing child text hierarchies and data matrices to render without forced secondary washes.
+        </div>
+        <div style="display: flex; gap: var(--jd-space-1);">
+          <button class="btn btn--sm">Inspect</button>
+          <button class="btn btn--sm btn--outline">Dismiss</button>
+        </div>
+      </div>
+
+      <div class="card card--flat">
+        <div class="card__eyebrow">Architecture Tier 0</div>
+        <div class="card__title">Flat Card Container</div>
+        <div class="card__body">
+          Border-free container aligned directly with the underlying paper substrate for seamless column measures.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Script -->
+  <script>
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        document.body.style.backgroundColor = 'var(--jd-substrate)';
+      } else {
+        document.body.style.backgroundColor = '#FFFFFF';
+      }
+    }
+
+    function toggleContrast() {
+      const current = document.documentElement.getAttribute('data-contrast');
+      if (current === 'high') {
+        document.documentElement.removeAttribute('data-contrast');
+      } else {
+        document.documentElement.setAttribute('data-contrast', 'high');
+      }
+    }
+  </script>
+</body>
+</html>

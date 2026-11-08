@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judarn Color Dictionary</title>
+<style>
+  :root {
+    /* San Francisco Native Typography Stack */
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro", "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    
+    /* Judarn Canonical Dynamic OKLCh Neutrals */
+    --substrate: oklch(1.000 0.000 0);         /* Pure white substrate */
+    --surface: oklch(0.980 0.000 0);           /* Crisp neutral box surface */
+    --surface-recessed: oklch(0.958 0.000 0);  /* Refined neutral track / Sunken well */
+    --surface-hover: oklch(0.935 0.000 0);
+    
+    /* Razor-Sharp Dark Typography */
+    --ink-100: oklch(0.080 0.000 0);           /* Optical black */
+    --ink-80: oklch(0.250 0.004 92);           /* High-contrast secondary */
+    --ink-60: oklch(0.520 0.005 92);           /* Secondary dark neutral */
+    --ink-30: oklch(0.780 0.005 92);           /* Hairline / Muted */
+    --rule: oklch(0.780 0.005 92);             /* 1pt tabular hairline */
+    
+    --btn-primary-bg: oklch(0.080 0.000 0);    /* Optical black action button */
+    --btn-primary-hover: oklch(0.200 0.000 0);
+    
+    --radius-card: 16px;
+    --radius-control: 10px;
+    --radius-badge: 9999px;
+    
+    --space-half: 4px;
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+  }
+  
+  html {
+    scrollbar-gutter: stable;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--substrate);
+    color: var(--ink-100);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-optical-sizing: auto;
+    padding-bottom: 80px;
+  }
+
+  /* Micro-Typography Utilities */
+  .mono-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "zero" 1;
+  }
+  .small-caps {
+    font-variant-caps: all-small-caps;
+    font-feature-settings: "smcp" 1, "c2sc" 1;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+  }
+
+  /* Sticky Top Header */
+  header {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+    height: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Header Left: View Switcher Nav directly in the left spot */
+  .view-switch-nav {
+    display: flex;
+    background: var(--surface-recessed);
+    padding: 3px;
+    border-radius: var(--radius-control);
+    gap: 2px;
+  }
+  .view-switch-nav .pill-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--ink-60);
+    transition: all 0.15s ease;
+  }
+  .view-switch-nav .pill-tab svg {
+    opacity: 0.75;
+    transition: opacity 0.15s ease;
+  }
+  .view-switch-nav .pill-tab.active {
+    background: var(--surface);
+    color: var(--ink-100);
+  }
+  .view-switch-nav .pill-tab.active svg {
+    opacity: 1;
+  }
+
+  /* Header Right: Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    appearance: none;
+    background: var(--surface-recessed);
+    border: none;
+    border-radius: var(--radius-control);
+    padding: var(--space-1) 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-100);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .btn:hover { background: var(--surface-hover); }
+  .btn:active { transform: scale(0.98); }
+  
+  .btn-primary {
+    background: var(--btn-primary-bg);
+    color: #FFFFFF;
+  }
+  .btn-primary:hover { background: var(--btn-primary-hover); }
+  
+  .btn-favorite {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    color: var(--ink-60);
+  }
+  .btn-favorite.active {
+    background: var(--surface-recessed);
+    border-color: var(--ink-60);
+    color: var(--ink-100);
+  }
+  .btn-favorite svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s ease;
+  }
+  .btn-favorite.active svg {
+    fill: var(--ink-100);
+    stroke: var(--ink-100);
+  }
+
+  select {
+    appearance: none;
+    background: var(--surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%234B5360" viewBox="0 0 16 16"><path d="M8 11L3 6h10l-5 5z"/></svg>') no-repeat right 12px center;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-control);
+    padding: var(--space-1) 34px var(--space-1) 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-100);
+    cursor: pointer;
+  }
+
+  /* Main Container */
+  .main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  /* Hero Section */
+  .hero-section {
+    text-align: center;
+    margin: 44px auto 36px auto;
+    max-width: 820px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    color: var(--ink-60);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-size: clamp(34px, 4.8vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    color: var(--ink-100);
+    margin-bottom: 14px;
+  }
+  .hero-subtitle {
+    font-size: 17px;
+    color: var(--ink-80);
+    line-height: 1.5;
+    font-weight: 450;
+    margin-bottom: 18px;
+  }
+  .hero-provenance {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--ink-60);
+    padding: 6px 18px;
+    background: var(--surface);
+    border-radius: var(--radius-badge);
+  }
+  .hero-provenance a {
+    color: var(--ink-100);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Filter Bars */
+  .filter-bar,
+  .color-filter-bar {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 14px 22px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .filter-label {
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+  .pill-tabs {
+    display: flex;
+    background: var(--surface-recessed);
+    padding: 3px;
+    border-radius: 8px;
+    gap: 2px;
+  }
+  .pill-tab {
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--ink-60);
+  }
+  .pill-tab.active {
+    background: var(--surface);
+    color: var(--ink-100);
+  }
+
+  /* Combinations Grid */
+  .combinations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: var(--space-3);
+  }
+  .combination-card {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 14px;
+    cursor: pointer;
+    
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    position: relative;
+  }
+  .combination-card:hover {
+  }
+  .comb-swatch-box {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+  }
+  .comb-stripe {
+    flex: 1;
+    height: 100%;
+  }
+  .comb-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-half);
+    padding: 0 2px;
+  }
+  .comb-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-100);
+  }
+  .comb-badge {
+    font-size: 10px;
+    color: var(--ink-60);
+    background: var(--surface-recessed);
+    padding: 2px 7px;
+    border-radius: var(--radius-badge);
+  }
+  .comb-colors-list {
+    font-size: 12px;
+    color: var(--ink-60);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 2px;
+  }
+  .comb-card-fav-btn {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-badge);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+    color: var(--ink-60);
+  }
+  .combination-card:hover .comb-card-fav-btn,
+  .comb-card-fav-btn.active {
+    opacity: 1;
+  }
+  .comb-card-fav-btn:hover {
+    transform: scale(1.1);
+  }
+  .comb-card-fav-btn.active {
+    color: var(--ink-100);
+  }
+  .comb-card-fav-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+  .comb-card-fav-btn.active svg {
+    fill: var(--ink-100);
+    stroke: var(--ink-100);
+  }
+
+  /* Active Palette Bar in Live Explorer */
+  .palette-bar {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 20px var(--space-3);
+    margin-bottom: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .palette-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .palette-number {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-100);
+  }
+  .palette-name {
+    font-size: 14px;
+    color: var(--ink-60);
+    font-weight: 500;
+  }
+  .swatches-strip {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .swatch-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--substrate);
+    padding: 6px 12px 6px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .swatch-card:hover {
+    background: var(--surface-hover);
+  }
+  .swatch-color {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+  }
+  .swatch-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .swatch-name-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-half);
+  }
+  .swatch-name {
+    font-size: 11px;
+    color: var(--ink-100);
+  }
+  .swatch-role-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-60);
+  }
+
+  /* Favorites Drawer Strip */
+  .favorites-strip {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: var(--space-2) 20px;
+    margin-bottom: var(--space-3);
+    display: none;
+  }
+  .favorites-strip.has-favorites {
+    display: block;
+  }
+  .fav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .fav-title {
+    font-size: 11px;
+    color: var(--ink-60);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .fav-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: var(--radius-badge);
+    background: var(--surface-recessed);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink-80);
+  }
+  .fav-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .fav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--substrate);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .fav-item:hover {
+    background: var(--surface-hover);
+  }
+  .fav-mini-swatches {
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .fav-mini-swatch {
+    width: 10px;
+    height: 18px;
+  }
+  .fav-label {
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--ink-100);
+  }
+
+  /* Grid of Contexts */
+  .contexts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  .context-frame {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+  }
+  .context-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+  .context-title {
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+  .context-role-badge {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--ink-60);
+    background: var(--surface-recessed);
+    padding: 3px var(--space-1);
+    border-radius: var(--radius-badge);
+  }
+
+  /* Stage 1: Slide (16:9) */
+  .slide-stage {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 12px;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .slide-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .slide-category {
+    font-size: 11px;
+  }
+  .slide-counter {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  .slide-headline {
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    max-width: 90%;
+  }
+  .slide-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .slide-stat-num {
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .slide-stat-lbl {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: var(--space-half);
+  }
+  .slide-tag {
+    padding: 6px 14px;
+    border-radius: var(--radius-badge);
+    font-size: 11px;
+  }
+
+  /* Stage 2: Technical Specification Document (Pure White Surface) */
+  .doc-stage {
+    min-height: 290px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: var(--substrate);
+  }
+  .doc-eyebrow {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  .doc-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: var(--space-1);
+    letter-spacing: -0.015em;
+    color: var(--ink-100);
+  }
+  .doc-body {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-80);
+    margin-bottom: 18px;
+  }
+  .doc-body a {
+    color: var(--ink-100);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+  }
+  .doc-table th {
+    text-align: left;
+    padding: 7px 10px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-60);
+    font-size: 10px;
+  }
+  .doc-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: var(--ink-100);
+  }
+  .doc-table code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .doc-accent-pill {
+    display: inline-block;
+    padding: 3px var(--space-1);
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  /* Stage 3: Native App Interface */
+  .app-stage {
+    min-height: 290px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: var(--space-2);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    background: var(--substrate);
+  }
+  .app-sidebar {
+    width: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+  }
+  .app-sidebar-item {
+    padding: var(--space-1) 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-60);
+  }
+  .app-sidebar-item.active {
+    background: var(--surface);
+    color: var(--ink-100);
+  }
+  .app-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .app-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: var(--space-2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .app-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-100);
+  }
+  .app-card-sub {
+    font-size: 11px;
+    color: var(--ink-60);
+    margin-top: 2px;
+  }
+  .app-badge {
+    padding: var(--space-half) 10px;
+    border-radius: var(--radius-badge);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .app-btn {
+    padding: 10px var(--space-2);
+    border-radius: var(--radius-control);
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* Stage 4: Web Editorial Hero */
+  .web-stage {
+    min-height: 290px;
+    width: 100%;
+    border-radius: 12px;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .web-nav {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+  .web-hero {
+    margin: 20px 0;
+  }
+  .web-hero h2 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: var(--space-1);
+  }
+  .web-hero p {
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0.85;
+    max-width: 85%;
+  }
+  .web-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Token Export Section */
+  .export-section {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: var(--space-3);
+    margin-top: var(--space-3);
+  }
+  .export-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .export-header h3 {
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+  .export-desc {
+    font-size: 13px;
+    color: var(--ink-80);
+    margin-bottom: 14px;
+  }
+  pre {
+    background: #090B0E;
+    color: #E2E8F0;
+    padding: 18px;
+    border-radius: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    overflow-x: auto;
+  }
+
+  /* All Colors View */
+  .search-box {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+    max-width: 480px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 9px var(--space-4) 9px 36px;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink-100);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--ink-100);
+    box-shadow: 0 0 0 2px rgba(9, 11, 14, 0.08);
+  }
+  .search-box .search-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-60);
+    pointer-events: none;
+  }
+  .search-clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--ink-60);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    padding: var(--space-half);
+    border-radius: 4px;
+  }
+  .search-clear-btn:hover {
+    color: var(--ink-100);
+  }
+
+  .color-filter-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .color-count-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-60);
+    background: var(--surface-recessed);
+    padding: 6px 12px;
+    border-radius: var(--radius-badge);
+  }
+
+  .colors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 18px;
+  }
+  .color-card {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 12px;
+    cursor: pointer;
+    
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .color-card:hover {
+  }
+  .color-card-swatch {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .color-card-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(9, 11, 14, 0.72);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: var(--radius-badge);
+  }
+  .color-card-body {
+    padding: var(--space-1) var(--space-half) var(--space-half) var(--space-half);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .color-card-hex {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+        color: var(--ink-100);
+    letter-spacing: 0.04em;
+  }
+  .color-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-80);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .color-card-sub {
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+
+  .colors-empty-state {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 48px var(--space-3);
+    text-align: center;
+    margin-top: 20px;
+  }
+  .colors-empty-state p {
+    font-size: 14px;
+    color: var(--ink-60);
+    margin-bottom: var(--space-2);
+  }
+
+  /* Modal Backdrop & Dialog */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 11, 14, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-dialog {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    max-width: 820px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    position: relative;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+  }
+  .btn-back {
+    background: var(--substrate);
+    color: var(--ink-60);
+  }
+  .btn-back:hover {
+    background: var(--surface-hover);
+    color: var(--ink-100);
+  }
+  .modal-close-btn {
+    appearance: none;
+    background: var(--substrate);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink-60);
+    transition: all 0.15s ease;
+  }
+  .modal-close-btn:hover {
+    background: var(--surface-hover);
+    color: var(--ink-100);
+  }
+
+  .modal-hero {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .modal-swatch {
+    width: 130px;
+    height: 130px;
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12), 0 4px 14px rgba(0,0,0,0.06);
+    flex-shrink: 0;
+  }
+  .modal-hero-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    flex: 1;
+    min-width: 220px;
+  }
+  .modal-eyebrow {
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+  .modal-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: var(--ink-100);
+    line-height: 1.15;
+  }
+  .modal-hex-badge {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+        letter-spacing: 0.06em;
+    color: var(--ink-60);
+  }
+  .modal-usage-summary {
+    font-size: 13px;
+    color: var(--ink-80);
+    margin-top: var(--space-half);
+  }
+
+  .modal-section {
+    margin-top: var(--space-3);
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .modal-section-title {
+    font-size: 11px;
+    color: var(--ink-60);
+    margin-bottom: 12px;
+  }
+  .modal-section-subtitle {
+    font-size: 12px;
+    color: var(--ink-60);
+    margin-top: -6px;
+    margin-bottom: 14px;
+  }
+
+  .color-values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .value-card {
+    background: var(--substrate);
+    border-radius: var(--radius-control);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+  }
+  .value-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .value-label {
+    font-size: 10px;
+    color: var(--ink-60);
+  }
+  .value-copy-btn {
+    appearance: none;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-60);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .value-copy-btn:hover {
+    background: var(--substrate);
+    color: var(--ink-100);
+  }
+  .value-copy-btn.copied {
+    background: #ECFDF5;
+    border-color: #A7F3D0;
+    color: #059669;
+  }
+  .value-text {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-100);
+    word-break: break-all;
+  }
+
+  .modal-combinations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .comb-card {
+    background: var(--substrate);
+    border-radius: var(--radius-control);
+    padding: var(--space-1);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .comb-card:hover {
+    background: var(--surface);
+  }
+  .comb-card-strip {
+    display: flex;
+    height: 36px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  }
+  .comb-card-stripe {
+    flex: 1;
+    height: 100%;
+    transition: flex 0.2s ease;
+  }
+  .comb-card:hover .comb-card-stripe:hover {
+    flex: 1.4;
+  }
+  .comb-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 2px;
+  }
+  .comb-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-100);
+  }
+  .comb-card-sub {
+    font-size: 11px;
+    color: var(--ink-60);
+  }
+
+  /* Floating Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink-100);
+    color: #FFFFFF;
+    padding: 9px 18px;
+    border-radius: var(--radius-badge);
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Clean Attribution Footer */
+  footer.attribution {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-60);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  footer.attribution a {
+    color: var(--ink-100);
+    text-decoration: underline;
+    font-weight: 600;
+    text-underline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <!-- Header Left: View Switcher Nav directly in left spot -->
+    <div class="view-switch-nav">
+      <button class="pill-tab active" id="viewCombinationsBtn" onclick="switchView('combinations')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Combinations (348)</span>
+      </button>
+      <button class="pill-tab" id="viewLiveExplorerBtn" onclick="switchView('live-explorer')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Live Explorer</span>
+      </button>
+      <button class="pill-tab" id="viewColorsBtn" onclick="switchView('colors')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18v-9z"/></svg>
+        <span>All Colors (159)</span>
+      </button>
+    </div>
+
+    <!-- Header Right: Context Actions -->
+    <div class="header-actions">
+      <div id="combinationsActions" style="display:flex;align-items:center;gap:10px;">
+        <button class="btn" onclick="randomCombination()">Random Combination</button>
+      </div>
+      <div id="liveExplorerActions" style="display:none;align-items:center;gap:10px;">
+        <button class="btn" onclick="randomCombination()">Random Combination</button>
+        <button class="btn btn-favorite" id="favToggleBtn" onclick="toggleCurrentFavorite()">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span id="favBtnLabel">Favorite</span>
+        </button>
+        <button class="btn btn-primary" onclick="copyThemeJson()">Copy Judarn Tokens</button>
+      </div>
+      <div id="colorsActions" style="display:none;align-items:center;gap:10px;">
+        <button class="btn" onclick="randomColor()">Random Color</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main-container">
+
+  <!-- Confident Hero Section (Single canonical title) -->
+  <div class="hero-section">
+    <div class="hero-eyebrow small-caps">Judarn Design Foundation</div>
+    <h1 class="hero-title">Judarn Color Dictionary</h1>
+    <p class="hero-subtitle">
+      348 Japanese color harmonies by Sanzo Wada, calibrated in OKLCh for modern screens.
+    </p>
+    <div class="hero-provenance">
+      <span>Archive: <a href="https://github.com/mattdesl/dictionary-of-colour-combinations" target="_blank">mattdesl</a> (MIT)</span>
+      <span>Reference: <a href="https://espectro.dev" target="_blank">espectro.dev</a></span>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 1. COMBINATIONS GALLERY VIEW (348 COMBINATIONS - LANDING) -->
+  <!-- ========================================================= -->
+  <div id="combinationsView">
+
+    <!-- Combinations Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label small-caps">Size:</span>
+        <div class="pill-tabs" id="combSizeTabs">
+          <button class="pill-tab active" onclick="setCombSizeFilter('all', this)">All (348)</button>
+          <button class="pill-tab" onclick="setCombSizeFilter(2, this)">2 Colors (120)</button>
+          <button class="pill-tab" onclick="setCombSizeFilter(3, this)">3 Colors (120)</button>
+          <button class="pill-tab" onclick="setCombSizeFilter(4, this)">4 Colors (108)</button>
+        </div>
+      </div>
+
+      <div class="filter-group" style="flex:1; max-width:380px;">
+        <div class="search-box" style="max-width:100%;">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="combSearchInput" placeholder="Filter combinations by name or hex..." oninput="onCombSearchInput(this.value)">
+          <button class="search-clear-btn" id="combSearchClearBtn" onclick="clearCombSearch()" style="display:none;" title="Clear search">&times;</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label small-caps">Sort:</span>
+        <select id="combSortSelect" onchange="onCombSortChange(this.value)">
+          <option value="id">Index (#1 – #348)</option>
+          <option value="size-asc">2 Colors first</option>
+          <option value="size-desc">4 Colors first</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Favorites Drawer Strip -->
+    <div class="favorites-strip" id="favStrip">
+      <div class="fav-header">
+        <div class="fav-title small-caps">
+          <svg style="width:13px;height:13px;fill:var(--ink-100);stroke:var(--ink-100);" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span>Saved Favorites</span>
+          <span class="fav-count-badge mono-nums" id="favCount">0</span>
+        </div>
+        <button class="btn" style="padding:4px 8px;font-size:11px;" onclick="clearAllFavorites()">Clear All</button>
+      </div>
+      <div class="fav-list" id="favList"></div>
+    </div>
+
+    <!-- Combinations Grid -->
+    <div class="combinations-grid" id="combinationsGrid"></div>
+
+    <!-- Empty State -->
+    <div class="colors-empty-state" id="combEmptyState" style="display:none;">
+      <p>No combinations match your filter.</p>
+      <button class="btn" onclick="clearCombSearch()">Reset Search</button>
+    </div>
+
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 2. LIVE EXPLORER VIEW (4 CONTEXT TEMPLATES)               -->
+  <!-- ========================================================= -->
+  <div id="liveExplorerView" style="display:none;">
+
+    <!-- Palette Header Strip -->
+    <div class="palette-bar">
+      <div class="palette-meta">
+        <div class="palette-number mono-nums" id="pNum">#264</div>
+        <div class="palette-name" id="pName">Harmonic Palette</div>
+      </div>
+      
+      <div class="filter-group">
+        <button class="btn" onclick="stepPalette(-1)" title="Previous combination">&larr; Prev</button>
+        <select id="paletteSelect" onchange="selectPalette(parseInt(this.value))"></select>
+        <button class="btn" onclick="stepPalette(1)" title="Next combination">Next &rarr;</button>
+      </div>
+
+      <div class="swatches-strip" id="swatchesStrip"></div>
+    </div>
+
+    <!-- Multi-Context Preview Grid -->
+    <div class="contexts-grid">
+
+      <!-- Context 1: Slide -->
+      <div class="context-frame">
+        <div class="context-header">
+          <span class="context-title small-caps">1. Presentation Slide Master</span>
+          <span class="context-role-badge">Substrate Canvas + Accent Badge</span>
+        </div>
+        <div class="slide-stage" id="slideStage">
+          <div class="slide-top">
+            <span class="slide-category small-caps" id="slideCat">Sanzo Wada (1883–1967)</span>
+            <span class="slide-counter mono-nums">Haishoku Sōkan &middot; 1933</span>
+          </div>
+          <div class="slide-headline" id="slideHead">
+            In 1930s Japan, painter and costume designer Sanzo Wada pioneered a systematic study of color combinations, creating a timeless reference for aesthetic balance.
+          </div>
+          <div class="slide-bottom">
+            <div class="slide-stat">
+              <div class="slide-stat-num mono-nums" id="slideStat">348</div>
+              <div class="slide-stat-lbl small-caps">Historic Harmonies</div>
+            </div>
+            <div class="slide-tag small-caps" id="slideTag">Public Domain Heritage</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Context 2: Technical Specification Document -->
+      <div class="context-frame">
+        <div class="context-header">
+          <span class="context-title small-caps">2. Technical Specification Document</span>
+          <span class="context-role-badge">Pure White Surface &amp; Tabular Matrix</span>
+        </div>
+        <div class="doc-stage" id="docStage">
+          <div class="doc-eyebrow small-caps" id="docEyebrow">Data Provenance</div>
+          <div class="doc-title">Data Sources</div>
+          <div class="doc-body">
+            This dictionary builds upon the open-source color archive digitized by <a href="https://github.com/mattdesl/dictionary-of-colour-combinations" target="_blank">Matt DesLauriers</a> (MIT License) from the dataset compiled by Dain M. Blodorn Kim.
+          </div>
+          <table class="doc-table" id="docTable">
+            <thead>
+              <tr>
+                <th class="small-caps">Resource</th>
+                <th class="small-caps">Origin</th>
+                <th class="small-caps">License</th>
+                <th class="small-caps">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><em>Haishoku Sōkan</em></td>
+                <td>Sanzo Wada</td>
+                <td>Public Domain</td>
+                <td class="mono-nums">Canonical</td>
+              </tr>
+              <tr>
+                <td>Color Dataset</td>
+                <td>Matt DesLauriers</td>
+                <td>MIT License</td>
+                <td class="mono-nums">Verified</td>
+              </tr>
+              <tr>
+                <td>Perceptual Gamut</td>
+                <td>Judarn OKLCh</td>
+                <td>Display P3</td>
+                <td><span class="doc-accent-pill mono-nums" id="docRatioPill">WCAG AAA/AA</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Context 3: Native App Interface -->
+      <div class="context-frame">
+        <div class="context-header">
+          <span class="context-title small-caps">3. Native App Interface</span>
+          <span class="context-role-badge">Substrate Wash, Squircle Surface &amp; Badges</span>
+        </div>
+        <div class="app-stage" id="appStage">
+          <div class="app-sidebar">
+            <div class="app-sidebar-item active">Philosophy</div>
+            <div class="app-sidebar-item">Wide Gamut</div>
+            <div class="app-sidebar-item">Invariants</div>
+          </div>
+          <div class="app-content">
+            <div class="app-card">
+              <div>
+                <div class="app-card-title">OKLCh Perceptual Uniformity</div>
+                <div class="app-card-sub">Mapped to Display P3 with sRGB fallbacks</div>
+              </div>
+              <div class="app-badge mono-nums" id="appBadge">P3</div>
+            </div>
+            <div class="app-card">
+              <div>
+                <div class="app-card-title">Host Platform Invariants</div>
+                <div class="app-card-sub">Judarn sets color &amp; rhythm; OS shapes geometry</div>
+              </div>
+              <div class="app-badge mono-nums" id="appBadge2">Host</div>
+            </div>
+            <button class="app-btn" id="appBtn">Explore Judarn Foundation</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Context 4: Web Editorial Hero -->
+      <div class="context-frame">
+        <div class="context-header">
+          <span class="context-title small-caps">4. Web Editorial Hero</span>
+          <span class="context-role-badge">High-Contrast Canvas &amp; Accent CTA</span>
+        </div>
+        <div class="web-stage" id="webStage">
+          <div class="web-nav">
+            <span>Judarn Design</span>
+            <span>Documentation / Tokens</span>
+          </div>
+          <div class="web-hero">
+            <h2 id="webHead">Sanzo Wada's color combinations in OKLCh.</h2>
+            <p id="webSub">
+              Browse 348 combinations, inspect 159 colors, and copy their OKLCh values.
+            </p>
+          </div>
+          <div class="web-footer">
+            <button class="btn" id="webBtnPrimary" style="font-weight:700;">Explore Combinations</button>
+            <span style="font-size:11px; opacity:0.85;">Judarn Color Dictionary</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Token Export Snippet -->
+    <div class="export-section">
+      <div class="export-header">
+        <h3 class="small-caps">Ready-to-Use Judarn Token JSON (OKLCh Calibrated)</h3>
+        <button class="btn btn-primary" onclick="copyThemeJson()">Copy JSON</button>
+      </div>
+      <div class="export-desc">
+        Outputs the Design Tokens Format Module 2025.10 with mathematically calculated <code>oklch(L C H)</code> coordinates and sRGB hex fallbacks, ready to integrate into Judarn or any design system.
+      </div>
+      <pre><code id="exportCode"></code></pre>
+    </div>
+
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 3. ALL COLORS VIEW (159 INDIVIDUAL COLORS)                 -->
+  <!-- ========================================================= -->
+  <div id="colorsView" style="display:none;">
+
+    <!-- Color Controls Bar (Search & Sort) -->
+    <div class="color-filter-bar">
+      <div class="search-box">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="colorSearchInput" placeholder="Search by name, hex, or index (e.g. Hermosa Pink, #f9c1ce, pink)..." oninput="onColorSearchInput(this.value)">
+        <button class="search-clear-btn" id="searchClearBtn" onclick="clearColorSearch()" style="display:none;" title="Clear search">&times;</button>
+      </div>
+
+      <div class="color-filter-controls">
+        <div class="filter-group">
+          <span class="filter-label small-caps">Sort:</span>
+          <select id="colorSortSelect" onchange="onColorSortChange(this.value)">
+            <option value="id">Index</option>
+            <option value="name">Name (A – Z)</option>
+            <option value="usage">Most combinations</option>
+            <option value="lightness-asc">Darkest first</option>
+            <option value="lightness-desc">Lightest first</option>
+            <option value="hue">Hue</option>
+          </select>
+        </div>
+
+        <div class="color-count-badge mono-nums" id="colorCountBadge">Showing 159 colors</div>
+      </div>
+    </div>
+
+    <!-- Color Grid -->
+    <div class="colors-grid" id="colorsGrid"></div>
+
+    <!-- Empty State -->
+    <div class="colors-empty-state" id="colorsEmptyState" style="display:none;">
+      <p>No colors match your search query.</p>
+      <button class="btn" onclick="clearColorSearch()">Reset Search</button>
+    </div>
+
+  </div>
+
+  <!-- Clean Attribution Footer -->
+  <footer class="attribution">
+    <div>
+      Archive: <a href="https://github.com/mattdesl/dictionary-of-colour-combinations" target="_blank">mattdesl/dictionary-of-colour-combinations</a> (MIT)
+    </div>
+    <div>
+      Reference: <a href="https://espectro.dev" target="_blank">espectro.dev</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ========================================================= -->
+<!-- 4. COLOR DETAIL MODAL (INSPECTOR & CROSS-REFERENCES)       -->
+<!-- ========================================================= -->
+<div id="colorModal" class="modal-backdrop" style="display:none;" onclick="onBackdropClick(event)">
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalColorName">
+    <!-- Close / Back Header -->
+    <div class="modal-header">
+      <button class="btn btn-back" onclick="closeColorModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span>Back to Explorer</span>
+      </button>
+      <button class="modal-close-btn" onclick="closeColorModal()" title="Close (Esc)">&times;</button>
+    </div>
+
+    <!-- Color Hero & Identification -->
+    <div class="modal-hero">
+      <div class="modal-swatch" id="modalSwatch"></div>
+      <div class="modal-hero-details">
+        <div class="modal-eyebrow small-caps" id="modalEyebrow">Sanzo Wada Color #1</div>
+        <h2 class="modal-title" id="modalColorName">Hermosa Pink</h2>
+        <div class="modal-hex-badge mono-nums" id="modalHexBadge">#F9C1CE</div>
+        <p class="modal-usage-summary" id="modalUsageSummary">Used in 3 historical combinations</p>
+      </div>
+    </div>
+
+    <!-- Color Space Values Matrix -->
+    <div class="modal-section">
+      <h3 class="modal-section-title small-caps">Color Values &amp; Formats</h3>
+      <div class="color-values-grid">
+        <div class="value-card">
+          <div class="value-card-header">
+            <span class="value-label small-caps">HEX</span>
+            <button class="value-copy-btn" onclick="copyValue('hex')" id="copyBtn-hex">Copy</button>
+          </div>
+          <div class="value-text mono-nums" id="valHex">#f9c1ce</div>
+        </div>
+        <div class="value-card">
+          <div class="value-card-header">
+            <span class="value-label small-caps">RGB</span>
+            <button class="value-copy-btn" onclick="copyValue('rgb')" id="copyBtn-rgb">Copy</button>
+          </div>
+          <div class="value-text mono-nums" id="valRgb">249, 193, 206</div>
+        </div>
+        <div class="value-card">
+          <div class="value-card-header">
+            <span class="value-label small-caps">CMYK</span>
+            <button class="value-copy-btn" onclick="copyValue('cmyk')" id="copyBtn-cmyk">Copy</button>
+          </div>
+          <div class="value-text mono-nums" id="valCmyk">0, 30, 6, 0</div>
+        </div>
+        <div class="value-card">
+          <div class="value-card-header">
+            <span class="value-label small-caps">CIE L*a*b*</span>
+            <button class="value-copy-btn" onclick="copyValue('lab')" id="copyBtn-lab">Copy</button>
+          </div>
+          <div class="value-text mono-nums" id="valLab">83.43, 22.14, 1.64</div>
+        </div>
+        <div class="value-card">
+          <div class="value-card-header">
+            <span class="value-label small-caps">OKLCh (Judarn Native)</span>
+            <button class="value-copy-btn" onclick="copyValue('oklch')" id="copyBtn-oklch">Copy</button>
+          </div>
+          <div class="value-text mono-nums" id="valOklch">oklch(0.864 0.063 8.2)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Used in X Combinations Section -->
+    <div class="modal-section">
+      <h3 class="modal-section-title small-caps" id="modalCombinationsTitle">Used in 3 Combinations</h3>
+      <p class="modal-section-subtitle">Click any combination to load and preview across all 4 Judarn design surfaces:</p>
+      <div class="modal-combinations-grid" id="modalCombinationsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Toast -->
+<div id="toast" class="toast">Copied to clipboard</div>
+
+<script>
+const CATALOG = [{"id":1,"colors":[{"name":"English Red","hex":"#d96629"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":2,"colors":[{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Dark Tyrian Blue","hex":"#12354e"}]},{"id":3,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Pale Lemon Yellow","hex":"#ffefae"}]},{"id":4,"colors":[{"name":"Isabella Color","hex":"#c5a56e"},{"name":"Red Violet","hex":"#59256a"}]},{"id":5,"colors":[{"name":"Cossack Green","hex":"#437742"},{"name":"Vandar Poel's Blue","hex":"#064f6e"}]},{"id":6,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Deep Indigo","hex":"#051230"}]},{"id":7,"colors":[{"name":"Orange","hex":"#f37420"},{"name":"Glaucous Green","hex":"#b4cdc2"}]},{"id":8,"colors":[{"name":"Cinnamon Rufous","hex":"#c27544"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"}]},{"id":9,"colors":[{"name":"Violet Red","hex":"#642d5e"},{"name":"Dull Blue Violet","hex":"#80719e"}]},{"id":10,"colors":[{"name":"Cinnamon Rufous","hex":"#c27544"},{"name":"Dark Citrine","hex":"#8b835b"}]},{"id":11,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Mineral Gray","hex":"#a2b0ad"}]},{"id":12,"colors":[{"name":"Isabella Color","hex":"#c5a56e"},{"name":"Green Blue","hex":"#099197"}]},{"id":13,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Veronia Purple","hex":"#8c4c62"}]},{"id":14,"colors":[{"name":"Spinel Red","hex":"#f27291"},{"name":"Naples Yellow","hex":"#fbe6a0"}]},{"id":15,"colors":[{"name":"Benzol Green","hex":"#00978d"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"}]},{"id":16,"colors":[{"name":"Vandyke Red","hex":"#82241f"},{"name":"Pale King's Blue","hex":"#a7d4e4"}]},{"id":17,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Sea Green","hex":"#00b49b"}]},{"id":18,"colors":[{"name":"Fawn","hex":"#d1b0a7"},{"name":"Dusky Madder Violet","hex":"#4e1d4c"}]},{"id":19,"colors":[{"name":"Mars Brown Tobacco","hex":"#653514"},{"name":"Night Green","hex":"#87c540"}]},{"id":20,"colors":[{"name":"Calamine BLue","hex":"#78cdd0"},{"name":"Laelia Pink","hex":"#ca92a8"}]},{"id":21,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Sea Green","hex":"#00b49b"}]},{"id":22,"colors":[{"name":"Yellow","hex":"#fff200"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":23,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Light Mauve","hex":"#9a72aa"}]},{"id":24,"colors":[{"name":"Sepia","hex":"#644b1e"},{"name":"Veronia Purple","hex":"#8c4c62"}]},{"id":25,"colors":[{"name":"Etruscan Red","hex":"#c55347"},{"name":"Nile Blue","hex":"#bce4e5"}]},{"id":26,"colors":[{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Pale Raw Umber","hex":"#71502f"}]},{"id":27,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Slate Color","hex":"#34454c"}]},{"id":28,"colors":[{"name":"Madder Brown","hex":"#762c19"},{"name":"Deep Indigo","hex":"#051230"}]},{"id":29,"colors":[{"name":"Krongbergs Green","hex":"#84875e"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":30,"colors":[{"name":"Pompeian Red","hex":"#ab2439"},{"name":"Mineral Gray","hex":"#a2b0ad"}]},{"id":31,"colors":[{"name":"Red Orange","hex":"#dd4027"},{"name":"Pale Lemon Yellow","hex":"#ffefae"}]},{"id":32,"colors":[{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Night Green","hex":"#87c540"}]},{"id":33,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Slate Color","hex":"#34454c"}]},{"id":34,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":35,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Carmine Red","hex":"#a62c37"}]},{"id":36,"colors":[{"name":"Sulphine Yellow","hex":"#c19f2c"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":37,"colors":[{"name":"Brick Red","hex":"#a84222"},{"name":"Red Violet","hex":"#59256a"}]},{"id":38,"colors":[{"name":"Diamine Green","hex":"#1a7444"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":39,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Helvetia Blue","hex":"#005b8d"}]},{"id":40,"colors":[{"name":"Vinaceous Tawny","hex":"#c56127"},{"name":"Citron Yellow","hex":"#b2b73e"}]},{"id":41,"colors":[{"name":"Dark Citrine","hex":"#8b835b"},{"name":"Calamine BLue","hex":"#78cdd0"}]},{"id":42,"colors":[{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Violet","hex":"#4f4086"}]},{"id":43,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Aconite Violet","hex":"#a36aa5"}]},{"id":44,"colors":[{"name":"Light Porcelain Green","hex":"#00908a"},{"name":"Olympic Blue","hex":"#5a82b3"}]},{"id":45,"colors":[{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Lemon Yellow","hex":"#f8ed43"}]},{"id":46,"colors":[{"name":"Orange","hex":"#f37420"},{"name":"Black","hex":"#111314"}]},{"id":47,"colors":[{"name":"Etruscan Red","hex":"#c55347"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"}]},{"id":48,"colors":[{"name":"Rosolanc Purple","hex":"#b73f74"},{"name":"Helvetia Blue","hex":"#005b8d"}]},{"id":49,"colors":[{"name":"Pale King's Blue","hex":"#a7d4e4"},{"name":"Blue","hex":"#006eb8"}]},{"id":50,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Dusky Madder Violet","hex":"#4e1d4c"}]},{"id":51,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Blue","hex":"#006eb8"}]},{"id":52,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Black","hex":"#111314"}]},{"id":53,"colors":[{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Dusky Madder Violet","hex":"#4e1d4c"}]},{"id":54,"colors":[{"name":"Benzol Green","hex":"#00978d"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"}]},{"id":55,"colors":[{"name":"Old Rose","hex":"#d46d7a"},{"name":"White","hex":"#ffffff"}]},{"id":56,"colors":[{"name":"Grayish Lavender - B","hex":"#c0a9b3"},{"name":"Violet","hex":"#4f4086"}]},{"id":57,"colors":[{"name":"Taupe Brown","hex":"#7a4456"},{"name":"Slate Color","hex":"#34454c"}]},{"id":58,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Sea Green","hex":"#00b49b"}]},{"id":59,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Citrine","hex":"#b09f36"}]},{"id":60,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Dark Tyrian Blue","hex":"#12354e"}]},{"id":61,"colors":[{"name":"Light Green Yellow","hex":"#c7d14f"},{"name":"Cotinga Purple","hex":"#501345"}]},{"id":62,"colors":[{"name":"Yellow","hex":"#fff200"},{"name":"Black","hex":"#111314"}]},{"id":63,"colors":[{"name":"Vistoris Lake","hex":"#6d4145"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":64,"colors":[{"name":"Aconite Violet","hex":"#a36aa5"},{"name":"Dark Soft Violet","hex":"#66629c"}]},{"id":65,"colors":[{"name":"Sulphine Yellow","hex":"#c19f2c"},{"name":"Calamine BLue","hex":"#78cdd0"}]},{"id":66,"colors":[{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Olive Green","hex":"#6b7140"}]},{"id":67,"colors":[{"name":"Olympic Blue","hex":"#5a82b3"},{"name":"Dark Tyrian Blue","hex":"#12354e"}]},{"id":68,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Yellow","hex":"#fff200"}]},{"id":69,"colors":[{"name":"Warm Gray","hex":"#a1a39a"},{"name":"Black","hex":"#111314"}]},{"id":70,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Lincoln Green","hex":"#555832"}]},{"id":71,"colors":[{"name":"Pompeian Red","hex":"#ab2439"},{"name":"Ochraceous Salmon","hex":"#d8a37b"}]},{"id":72,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Pale King's Blue","hex":"#a7d4e4"}]},{"id":73,"colors":[{"name":"Pale Raw Umber","hex":"#71502f"},{"name":"Rainette Green","hex":"#8fa071"}]},{"id":74,"colors":[{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Green Blue","hex":"#099197"}]},{"id":75,"colors":[{"name":"Pale King's Blue","hex":"#a7d4e4"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":76,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":77,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Vandar Poel's Blue","hex":"#064f6e"}]},{"id":78,"colors":[{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Venice Green","hex":"#62c6bf"}]},{"id":79,"colors":[{"name":"Madder Brown","hex":"#762c19"},{"name":"Green Blue","hex":"#099197"}]},{"id":80,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Light Mauve","hex":"#9a72aa"}]},{"id":81,"colors":[{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":82,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Dusky Madder Violet","hex":"#4e1d4c"}]},{"id":83,"colors":[{"name":"Olive Buff","hex":"#c1c494"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":84,"colors":[{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Deep Slate Green","hex":"#112f2c"}]},{"id":85,"colors":[{"name":"Vinaceous Tawny","hex":"#c56127"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":86,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Sea Green","hex":"#00b49b"}]},{"id":87,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Citron Yellow","hex":"#b2b73e"}]},{"id":88,"colors":[{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Blue","hex":"#006eb8"}]},{"id":89,"colors":[{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":90,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Aconite Violet","hex":"#a36aa5"}]},{"id":91,"colors":[{"name":"Vistoris Lake","hex":"#6d4145"},{"name":"Orange Rufous","hex":"#c16b27"}]},{"id":92,"colors":[{"name":"Coral Red","hex":"#f58e84"},{"name":"Benzol Green","hex":"#00978d"}]},{"id":93,"colors":[{"name":"Citrine","hex":"#b09f36"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"}]},{"id":94,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Dusky Green","hex":"#004f46"}]},{"id":95,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":96,"colors":[{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Olive","hex":"#837e31"}]},{"id":97,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Etruscan Red","hex":"#c55347"}]},{"id":98,"colors":[{"name":"Madder Brown","hex":"#762c19"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":99,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":100,"colors":[{"name":"Buffy Citrine","hex":"#96874d"},{"name":"Dull Blue Violet","hex":"#80719e"}]},{"id":101,"colors":[{"name":"Cameo Pink","hex":"#e0b3b6"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":102,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Orange Rufous","hex":"#c16b27"}]},{"id":103,"colors":[{"name":"Cinnamon Rufous","hex":"#c27544"},{"name":"Dusky Madder Violet","hex":"#4e1d4c"}]},{"id":104,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Sulpher Yellow","hex":"#f5ecc2"}]},{"id":105,"colors":[{"name":"Cameo Pink","hex":"#e0b3b6"},{"name":"Chromium Green","hex":"#719470"}]},{"id":106,"colors":[{"name":"Antwarp Blue","hex":"#007190"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":107,"colors":[{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Light Grayish Olive","hex":"#848061"}]},{"id":108,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Brick Red","hex":"#a84222"}]},{"id":109,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Blackish Olive","hex":"#42533e"}]},{"id":110,"colors":[{"name":"Brown","hex":"#7c4226"},{"name":"Vandyke Brown","hex":"#4b3317"}]},{"id":111,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Yellow Green","hex":"#afd472"}]},{"id":112,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Black","hex":"#111314"}]},{"id":113,"colors":[{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Vandyke Brown","hex":"#4b3317"}]},{"id":114,"colors":[{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":115,"colors":[{"name":"Naples Yellow","hex":"#fbe6a0"},{"name":"Peach Red","hex":"#f15a30"}]},{"id":116,"colors":[{"name":"Cameo Pink","hex":"#e0b3b6"},{"name":"Blue Violet","hex":"#6450a1"}]},{"id":117,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Black","hex":"#111314"}]},{"id":118,"colors":[{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Vandyke Brown","hex":"#4b3317"}]},{"id":119,"colors":[{"name":"Light Glaucous Blue","hex":"#a5c8d1"},{"name":"Dark Tyrian Blue","hex":"#12354e"}]},{"id":120,"colors":[{"name":"Cameo Pink","hex":"#e0b3b6"},{"name":"Pompeian Red","hex":"#ab2439"}]},{"id":121,"colors":[{"name":"Brown","hex":"#7c4226"},{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Lincoln Green","hex":"#555832"}]},{"id":122,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Benzol Green","hex":"#00978d"}]},{"id":123,"colors":[{"name":"Coral Red","hex":"#f58e84"},{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Taupe Brown","hex":"#7a4456"}]},{"id":124,"colors":[{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Olive Yellow","hex":"#a6a159"}]},{"id":125,"colors":[{"name":"Fawn","hex":"#d1b0a7"},{"name":"Cerulian Blue","hex":"#0093a5"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":126,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":127,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Pistachio Green","hex":"#648f7b"},{"name":"Dark Soft Violet","hex":"#66629c"}]},{"id":128,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Venice Green","hex":"#62c6bf"},{"name":"Light Mauve","hex":"#9a72aa"}]},{"id":129,"colors":[{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Khaki","hex":"#bc892b"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":130,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Carmine Red","hex":"#a62c37"},{"name":"Violet","hex":"#4f4086"}]},{"id":131,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"English Red","hex":"#d96629"},{"name":"Peacock Blue","hex":"#00939b"}]},{"id":132,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Citrine","hex":"#b09f36"}]},{"id":133,"colors":[{"name":"Vandyke Red","hex":"#82241f"},{"name":"Citrine","hex":"#b09f36"},{"name":"Sea Green","hex":"#00b49b"}]},{"id":134,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Light Mauve","hex":"#9a72aa"},{"name":"Red Violet","hex":"#59256a"}]},{"id":135,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Cossack Green","hex":"#437742"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":136,"colors":[{"name":"Scarlet","hex":"#cb2f43"},{"name":"Dull Viridian Green","hex":"#009465"},{"name":"Red Violet","hex":"#59256a"}]},{"id":137,"colors":[{"name":"Etruscan Red","hex":"#c55347"},{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Pistachio Green","hex":"#648f7b"}]},{"id":138,"colors":[{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Venice Green","hex":"#62c6bf"}]},{"id":139,"colors":[{"name":"Salvia Blue","hex":"#97acc8"},{"name":"Deep Indigo","hex":"#051230"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":140,"colors":[{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Antwarp Blue","hex":"#007190"},{"name":"Slate Color","hex":"#34454c"}]},{"id":141,"colors":[{"name":"Orange","hex":"#f37420"},{"name":"Yellow Green","hex":"#afd472"},{"name":"Dark Tyrian Blue","hex":"#12354e"}]},{"id":142,"colors":[{"name":"Hydrangea Red","hex":"#a94151"},{"name":"Sulphine Yellow","hex":"#c19f2c"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":143,"colors":[{"name":"Blue","hex":"#006eb8"},{"name":"Lilac","hex":"#b984af"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":144,"colors":[{"name":"Rosolanc Purple","hex":"#b73f74"},{"name":"Orange","hex":"#f37420"},{"name":"Black","hex":"#111314"}]},{"id":145,"colors":[{"name":"Brown","hex":"#7c4226"},{"name":"Citron Yellow","hex":"#b2b73e"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":146,"colors":[{"name":"Khaki","hex":"#bc892b"},{"name":"Deep Grayish Olive","hex":"#635a3a"},{"name":"Diamine Green","hex":"#1a7444"}]},{"id":147,"colors":[{"name":"Spinel Red","hex":"#f27291"},{"name":"Vandyke Red","hex":"#82241f"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":148,"colors":[{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":149,"colors":[{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Orange","hex":"#f37420"},{"name":"Deep Slate Green","hex":"#112f2c"}]},{"id":150,"colors":[{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Citron Yellow","hex":"#b2b73e"},{"name":"Glaucous Green","hex":"#b4cdc2"}]},{"id":151,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Vandar Poel's Blue","hex":"#064f6e"}]},{"id":152,"colors":[{"name":"Etruscan Red","hex":"#c55347"},{"name":"Hay's Russet","hex":"#793327"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"}]},{"id":153,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Citron Yellow","hex":"#b2b73e"}]},{"id":154,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Yellow","hex":"#fff200"},{"name":"Blue","hex":"#006eb8"}]},{"id":155,"colors":[{"name":"Jasper Red","hex":"#eb5324"},{"name":"Benzol Green","hex":"#00978d"},{"name":"Deep Indigo","hex":"#051230"}]},{"id":156,"colors":[{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Violet","hex":"#4f4086"}]},{"id":157,"colors":[{"name":"Pansy Purple","hex":"#7d133a"},{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Olympic Blue","hex":"#5a82b3"}]},{"id":158,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Cinnamon Rufous","hex":"#c27544"},{"name":"Night Green","hex":"#87c540"}]},{"id":159,"colors":[{"name":"Khaki","hex":"#bc892b"},{"name":"Calamine BLue","hex":"#78cdd0"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"}]},{"id":160,"colors":[{"name":"Sulphine Yellow","hex":"#c19f2c"},{"name":"Pale Raw Umber","hex":"#71502f"},{"name":"Dark Medici Blue","hex":"#547076"}]},{"id":161,"colors":[{"name":"Brown","hex":"#7c4226"},{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Helvetia Blue","hex":"#005b8d"}]},{"id":162,"colors":[{"name":"Old Rose","hex":"#d46d7a"},{"name":"Rainette Green","hex":"#8fa071"},{"name":"Lilac","hex":"#b984af"}]},{"id":163,"colors":[{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":164,"colors":[{"name":"Red Orange","hex":"#dd4027"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Violet","hex":"#4f4086"}]},{"id":165,"colors":[{"name":"Cameo Pink","hex":"#e0b3b6"},{"name":"Spinel Red","hex":"#f27291"},{"name":"Vistoris Lake","hex":"#6d4145"}]},{"id":166,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Naples Yellow","hex":"#fbe6a0"},{"name":"Deep Slate Green","hex":"#112f2c"}]},{"id":167,"colors":[{"name":"Ecru","hex":"#c2ae93"},{"name":"Pale King's Blue","hex":"#a7d4e4"},{"name":"Vandar Poel's Blue","hex":"#064f6e"}]},{"id":168,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Vandar Poel's Blue","hex":"#064f6e"},{"name":"Veronia Purple","hex":"#8c4c62"}]},{"id":169,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":170,"colors":[{"name":"Rosolanc Purple","hex":"#b73f74"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Red Violet","hex":"#59256a"}]},{"id":171,"colors":[{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Glaucous Green","hex":"#b4cdc2"}]},{"id":172,"colors":[{"name":"Cinnamon Rufous","hex":"#c27544"},{"name":"Antwarp Blue","hex":"#007190"},{"name":"Red Violet","hex":"#59256a"}]},{"id":173,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Madder Brown","hex":"#762c19"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":174,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"},{"name":"Taupe Brown","hex":"#7a4456"}]},{"id":175,"colors":[{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Olive Buff","hex":"#c1c494"},{"name":"Blue Violet","hex":"#6450a1"}]},{"id":176,"colors":[{"name":"Hermosa Pink","hex":"#f9c1ce"},{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Calamine BLue","hex":"#78cdd0"}]},{"id":177,"colors":[{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Buffy Citrine","hex":"#96874d"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"}]},{"id":178,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"},{"name":"Green Blue","hex":"#099197"}]},{"id":179,"colors":[{"name":"Red Orange","hex":"#dd4027"},{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":180,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Light Mauve","hex":"#9a72aa"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":181,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Violet","hex":"#4f4086"},{"name":"Cotinga Purple","hex":"#501345"}]},{"id":182,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Vandyke Brown","hex":"#4b3317"},{"name":"Deep Indigo","hex":"#051230"}]},{"id":183,"colors":[{"name":"Deep Violet / Plumbeous","hex":"#70727c"},{"name":"Veronia Purple","hex":"#8c4c62"},{"name":"Red Violet","hex":"#59256a"}]},{"id":184,"colors":[{"name":"Spinel Red","hex":"#f27291"},{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Light Grayish Olive","hex":"#848061"}]},{"id":185,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Etruscan Red","hex":"#c55347"},{"name":"Pale Lemon Yellow","hex":"#ffefae"}]},{"id":186,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Blue","hex":"#006eb8"}]},{"id":187,"colors":[{"name":"Helvetia Blue","hex":"#005b8d"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"},{"name":"Aconite Violet","hex":"#a36aa5"}]},{"id":188,"colors":[{"name":"Rainette Green","hex":"#8fa071"},{"name":"Salvia Blue","hex":"#97acc8"},{"name":"Cobalt Green","hex":"#96d1aa"}]},{"id":189,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Venice Green","hex":"#62c6bf"}]},{"id":190,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"English Red","hex":"#d96629"},{"name":"Black","hex":"#111314"}]},{"id":191,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Blue","hex":"#006eb8"}]},{"id":192,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Vandyke Brown","hex":"#4b3317"},{"name":"Deep Violet / Plumbeous","hex":"#70727c"}]},{"id":193,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Naples Yellow","hex":"#fbe6a0"},{"name":"Light Porcelain Green","hex":"#00908a"}]},{"id":194,"colors":[{"name":"Jasper Red","hex":"#eb5324"},{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Olympic Blue","hex":"#5a82b3"}]},{"id":195,"colors":[{"name":"Spinel Red","hex":"#f27291"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":196,"colors":[{"name":"Citron Yellow","hex":"#b2b73e"},{"name":"Pale King's Blue","hex":"#a7d4e4"},{"name":"Blue Violet","hex":"#6450a1"}]},{"id":197,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Dark Soft Violet","hex":"#66629c"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":198,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Green","hex":"#489b6e"}]},{"id":199,"colors":[{"name":"Ochre Red","hex":"#ab544d"},{"name":"Light Brownish Olive","hex":"#806e4b"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":200,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Olive Buff","hex":"#c1c494"},{"name":"Chromium Green","hex":"#719470"}]},{"id":201,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Olive","hex":"#837e31"},{"name":"Cobalt Green","hex":"#96d1aa"}]},{"id":202,"colors":[{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Slate Color","hex":"#34454c"}]},{"id":203,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Lincoln Green","hex":"#555832"}]},{"id":204,"colors":[{"name":"Rosolanc Purple","hex":"#b73f74"},{"name":"Cinnamon Rufous","hex":"#c27544"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"}]},{"id":205,"colors":[{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Violet","hex":"#4f4086"}]},{"id":206,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Cinnamon Rufous","hex":"#c27544"}]},{"id":207,"colors":[{"name":"Sudan Brown","hex":"#a36752"},{"name":"Glaucous Green","hex":"#b4cdc2"},{"name":"Black","hex":"#111314"}]},{"id":208,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Green Blue","hex":"#099197"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":209,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":210,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Lincoln Green","hex":"#555832"}]},{"id":211,"colors":[{"name":"Apricot Orange","hex":"#f68c50"},{"name":"Olive Yellow","hex":"#a6a159"},{"name":"Deep Indigo","hex":"#051230"}]},{"id":212,"colors":[{"name":"Pompeian Red","hex":"#ab2439"},{"name":"Orange Citrine","hex":"#986f2d"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":213,"colors":[{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Pale King's Blue","hex":"#a7d4e4"}]},{"id":214,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Sudan Brown","hex":"#a36752"},{"name":"Violet","hex":"#4f4086"}]},{"id":215,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Blue","hex":"#006eb8"},{"name":"Eupatorium Purple","hex":"#bf5892"}]},{"id":216,"colors":[{"name":"Jasper Red","hex":"#eb5324"},{"name":"Green","hex":"#489b6e"},{"name":"Black","hex":"#111314"}]},{"id":217,"colors":[{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Diamine Green","hex":"#1a7444"}]},{"id":218,"colors":[{"name":"Helvetia Blue","hex":"#005b8d"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"},{"name":"Deep Violet / Plumbeous","hex":"#70727c"}]},{"id":219,"colors":[{"name":"Jasper Red","hex":"#eb5324"},{"name":"Chromium Green","hex":"#719470"},{"name":"Dusky Green","hex":"#004f46"}]},{"id":220,"colors":[{"name":"Pomegranite Purple","hex":"#b71f57"},{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Aconite Violet","hex":"#a36aa5"}]},{"id":221,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Neutral Gray","hex":"#b6bfc1"},{"name":"Black","hex":"#111314"}]},{"id":222,"colors":[{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Orange Rufous","hex":"#c16b27"}]},{"id":223,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":224,"colors":[{"name":"Spinel Red","hex":"#f27291"},{"name":"Dark Medici Blue","hex":"#547076"},{"name":"Taupe Brown","hex":"#7a4456"}]},{"id":225,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Dusky Green","hex":"#004f46"},{"name":"Dark Slate Purple","hex":"#704357"}]},{"id":226,"colors":[{"name":"Vistoris Lake","hex":"#6d4145"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Violet","hex":"#4f4086"}]},{"id":227,"colors":[{"name":"Hermosa Pink","hex":"#f9c1ce"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":228,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":229,"colors":[{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":230,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Cobalt Green","hex":"#96d1aa"}]},{"id":231,"colors":[{"name":"Cameo Pink","hex":"#e0b3b6"},{"name":"Hay's Russet","hex":"#793327"},{"name":"Olympic Blue","hex":"#5a82b3"}]},{"id":232,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Deep Indigo","hex":"#051230"}]},{"id":233,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Buffy Citrine","hex":"#96874d"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":234,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Pale Raw Umber","hex":"#71502f"},{"name":"Pale King's Blue","hex":"#a7d4e4"}]},{"id":235,"colors":[{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"}]},{"id":236,"colors":[{"name":"Khaki","hex":"#bc892b"},{"name":"Deep Lyons Blue","hex":"#1c4286"},{"name":"Purple Drab","hex":"#84565b"}]},{"id":237,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Madder Brown","hex":"#762c19"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":238,"colors":[{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Cotinga Purple","hex":"#501345"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":239,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Pyrite Yellow","hex":"#cab356"},{"name":"Glaucous Green","hex":"#b4cdc2"}]},{"id":240,"colors":[{"name":"Fresh Color","hex":"#f6917e"},{"name":"Yellow","hex":"#fff200"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":241,"colors":[{"name":"Red Orange","hex":"#dd4027"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Isabella Color","hex":"#c5a56e"},{"name":"Dark Medici Blue","hex":"#547076"}]},{"id":242,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Diamine Green","hex":"#1a7444"},{"name":"Black","hex":"#111314"}]},{"id":243,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Olive Green","hex":"#6b7140"},{"name":"Slate Color","hex":"#34454c"}]},{"id":244,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Vinaceous Tawny","hex":"#c56127"},{"name":"Andover Green","hex":"#6d7e77"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":245,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Oil Green","hex":"#819238"},{"name":"Dark Tyrian Blue","hex":"#12354e"},{"name":"Slate Color","hex":"#34454c"}]},{"id":246,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Brick Red","hex":"#a84222"},{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Cinnamon Buff","hex":"#fdc57e"}]},{"id":247,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Benzol Green","hex":"#00978d"},{"name":"Deep Lyons Blue","hex":"#1c4286"}]},{"id":248,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Khaki","hex":"#bc892b"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"},{"name":"Dark Slate Purple","hex":"#704357"}]},{"id":249,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Ecru","hex":"#c2ae93"},{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Dark Medici Blue","hex":"#547076"}]},{"id":250,"colors":[{"name":"Pyrite Yellow","hex":"#cab356"},{"name":"Peach Red","hex":"#f15a30"},{"name":"Sea Green","hex":"#00b49b"},{"name":"Nile Blue","hex":"#bce4e5"}]},{"id":251,"colors":[{"name":"Red","hex":"#a72144"},{"name":"Yellow","hex":"#fff200"},{"name":"Diamine Green","hex":"#1a7444"},{"name":"Slate Color","hex":"#34454c"}]},{"id":252,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Sulphine Yellow","hex":"#c19f2c"},{"name":"Green Blue","hex":"#099197"}]},{"id":253,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Apricot Orange","hex":"#f68c50"},{"name":"Cotinga Purple","hex":"#501345"},{"name":"Slate Color","hex":"#34454c"}]},{"id":254,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Olive","hex":"#837e31"},{"name":"Laelia Pink","hex":"#ca92a8"}]},{"id":255,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Pyrite Yellow","hex":"#cab356"},{"name":"Calamine BLue","hex":"#78cdd0"},{"name":"Black","hex":"#111314"}]},{"id":256,"colors":[{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Orange","hex":"#f37420"},{"name":"Dull Viridian Green","hex":"#009465"},{"name":"Black","hex":"#111314"}]},{"id":257,"colors":[{"name":"Spectrum Red","hex":"#e31f26"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Blue","hex":"#006eb8"},{"name":"Aconite Violet","hex":"#a36aa5"}]},{"id":258,"colors":[{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Olive","hex":"#837e31"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":259,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Green Blue","hex":"#099197"},{"name":"Helvetia Blue","hex":"#005b8d"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":260,"colors":[{"name":"Old Rose","hex":"#d46d7a"},{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Glaucous Green","hex":"#b4cdc2"},{"name":"Sea Green","hex":"#00b49b"}]},{"id":261,"colors":[{"name":"Red","hex":"#a72144"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Calamine BLue","hex":"#78cdd0"},{"name":"Warm Gray","hex":"#a1a39a"}]},{"id":262,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Citrine","hex":"#b09f36"},{"name":"Cossack Green","hex":"#437742"}]},{"id":263,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Slate Color","hex":"#34454c"}]},{"id":264,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Red Orange","hex":"#dd4027"},{"name":"Dark Greenish Glaucous","hex":"#b7c2a9"},{"name":"Cerulian Blue","hex":"#0093a5"}]},{"id":265,"colors":[{"name":"Old Rose","hex":"#d46d7a"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Olive Yellow","hex":"#a6a159"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":266,"colors":[{"name":"Spectrum Red","hex":"#e31f26"},{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Rainette Green","hex":"#8fa071"},{"name":"Benzol Green","hex":"#00978d"}]},{"id":267,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Benzol Green","hex":"#00978d"},{"name":"Blue","hex":"#006eb8"}]},{"id":268,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Nile Blue","hex":"#bce4e5"}]},{"id":269,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Aconite Violet","hex":"#a36aa5"},{"name":"Black","hex":"#111314"}]},{"id":270,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Olive Green","hex":"#6b7140"},{"name":"Cossack Green","hex":"#437742"}]},{"id":271,"colors":[{"name":"Pomegranite Purple","hex":"#b71f57"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Green Blue","hex":"#099197"},{"name":"Deep Slate Green","hex":"#112f2c"}]},{"id":272,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Orange","hex":"#f37420"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":273,"colors":[{"name":"Hermosa Pink","hex":"#f9c1ce"},{"name":"Pansy Purple","hex":"#7d133a"},{"name":"Sudan Brown","hex":"#a36752"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":274,"colors":[{"name":"Peach Red","hex":"#f15a30"},{"name":"Dark Citrine","hex":"#8b835b"},{"name":"Olympic Blue","hex":"#5a82b3"},{"name":"Light Mauve","hex":"#9a72aa"}]},{"id":275,"colors":[{"name":"Etruscan Red","hex":"#c55347"},{"name":"Ecru","hex":"#c2ae93"},{"name":"Madder Brown","hex":"#762c19"},{"name":"Taupe Brown","hex":"#7a4456"}]},{"id":276,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Yellow Green","hex":"#afd472"},{"name":"Black","hex":"#111314"}]},{"id":277,"colors":[{"name":"Spinel Red","hex":"#f27291"},{"name":"Rosolanc Purple","hex":"#b73f74"},{"name":"Olive","hex":"#837e31"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":278,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Olive Ocher","hex":"#d6b43e"},{"name":"Cossack Green","hex":"#437742"},{"name":"Dusky Green","hex":"#004f46"}]},{"id":279,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Ecru","hex":"#c2ae93"},{"name":"Dark Tyrian Blue","hex":"#12354e"}]},{"id":280,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Lincoln Green","hex":"#555832"},{"name":"Laelia Pink","hex":"#ca92a8"},{"name":"Taupe Brown","hex":"#7a4456"}]},{"id":281,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Benzol Green","hex":"#00978d"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":282,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Maple","hex":"#c59f6b"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Lilac","hex":"#b984af"}]},{"id":283,"colors":[{"name":"Ochre Red","hex":"#ab544d"},{"name":"Pale Burnt Lake","hex":"#802626"},{"name":"Chromium Green","hex":"#719470"},{"name":"Venice Green","hex":"#62c6bf"}]},{"id":284,"colors":[{"name":"Eugenia Red | A","hex":"#e2625e"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Sea Green","hex":"#00b49b"},{"name":"Dusky Green","hex":"#004f46"}]},{"id":285,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Peach Red","hex":"#f15a30"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":286,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Peacock Blue","hex":"#00939b"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":287,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Pyrite Yellow","hex":"#cab356"},{"name":"Pale King's Blue","hex":"#a7d4e4"},{"name":"Calamine BLue","hex":"#78cdd0"}]},{"id":288,"colors":[{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Sepia","hex":"#644b1e"},{"name":"Taupe Brown","hex":"#7a4456"},{"name":"Black","hex":"#111314"}]},{"id":289,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Light Green Yellow","hex":"#c7d14f"},{"name":"Violet Blue","hex":"#40456a"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":290,"colors":[{"name":"Vistoris Lake","hex":"#6d4145"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Lincoln Green","hex":"#555832"},{"name":"Cobalt Green","hex":"#96d1aa"}]},{"id":291,"colors":[{"name":"Light Green Yellow","hex":"#c7d14f"},{"name":"Sea Green","hex":"#00b49b"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Calamine BLue","hex":"#78cdd0"}]},{"id":292,"colors":[{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Isabella Color","hex":"#c5a56e"},{"name":"Ecru","hex":"#c2ae93"}]},{"id":293,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Artemesia Green","hex":"#709390"},{"name":"Green","hex":"#489b6e"}]},{"id":294,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Cossack Green","hex":"#437742"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":295,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Yellow","hex":"#fff200"},{"name":"Blue","hex":"#006eb8"},{"name":"Dull Violet Black","hex":"#1e0e3f"}]},{"id":296,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"Pale Raw Umber","hex":"#71502f"},{"name":"Slate Color","hex":"#34454c"}]},{"id":297,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Olive Green","hex":"#6b7140"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":298,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Peach Red","hex":"#f15a30"},{"name":"Black","hex":"#111314"}]},{"id":299,"colors":[{"name":"Indian Lake","hex":"#c53c69"},{"name":"Vinaceous Cinnamon","hex":"#eea78c"},{"name":"Oil Green","hex":"#819238"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":300,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Calamine BLue","hex":"#78cdd0"}]},{"id":301,"colors":[{"name":"Spectrum Red","hex":"#e31f26"},{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Rainette Green","hex":"#8fa071"},{"name":"Aconite Violet","hex":"#a36aa5"}]},{"id":302,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Ecru","hex":"#c2ae93"},{"name":"Nile Blue","hex":"#bce4e5"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":303,"colors":[{"name":"Naples Yellow","hex":"#fbe6a0"},{"name":"Peach Red","hex":"#f15a30"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":304,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Dark Citrine","hex":"#8b835b"},{"name":"Benzol Green","hex":"#00978d"}]},{"id":305,"colors":[{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Citron Yellow","hex":"#b2b73e"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":306,"colors":[{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Benzol Green","hex":"#00978d"},{"name":"Dull Viridian Green","hex":"#009465"},{"name":"Nile Blue","hex":"#bce4e5"}]},{"id":307,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Grayish Lavender - A","hex":"#b5b1d8"},{"name":"Aconite Violet","hex":"#a36aa5"},{"name":"Cotinga Purple","hex":"#501345"}]},{"id":308,"colors":[{"name":"Fawn","hex":"#d1b0a7"},{"name":"Scarlet","hex":"#cb2f43"},{"name":"English Red","hex":"#d96629"},{"name":"Cobalt Green","hex":"#96d1aa"}]},{"id":309,"colors":[{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Apricot Orange","hex":"#f68c50"},{"name":"Violet Blue","hex":"#40456a"},{"name":"Vandar Poel's Blue","hex":"#064f6e"}]},{"id":310,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Pinkish Cinnamon","hex":"#eeb480"},{"name":"Olive","hex":"#837e31"},{"name":"Deep Slate Olive","hex":"#253122"}]},{"id":311,"colors":[{"name":"Pompeian Red","hex":"#ab2439"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Dark Greenish Glaucous","hex":"#b7c2a9"},{"name":"Light Green Yellow","hex":"#c7d14f"}]},{"id":312,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Artemesia Green","hex":"#709390"},{"name":"Helvetia Blue","hex":"#005b8d"}]},{"id":313,"colors":[{"name":"Carmine","hex":"#cc1236"},{"name":"Yellow","hex":"#fff200"},{"name":"Diamine Green","hex":"#1a7444"},{"name":"Black","hex":"#111314"}]},{"id":314,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Hay's Russet","hex":"#793327"},{"name":"Deep Lyons Blue","hex":"#1c4286"},{"name":"Dusky Madder Violet","hex":"#4e1d4c"}]},{"id":315,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Golden Yellow","hex":"#f3a257"},{"name":"Eupatorium Purple","hex":"#bf5892"}]},{"id":316,"colors":[{"name":"Vandyke Red","hex":"#82241f"},{"name":"Dull Viridian Green","hex":"#009465"},{"name":"Violet","hex":"#4f4086"},{"name":"Red Violet","hex":"#59256a"}]},{"id":317,"colors":[{"name":"Light Pinkish Cinnamon","hex":"#fcc79b"},{"name":"Ecru","hex":"#c2ae93"},{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Turquoise Green","hex":"#b5decc"}]},{"id":318,"colors":[{"name":"Light Brownish Olive","hex":"#806e4b"},{"name":"Blackish Olive","hex":"#42533e"},{"name":"Dusky Green","hex":"#004f46"},{"name":"Deep Slate Green","hex":"#112f2c"}]},{"id":319,"colors":[{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Apricot Yellow","hex":"#ffdd00"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Cossack Green","hex":"#437742"}]},{"id":320,"colors":[{"name":"Coral Red","hex":"#f58e84"},{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Oil Green","hex":"#819238"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"}]},{"id":321,"colors":[{"name":"Light Brown Drab","hex":"#b59392"},{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Salvia Blue","hex":"#97acc8"}]},{"id":322,"colors":[{"name":"Spectrum Red","hex":"#e31f26"},{"name":"Brick Red","hex":"#a84222"},{"name":"Eupatorium Purple","hex":"#bf5892"},{"name":"Blue Violet","hex":"#6450a1"}]},{"id":323,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Citron Yellow","hex":"#b2b73e"},{"name":"Madder Brown","hex":"#762c19"},{"name":"Black","hex":"#111314"}]},{"id":324,"colors":[{"name":"Pompeian Red","hex":"#ab2439"},{"name":"Olympic Blue","hex":"#5a82b3"},{"name":"Aconite Violet","hex":"#a36aa5"},{"name":"Neutral Gray","hex":"#b6bfc1"}]},{"id":325,"colors":[{"name":"Eugenia Red | B","hex":"#da525d"},{"name":"Naples Yellow","hex":"#fbe6a0"},{"name":"Yellow Ocher","hex":"#e2b540"},{"name":"Deep Slate Green","hex":"#112f2c"}]},{"id":326,"colors":[{"name":"Sulpher Yellow","hex":"#f5ecc2"},{"name":"Peach Red","hex":"#f15a30"},{"name":"Yellow Green","hex":"#afd472"},{"name":"Night Green","hex":"#87c540"}]},{"id":327,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Raw Sienna","hex":"#bb7125"},{"name":"Ecru","hex":"#c2ae93"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"}]},{"id":328,"colors":[{"name":"Brick Red","hex":"#a84222"},{"name":"Apricot Orange","hex":"#f68c50"},{"name":"Vandyke Brown","hex":"#4b3317"},{"name":"Light Porcelain Green","hex":"#00908a"}]},{"id":329,"colors":[{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"},{"name":"Cotinga Purple","hex":"#501345"},{"name":"Slate Color","hex":"#34454c"}]},{"id":330,"colors":[{"name":"Olive Buff","hex":"#c1c494"},{"name":"Nile Blue","hex":"#bce4e5"},{"name":"Salvia Blue","hex":"#97acc8"},{"name":"Green Blue","hex":"#099197"}]},{"id":331,"colors":[{"name":"Indian Lake","hex":"#c53c69"},{"name":"Dull Violet Black","hex":"#1e0e3f"},{"name":"Light Mauve","hex":"#9a72aa"},{"name":"Violet","hex":"#4f4086"}]},{"id":332,"colors":[{"name":"Coral Red","hex":"#f58e84"},{"name":"Scarlet","hex":"#cb2f43"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Dusky Green","hex":"#004f46"}]},{"id":333,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Lemon Yellow","hex":"#f8ed43"},{"name":"Cobalt Green","hex":"#96d1aa"},{"name":"Blue","hex":"#006eb8"}]},{"id":334,"colors":[{"name":"Seashell Pink","hex":"#fdd4bd"},{"name":"Olive","hex":"#837e31"},{"name":"Yellow Green","hex":"#afd472"},{"name":"Antwarp Blue","hex":"#007190"}]},{"id":335,"colors":[{"name":"Vandyke Red","hex":"#82241f"},{"name":"Yellow Orange","hex":"#f99d1b"},{"name":"Violet","hex":"#4f4086"},{"name":"Slate Color","hex":"#34454c"}]},{"id":336,"colors":[{"name":"Eosine Pink","hex":"#f37f94"},{"name":"Hay's Russet","hex":"#793327"},{"name":"Pale Lemon Yellow","hex":"#ffefae"},{"name":"Blackish Olive","hex":"#42533e"}]},{"id":337,"colors":[{"name":"Vistoris Lake","hex":"#6d4145"},{"name":"Laelia Pink","hex":"#ca92a8"},{"name":"Violet Carmine","hex":"#713b4c"},{"name":"Black","hex":"#111314"}]},{"id":338,"colors":[{"name":"Carmine Red","hex":"#a62c37"},{"name":"Orange Yellow","hex":"#fcb315"},{"name":"Dusky Green","hex":"#004f46"},{"name":"Grayish Lavender - B","hex":"#c0a9b3"}]},{"id":339,"colors":[{"name":"Ochraceous Salmon","hex":"#d8a37b"},{"name":"English Red","hex":"#d96629"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"},{"name":"Violet Blue","hex":"#40456a"}]},{"id":340,"colors":[{"name":"Peach Red","hex":"#f15a30"},{"name":"Sea Green","hex":"#00b49b"},{"name":"Neutral Gray","hex":"#b6bfc1"},{"name":"Black","hex":"#111314"}]},{"id":341,"colors":[{"name":"Grenadine Pink","hex":"#f48067"},{"name":"Cossack Green","hex":"#437742"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Light Glaucous Blue","hex":"#a5c8d1"}]},{"id":342,"colors":[{"name":"Corinthian Pink","hex":"#f8b6ba"},{"name":"Cream Yellow","hex":"#fdbf68"},{"name":"Orange Citrine","hex":"#986f2d"},{"name":"Deep Slate Olive","hex":"#253122"}]},{"id":343,"colors":[{"name":"Burnt Sienna","hex":"#ae5224"},{"name":"Ivory Buff","hex":"#ebd3a2"},{"name":"Deep Grayish Olive","hex":"#635a3a"},{"name":"Vandar Poel's Blue","hex":"#064f6e"}]},{"id":344,"colors":[{"name":"Cinnamon Buff","hex":"#fdc57e"},{"name":"Deep Lyons Blue","hex":"#1c4286"},{"name":"Aconite Violet","hex":"#a36aa5"},{"name":"Black","hex":"#111314"}]},{"id":345,"colors":[{"name":"Hay's Russet","hex":"#793327"},{"name":"Nile Blue","hex":"#bce4e5"},{"name":"Venice Green","hex":"#62c6bf"},{"name":"Blue Violet","hex":"#6450a1"}]},{"id":346,"colors":[{"name":"Rosolanc Purple","hex":"#b73f74"},{"name":"Turquoise Green","hex":"#b5decc"},{"name":"Light Green Yellow","hex":"#c7d14f"},{"name":"Andover Green","hex":"#6d7e77"}]},{"id":347,"colors":[{"name":"Olive Yellow","hex":"#a6a159"},{"name":"Sea Green","hex":"#00b49b"},{"name":"Helvetia Blue","hex":"#005b8d"},{"name":"Lilac","hex":"#b984af"}]},{"id":348,"colors":[{"name":"Olive Buff","hex":"#c1c494"},{"name":"Cossack Green","hex":"#437742"},{"name":"Deep Slate Olive","hex":"#253122"},{"name":"Cotinga Purple","hex":"#501345"}]}];
+const COLOR_CATALOG = [{"id":1,"name":"Hermosa Pink","slug":"hermosa-pink","hex":"#f9c1ce","rgb":[249,193,206],"cmyk":[0,30,6,0],"lab":[83.43,22.14,1.64],"swatch":0,"combinationIds":[176,227,273]},{"id":2,"name":"Corinthian Pink","slug":"corinthian-pink","hex":"#f8b6ba","rgb":[248,182,186],"cmyk":[0,35,15,0],"lab":[80.35,25.37,7.88],"swatch":0,"combinationIds":[27,43,87,97,128,169,174,206,246,254,264,342]},{"id":3,"name":"Cameo Pink","slug":"cameo-pink","hex":"#e0b3b6","rgb":[224,179,182],"cmyk":[10,32,19,0],"lab":[77.22,17.2,4.95],"swatch":0,"combinationIds":[101,105,116,120,165,231]},{"id":4,"name":"Fawn","slug":"fawn","hex":"#d1b0a7","rgb":[209,176,167],"cmyk":[18,31,30,0],"lab":[74.49,11.19,9.39],"swatch":0,"combinationIds":[18,125,308]},{"id":5,"name":"Light Brown Drab","slug":"light-brown-drab","hex":"#b59392","rgb":[181,147,146],"cmyk":[8,30,20,25],"lab":[64.12,13.02,5.34],"swatch":0,"combinationIds":[35,68,185,191,223,239,244,268,285,321]},{"id":6,"name":"Coral Red","slug":"coral-red","hex":"#f58e84","rgb":[245,142,132],"cmyk":[0,55,40,0],"lab":[70.28,39.29,23.19],"swatch":0,"combinationIds":[92,123,320,332]},{"id":7,"name":"Fresh Color","slug":"fresh-color","hex":"#f6917e","rgb":[246,145,126],"cmyk":[0,53,45,0],"lab":[70.96,37.48,27.3],"swatch":0,"combinationIds":[240]},{"id":8,"name":"Grenadine Pink","slug":"grenadine-pink","hex":"#f48067","rgb":[244,128,103],"cmyk":[0,62,58,0],"lab":[66.89,43.83,34.7],"swatch":0,"combinationIds":[6,21,112,166,193,201,230,300,315,341]},{"id":9,"name":"Eosine Pink","slug":"eosine-pink","hex":"#f37f94","rgb":[243,127,148],"cmyk":[0,63,23,0],"lab":[67.25,46.68,10.3],"swatch":0,"combinationIds":[34,59,90,108,134,153,197,242,248,276,287,314,327,336]},{"id":10,"name":"Spinel Red","slug":"spinel-red","hex":"#f27291","rgb":[242,114,145],"cmyk":[0,70,21,0],"lab":[64.53,52.19,8.29],"swatch":0,"combinationIds":[14,147,165,184,195,224,277]},{"id":11,"name":"Old Rose","slug":"old-rose","hex":"#d46d7a","rgb":[212,109,122],"cmyk":[15,70,40,0],"lab":[58.77,42.13,12.31],"swatch":0,"combinationIds":[55,162,260,265]},{"id":12,"name":"Eugenia Red | A","slug":"eugenia-red-a","hex":"#e2625e","rgb":[226,98,94],"cmyk":[7,76,60,0],"lab":[58.37,50.75,28.54],"swatch":0,"combinationIds":[284]},{"id":13,"name":"Eugenia Red | B","slug":"eugenia-red-b","hex":"#da525d","rgb":[218,82,93],"cmyk":[0,80,50,10],"lab":[54.27,54.7,23.66],"swatch":0,"combinationIds":[17,77,252,262,270,280,282,325]},{"id":14,"name":"Raw Sienna","slug":"raw-sienna","hex":"#bb7125","rgb":[187,113,37],"cmyk":[18,58,100,12],"lab":[55.06,25.55,52.17],"swatch":0,"combinationIds":[3,13,33,70,86,130,131,182,243,247,252,255,268,269,279,293,298,319,327]},{"id":15,"name":"Vinaceous Tawny","slug":"vinaceous-tawny","hex":"#c56127","rgb":[197,97,39],"cmyk":[17,72,100,6],"lab":[53.23,38.18,50.19],"swatch":0,"combinationIds":[40,85,244]},{"id":16,"name":"Jasper Red","slug":"jasper-red","hex":"#eb5324","rgb":[235,83,36],"cmyk":[2,83,100,0],"lab":[56.81,58.41,57.63],"swatch":0,"combinationIds":[155,194,216,219]},{"id":17,"name":"Spectrum Red","slug":"spectrum-red","hex":"#e31f26","rgb":[227,31,38],"cmyk":[5,100,100,0],"lab":[49.61,70.93,50.08],"swatch":0,"combinationIds":[257,266,301,322]},{"id":18,"name":"Red Orange","slug":"red-orange","hex":"#dd4027","rgb":[221,64,39],"cmyk":[9,90,100,0],"lab":[51.83,60.64,50.88],"swatch":0,"combinationIds":[31,164,179,241,264]},{"id":19,"name":"Etruscan Red","slug":"etruscan-red","hex":"#c55347","rgb":[197,83,71],"cmyk":[16,80,74,6],"lab":[50.75,45.88,31.05],"swatch":0,"combinationIds":[25,47,97,137,152,185,275]},{"id":20,"name":"Burnt Sienna","slug":"burnt-sienna","hex":"#ae5224","rgb":[174,82,36],"cmyk":[22,76,100,15],"lab":[46.44,36.23,43.79],"swatch":0,"combinationIds":[198,242,263,285,286,297,312,333,343]},{"id":21,"name":"Ochre Red","slug":"ochre-red","hex":"#ab544d","rgb":[171,84,77],"cmyk":[18,73,63,20],"lab":[46.82,35.74,21.85],"swatch":0,"combinationIds":[199,283]},{"id":22,"name":"Scarlet","slug":"scarlet","hex":"#cb2f43","rgb":[203,47,67],"cmyk":[10,95,72,7],"lab":[46.55,61.53,28.9],"swatch":0,"combinationIds":[136,308,332]},{"id":23,"name":"Carmine","slug":"carmine","hex":"#cc1236","rgb":[204,18,54],"cmyk":[0,100,75,16],"lab":[44.29,67.19,33.71],"swatch":0,"combinationIds":[39,117,122,154,225,232,307,313]},{"id":24,"name":"Indian Lake","slug":"indian-lake","hex":"#c53c69","rgb":[197,60,105],"cmyk":[12,89,35,9],"lab":[47.54,57.21,6.68],"swatch":0,"combinationIds":[299,331]},{"id":25,"name":"Rosolanc Purple","slug":"rosolanc-purple","hex":"#b73f74","rgb":[183,63,116],"cmyk":[30,90,33,0],"lab":[45.94,52.37,-3.16],"swatch":0,"combinationIds":[48,144,170,204,277,346]},{"id":26,"name":"Pomegranite Purple","slug":"pomegranite-purple","hex":"#b71f57","rgb":[183,31,87],"cmyk":[23,100,50,6],"lab":[41.43,60.96,8.4],"swatch":0,"combinationIds":[220,271]},{"id":27,"name":"Hydrangea Red","slug":"hydrangea-red","hex":"#a94151","rgb":[169,65,81],"cmyk":[38,90,70,0],"lab":[43.07,44.35,14.18],"swatch":0,"combinationIds":[142]},{"id":28,"name":"Brick Red","slug":"brick-red","hex":"#a84222","rgb":[168,66,34],"cmyk":[22,84,100,18],"lab":[42.46,41.51,40.69],"swatch":0,"combinationIds":[37,108,246,322,328]},{"id":29,"name":"Carmine Red","slug":"carmine-red","hex":"#a62c37","rgb":[166,44,55],"cmyk":[25,95,80,16],"lab":[38.71,50.23,24.69],"swatch":0,"combinationIds":[35,51,104,130,181,200,221,228,233,237,245,338]},{"id":30,"name":"Pompeian Red","slug":"pompeian-red","hex":"#ab2439","rgb":[171,36,57],"cmyk":[18,97,74,19],"lab":[38.86,54.81,23.84],"swatch":0,"combinationIds":[30,71,120,212,311,324]},{"id":31,"name":"Red","slug":"red","hex":"#a72144","rgb":[167,33,68],"cmyk":[30,100,70,10],"lab":[37.87,54.59,15.37],"swatch":0,"combinationIds":[251,261]},{"id":32,"name":"Brown","slug":"brown","hex":"#7c4226","rgb":[124,66,38],"cmyk":[35,74,90,35],"lab":[35.07,23.47,28.57],"swatch":0,"combinationIds":[110,121,145,161]},{"id":33,"name":"Hay's Russet","slug":"hay-s-russet","hex":"#793327","rgb":[121,51,39],"cmyk":[37,85,87,35],"lab":[31.24,30.66,23.51],"swatch":0,"combinationIds":[58,82,95,152,186,231,249,304,314,336,345]},{"id":34,"name":"Vandyke Red","slug":"vandyke-red","hex":"#82241f","rgb":[130,36,31],"cmyk":[32,95,95,33],"lab":[30.16,40.6,27.61],"swatch":0,"combinationIds":[16,133,147,316,335]},{"id":35,"name":"Pansy Purple","slug":"pansy-purple","hex":"#7d133a","rgb":[125,19,58],"cmyk":[34,100,60,34],"lab":[27.61,45.92,6.09],"swatch":0,"combinationIds":[157,273]},{"id":36,"name":"Pale Burnt Lake","slug":"pale-burnt-lake","hex":"#802626","rgb":[128,38,38],"cmyk":[25,90,80,40],"lab":[30.18,39.04,22.71],"swatch":0,"combinationIds":[124,171,177,205,217,258,269,283]},{"id":37,"name":"Violet Red","slug":"violet-red","hex":"#642d5e","rgb":[100,45,94],"cmyk":[75,100,50,5],"lab":[27.77,30.39,-17.74],"swatch":0,"combinationIds":[9]},{"id":38,"name":"Vistoris Lake","slug":"vistoris-lake","hex":"#6d4145","rgb":[109,65,69],"cmyk":[40,71,55,40],"lab":[33.09,20.3,6.1],"swatch":0,"combinationIds":[63,91,165,226,290,337]},{"id":39,"name":"Sulpher Yellow","slug":"sulpher-yellow","hex":"#f5ecc2","rgb":[245,236,194],"cmyk":[4,4,28,0],"lab":[93.22,-1.73,21.65],"swatch":1,"combinationIds":[52,72,80,104,132,135,151,208,246,254,270,294,296,310,315,320,321,326]},{"id":40,"name":"Pale Lemon Yellow","slug":"pale-lemon-yellow","hex":"#ffefae","rgb":[255,239,174],"cmyk":[0,4,38,0],"lab":[94.86,-0.14,34.09],"swatch":1,"combinationIds":[3,31,60,76,99,109,111,169,185,195,203,228,241,261,272,281,290,292,336]},{"id":41,"name":"Naples Yellow","slug":"naples-yellow","hex":"#fbe6a0","rgb":[251,230,160],"cmyk":[2,7,44,0],"lab":[91.73,0.32,36.57],"swatch":1,"combinationIds":[14,115,166,193,303,325]},{"id":42,"name":"Ivory Buff","slug":"ivory-buff","hex":"#ebd3a2","rgb":[235,211,162],"cmyk":[8,15,40,0],"lab":[85.6,3.38,27.27],"swatch":1,"combinationIds":[11,50,94,102,126,178,184,190,209,214,235,243,262,266,301,343]},{"id":43,"name":"Seashell Pink","slug":"seashell-pink","hex":"#fdd4bd","rgb":[253,212,189],"cmyk":[0,19,23,0],"lab":[88.13,12.09,17.27],"swatch":1,"combinationIds":[45,84,88,113,150,176,194,276,334]},{"id":44,"name":"Light Pinkish Cinnamon","slug":"light-pinkish-cinnamon","hex":"#fcc79b","rgb":[252,199,155],"cmyk":[0,25,40,0],"lab":[84.21,15.63,29.81],"swatch":1,"combinationIds":[317]},{"id":45,"name":"Pinkish Cinnamon","slug":"pinkish-cinnamon","hex":"#eeb480","rgb":[238,180,128],"cmyk":[5,32,53,0],"lab":[77.85,17.23,34.75],"swatch":1,"combinationIds":[78,161,175,232,258,263,292,305,310]},{"id":46,"name":"Cinnamon Buff","slug":"cinnamon-buff","hex":"#fdc57e","rgb":[253,197,126],"cmyk":[0,25,57,0],"lab":[83.53,14.74,43.67],"swatch":1,"combinationIds":[23,127,137,180,210,234,246,323,344]},{"id":47,"name":"Cream Yellow","slug":"cream-yellow","hex":"#fdbf68","rgb":[253,191,104],"cmyk":[0,28,68,0],"lab":[81.81,16.47,51.98],"swatch":1,"combinationIds":[122,192,215,226,267,278,294,295,300,302,304,311,329,342]},{"id":48,"name":"Golden Yellow","slug":"golden-yellow","hex":"#f3a257","rgb":[243,162,87],"cmyk":[2,42,74,0],"lab":[73.86,25.94,51.18],"swatch":1,"combinationIds":[26,81,132,138,140,179,206,229,309,315]},{"id":49,"name":"Vinaceous Cinnamon","slug":"vinaceous-cinnamon","hex":"#eea78c","rgb":[238,167,140],"cmyk":[4,40,42,0],"lab":[74.99,24.74,24.81],"swatch":1,"combinationIds":[203,205,213,256,260,279,299]},{"id":50,"name":"Ochraceous Salmon","slug":"ochraceous-salmon","hex":"#d8a37b","rgb":[216,163,123],"cmyk":[15,38,55,0],"lab":[71.45,16.46,29.1],"swatch":1,"combinationIds":[32,71,121,186,217,220,223,238,296,339]},{"id":51,"name":"Isabella Color","slug":"isabella-color","hex":"#c5a56e","rgb":[197,165,110],"cmyk":[15,28,60,10],"lab":[69.68,7.07,33.02],"swatch":1,"combinationIds":[4,12,241,292]},{"id":52,"name":"Maple","slug":"maple","hex":"#c59f6b","rgb":[197,159,107],"cmyk":[5,26,56,20],"lab":[68.19,9.59,32.95],"swatch":1,"combinationIds":[282]},{"id":53,"name":"Olive Buff","slug":"olive-buff","hex":"#c1c494","rgb":[193,196,148],"cmyk":[16,6,42,12],"lab":[78.05,-7.11,23.66],"swatch":1,"combinationIds":[83,175,200,330,348]},{"id":54,"name":"Ecru","slug":"ecru","hex":"#c2ae93","rgb":[194,174,147],"cmyk":[20,25,40,6],"lab":[72.19,4.23,16.73],"swatch":1,"combinationIds":[167,249,275,279,292,302,317,327]},{"id":55,"name":"Yellow","slug":"yellow","hex":"#fff200","rgb":[255,242,0],"cmyk":[0,0,100,0],"lab":[94.96,-6.46,95.58],"swatch":1,"combinationIds":[22,62,68,154,240,251,295,313]},{"id":56,"name":"Lemon Yellow","slug":"lemon-yellow","hex":"#f8ed43","rgb":[248,237,67],"cmyk":[5,0,85,0],"lab":[92.66,-9.39,77.76],"swatch":1,"combinationIds":[45,123,138,158,168,173,189,210,253,259,289,298,306,317,333]},{"id":57,"name":"Apricot Yellow","slug":"apricot-yellow","hex":"#ffdd00","rgb":[255,221,0],"cmyk":[0,10,100,0],"lab":[89.35,1.91,89.46],"swatch":1,"combinationIds":[107,129,163,198,213,247,265,284,305,319]},{"id":58,"name":"Pyrite Yellow","slug":"pyrite-yellow","hex":"#cab356","rgb":[202,179,86],"cmyk":[23,25,80,0],"lab":[73.56,0.42,49.82],"swatch":1,"combinationIds":[239,250,255,287]},{"id":59,"name":"Olive Ocher","slug":"olive-ocher","hex":"#d6b43e","rgb":[214,180,62],"cmyk":[18,26,90,0],"lab":[74.88,3.57,61.81],"swatch":1,"combinationIds":[66,148,149,156,157,249,278]},{"id":60,"name":"Yellow Ocher","slug":"yellow-ocher","hex":"#e2b540","rgb":[226,181,64],"cmyk":[12,28,88,0],"lab":[76.19,8.44,62.79],"swatch":1,"combinationIds":[42,96,118,124,126,191,222,325]},{"id":61,"name":"Orange Yellow","slug":"orange-yellow","hex":"#fcb315","rgb":[252,179,21],"cmyk":[0,33,100,0],"lab":[78.49,19.57,78.22],"swatch":1,"combinationIds":[114,148,153,164,170,257,286,338]},{"id":62,"name":"Yellow Orange","slug":"yellow-orange","hex":"#f99d1b","rgb":[249,157,27],"cmyk":[0,45,100,0],"lab":[72.96,29.4,72.94],"swatch":1,"combinationIds":[2,53,89,151,171,209,222,235,267,288,297,312,319,335]},{"id":63,"name":"Apricot Orange","slug":"apricot-orange","hex":"#f68c50","rgb":[246,140,80],"cmyk":[0,55,75,0],"lab":[69.37,37.69,49.65],"swatch":1,"combinationIds":[211,253,309,328]},{"id":64,"name":"Orange","slug":"orange","hex":"#f37420","rgb":[243,116,32],"cmyk":[0,68,100,0],"lab":[63.8,47.16,64.72],"swatch":1,"combinationIds":[7,46,141,144,149,256,272]},{"id":65,"name":"Peach Red","slug":"peach-red","hex":"#f15a30","rgb":[241,90,48],"cmyk":[0,80,90,0],"lab":[59.1,57.55,54.35],"swatch":1,"combinationIds":[115,250,274,285,298,303,326,340]},{"id":66,"name":"English Red","slug":"english-red","hex":"#d96629","rgb":[217,102,41],"cmyk":[13,73,100,0],"lab":[57.22,43.3,54.36],"swatch":1,"combinationIds":[1,131,190,308,339]},{"id":67,"name":"Cinnamon Rufous","slug":"cinnamon-rufous","hex":"#c27544","rgb":[194,117,68],"cmyk":[20,60,82,5],"lab":[57.23,27.77,40.23],"swatch":1,"combinationIds":[8,10,103,158,172,204,206]},{"id":68,"name":"Orange Rufous","slug":"orange-rufous","hex":"#c16b27","rgb":[193,107,39],"cmyk":[18,65,100,8],"lab":[54.56,31.61,51.25],"swatch":1,"combinationIds":[91,102,222]},{"id":69,"name":"Sulphine Yellow","slug":"sulphine-yellow","hex":"#c19f2c","rgb":[193,159,44],"cmyk":[24,32,100,4],"lab":[67.24,4.35,60.55],"swatch":1,"combinationIds":[36,65,142,160,252]},{"id":70,"name":"Khaki","slug":"khaki","hex":"#bc892b","rgb":[188,137,43],"cmyk":[24,45,100,6],"lab":[61.02,13.86,55.05],"swatch":1,"combinationIds":[129,146,159,236,248]},{"id":71,"name":"Citron Yellow","slug":"citron-yellow","hex":"#b2b73e","rgb":[178,183,62],"cmyk":[35,17,95,0],"lab":[72.47,-13.06,58.18],"swatch":1,"combinationIds":[40,87,145,150,153,196,305,323]},{"id":72,"name":"Citrine","slug":"citrine","hex":"#b09f36","rgb":[176,159,54],"cmyk":[36,32,100,0],"lab":[65.56,-2.58,54.49],"swatch":1,"combinationIds":[59,93,132,133,262]},{"id":73,"name":"Buffy Citrine","slug":"buffy-citrine","hex":"#96874d","rgb":[150,135,77],"cmyk":[42,40,82,8],"lab":[56.62,0,33.3],"swatch":1,"combinationIds":[100,177,233]},{"id":74,"name":"Dark Citrine","slug":"dark-citrine","hex":"#8b835b","rgb":[139,131,91],"cmyk":[38,34,67,20],"lab":[54.71,-1.4,23.07],"swatch":1,"combinationIds":[10,41,274,304]},{"id":75,"name":"Light Grayish Olive","slug":"light-grayish-olive","hex":"#848061","rgb":[132,128,97],"cmyk":[43,36,62,19],"lab":[53.19,-2.28,17.02],"swatch":1,"combinationIds":[107,184]},{"id":76,"name":"Krongbergs Green","slug":"krongbergs-green","hex":"#84875e","rgb":[132,135,94],"cmyk":[48,35,70,12],"lab":[55.12,-6.19,21.51],"swatch":1,"combinationIds":[29]},{"id":77,"name":"Olive","slug":"olive","hex":"#837e31","rgb":[131,126,49],"cmyk":[48,38,100,15],"lab":[52.21,-5.73,41.49],"swatch":1,"combinationIds":[96,201,254,258,277,310,334]},{"id":78,"name":"Orange Citrine","slug":"orange-citrine","hex":"#986f2d","rgb":[152,111,45],"cmyk":[28,48,92,24],"lab":[50.24,11.52,42.05],"swatch":1,"combinationIds":[212,342]},{"id":79,"name":"Sudan Brown","slug":"sudan-brown","hex":"#a36752","rgb":[163,103,82],"cmyk":[25,60,65,19],"lab":[49.86,23.03,22.45],"swatch":1,"combinationIds":[207,214,273]},{"id":80,"name":"Olive Green","slug":"olive-green","hex":"#6b7140","rgb":[107,113,64],"cmyk":[56,40,85,22],"lab":[46.39,-8.49,26.49],"swatch":1,"combinationIds":[66,243,270,297]},{"id":81,"name":"Light Brownish Olive","slug":"light-brownish-olive","hex":"#806e4b","rgb":[128,110,75],"cmyk":[42,46,73,24],"lab":[47.51,3.75,22.19],"swatch":1,"combinationIds":[199,318]},{"id":82,"name":"Deep Grayish Olive","slug":"deep-grayish-olive","hex":"#635a3a","rgb":[99,90,58],"cmyk":[50,48,78,37],"lab":[38.61,-0.28,19.94],"swatch":1,"combinationIds":[146,343]},{"id":83,"name":"Pale Raw Umber","slug":"pale-raw-umber","hex":"#71502f","rgb":[113,80,47],"cmyk":[46,63,87,32],"lab":[37.07,11.19,24.96],"swatch":1,"combinationIds":[26,73,160,234,296]},{"id":84,"name":"Sepia","slug":"sepia","hex":"#644b1e","rgb":[100,75,30],"cmyk":[48,60,100,40],"lab":[33.83,6.87,30.23],"swatch":1,"combinationIds":[24,288]},{"id":85,"name":"Madder Brown","slug":"madder-brown","hex":"#762c19","rgb":[118,44,25],"cmyk":[36,88,100,38],"lab":[29.09,32,29.28],"swatch":1,"combinationIds":[28,79,98,173,237,275,323]},{"id":86,"name":"Mars Brown Tobacco","slug":"mars-brown-tobacco","hex":"#653514","rgb":[101,53,20],"cmyk":[39,76,100,47],"lab":[28.03,20.45,29.84],"swatch":1,"combinationIds":[19]},{"id":87,"name":"Vandyke Brown","slug":"vandyke-brown","hex":"#4b3317","rgb":[75,51,23],"cmyk":[56,71,97,52],"lab":[23.81,8.5,22.1],"swatch":1,"combinationIds":[110,113,118,182,192,328]},{"id":88,"name":"Turquoise Green","slug":"turquoise-green","hex":"#b5decc","rgb":[181,222,204],"cmyk":[29,0,24,0],"lab":[85.26,-16.89,4.6],"swatch":2,"combinationIds":[36,74,147,163,173,202,223,230,263,272,285,293,300,305,317,346]},{"id":89,"name":"Glaucous Green","slug":"glaucous-green","hex":"#b4cdc2","rgb":[180,205,194],"cmyk":[30,9,24,0],"lab":[80.3,-10.24,2.3],"swatch":2,"combinationIds":[7,150,171,207,239,260]},{"id":90,"name":"Dark Greenish Glaucous","slug":"dark-greenish-glaucous","hex":"#b7c2a9","rgb":[183,194,169],"cmyk":[30,15,36,0],"lab":[77.09,-7.56,11.37],"swatch":2,"combinationIds":[264,311]},{"id":91,"name":"Yellow Green","slug":"yellow-green","hex":"#afd472","rgb":[175,212,114],"cmyk":[35,0,72,0],"lab":[80.61,-24.6,43.91],"swatch":2,"combinationIds":[111,141,276,326,334]},{"id":92,"name":"Light Green Yellow","slug":"light-green-yellow","hex":"#c7d14f","rgb":[199,209,79],"cmyk":[26,5,85,0],"lab":[81.14,-15.86,60.56],"swatch":2,"combinationIds":[61,289,291,311,346]},{"id":93,"name":"Night Green","slug":"night-green","hex":"#87c540","rgb":[135,197,64],"cmyk":[52,0,100,0],"lab":[73.31,-36.03,57.03],"swatch":2,"combinationIds":[19,32,158,326]},{"id":94,"name":"Olive Yellow","slug":"olive-yellow","hex":"#a6a159","rgb":[166,161,89],"cmyk":[40,30,80,0],"lab":[65.49,-6.05,37.84],"swatch":2,"combinationIds":[124,211,265,347]},{"id":95,"name":"Artemesia Green","slug":"artemesia-green","hex":"#709390","rgb":[112,147,144],"cmyk":[57,28,39,8],"lab":[58.1,-12.83,-2.89],"swatch":2,"combinationIds":[293,312]},{"id":96,"name":"Andover Green","slug":"andover-green","hex":"#6d7e77","rgb":[109,126,119],"cmyk":[60,40,50,10],"lab":[51.21,-7.76,1.54],"swatch":2,"combinationIds":[244,346]},{"id":97,"name":"Rainette Green","slug":"rainette-green","hex":"#8fa071","rgb":[143,160,113],"cmyk":[42,20,62,10],"lab":[63.74,-12.53,22.45],"swatch":2,"combinationIds":[73,162,188,266,301]},{"id":98,"name":"Chromium Green","slug":"chromium-green","hex":"#719470","rgb":[113,148,112],"cmyk":[50,16,58,20],"lab":[57.87,-18.15,14.99],"swatch":2,"combinationIds":[105,200,219,283]},{"id":99,"name":"Pistachio Green","slug":"pistachio-green","hex":"#648f7b","rgb":[100,143,123],"cmyk":[64,29,56,6],"lab":[55.82,-18.64,5.69],"swatch":2,"combinationIds":[127,137]},{"id":100,"name":"Sea Green","slug":"sea-green","hex":"#00b49b","rgb":[0,180,155],"cmyk":[80,0,51,0],"lab":[65.05,-48.9,0.46],"swatch":2,"combinationIds":[17,21,58,86,133,250,260,284,291,340,347]},{"id":101,"name":"Benzol Green","slug":"benzol-green","hex":"#00978d","rgb":[0,151,141],"cmyk":[100,15,55,0],"lab":[53.56,-54.63,-8.31],"swatch":2,"combinationIds":[15,54,92,122,155,247,266,267,281,304,306]},{"id":102,"name":"Light Porcelain Green","slug":"light-porcelain-green","hex":"#00908a","rgb":[0,144,138],"cmyk":[86,22,50,3],"lab":[53.3,-37.52,-6.83],"swatch":2,"combinationIds":[44,193,328]},{"id":103,"name":"Green","slug":"green","hex":"#489b6e","rgb":[72,155,110],"cmyk":[75,21,73,0],"lab":[57.77,-34.51,15.59],"swatch":2,"combinationIds":[198,216,293]},{"id":104,"name":"Dull Viridian Green","slug":"dull-viridian-green","hex":"#009465","rgb":[0,148,101],"cmyk":[90,20,80,0],"lab":[53.5,-49,14.44],"swatch":2,"combinationIds":[136,256,306,316]},{"id":105,"name":"Oil Green","slug":"oil-green","hex":"#819238","rgb":[129,146,56],"cmyk":[53,28,100,8],"lab":[57.64,-16.01,43.77],"swatch":2,"combinationIds":[245,299,320]},{"id":106,"name":"Diamine Green","slug":"diamine-green","hex":"#1a7444","rgb":[26,116,68],"cmyk":[87,32,91,18],"lab":[42.74,-35.66,18.56],"swatch":2,"combinationIds":[38,146,217,242,251,313]},{"id":107,"name":"Cossack Green","slug":"cossack-green","hex":"#437742","rgb":[67,119,66],"cmyk":[76,32,91,18],"lab":[45.46,-27.2,23.45],"swatch":2,"combinationIds":[5,135,262,270,278,294,319,341,348]},{"id":108,"name":"Lincoln Green","slug":"lincoln-green","hex":"#555832","rgb":[85,88,50],"cmyk":[60,48,86,37],"lab":[36.27,-5.91,21.18],"swatch":2,"combinationIds":[70,121,203,210,280,290]},{"id":109,"name":"Blackish Olive","slug":"blackish-olive","hex":"#42533e","rgb":[66,83,62],"cmyk":[56,32,63,55],"lab":[33.26,-10.13,9.69],"swatch":2,"combinationIds":[109,318,336]},{"id":110,"name":"Deep Slate Olive","slug":"deep-slate-olive","hex":"#253122","rgb":[37,49,34],"cmyk":[76,60,80,62],"lab":[18.8,-7.67,7.54],"swatch":2,"combinationIds":[189,229,268,303,310,321,332,341,342,348]},{"id":111,"name":"Nile Blue","slug":"nile-blue","hex":"#bce4e5","rgb":[188,228,229],"cmyk":[25,0,10,0],"lab":[87.68,-13.25,-5.03],"swatch":3,"combinationIds":[25,250,268,302,306,330,345]},{"id":112,"name":"Pale King's Blue","slug":"pale-king-s-blue","hex":"#a7d4e4","rgb":[167,212,228],"cmyk":[33,4,7,0],"lab":[82.21,-12.74,-12.88],"swatch":3,"combinationIds":[16,49,72,75,167,196,213,234,287]},{"id":113,"name":"Light Glaucous Blue","slug":"light-glaucous-blue","hex":"#a5c8d1","rgb":[165,200,209],"cmyk":[35,10,14,0],"lab":[78.21,-10.57,-8.72],"swatch":3,"combinationIds":[54,93,119,152,178,204,227,320,339,341]},{"id":114,"name":"Salvia Blue","slug":"salvia-blue","hex":"#97acc8","rgb":[151,172,200],"cmyk":[41,25,10,0],"lab":[69.47,-2.76,-16.75],"swatch":3,"combinationIds":[29,129,135,139,142,188,209,212,237,272,294,321,330]},{"id":115,"name":"Cobalt Green","slug":"cobalt-green","hex":"#96d1aa","rgb":[150,209,170],"cmyk":[42,0,42,0],"lab":[79.01,-25.56,13],"swatch":3,"combinationIds":[156,188,201,202,230,271,281,282,290,291,308,333]},{"id":116,"name":"Calamine BLue","slug":"calamine-blue","hex":"#78cdd0","rgb":[120,205,208],"cmyk":[50,0,20,0],"lab":[77.09,-26.24,-10.37],"swatch":3,"combinationIds":[20,41,65,159,176,255,261,287,291,300]},{"id":117,"name":"Venice Green","slug":"venice-green","hex":"#62c6bf","rgb":[98,198,191],"cmyk":[58,0,30,0],"lab":[73.7,-31.73,-6.14],"swatch":3,"combinationIds":[78,128,138,189,283,345]},{"id":118,"name":"Cerulian Blue","slug":"cerulian-blue","hex":"#0093a5","rgb":[0,147,165],"cmyk":[84,26,32,0],"lab":[54.97,-30.19,-20.14],"swatch":3,"combinationIds":[1,63,99,125,148,227,240,264]},{"id":119,"name":"Peacock Blue","slug":"peacock-blue","hex":"#00939b","rgb":[0,147,155],"cmyk":[100,19,43,0],"lab":[52.79,-48.91,-17.52],"swatch":3,"combinationIds":[131,286]},{"id":120,"name":"Green Blue","slug":"green-blue","hex":"#099197","rgb":[9,145,151],"cmyk":[82,24,40,3],"lab":[54.13,-31.27,-12.88],"swatch":3,"combinationIds":[12,74,79,178,208,252,259,271,330]},{"id":121,"name":"Olympic Blue","slug":"olympic-blue","hex":"#5a82b3","rgb":[90,130,179],"cmyk":[69,44,10,0],"lab":[53.09,-3.63,-30.74],"swatch":3,"combinationIds":[44,67,157,194,231,274,324]},{"id":122,"name":"Blue","slug":"blue","hex":"#006eb8","rgb":[0,110,184],"cmyk":[95,54,0,0],"lab":[43.49,-8.83,-48.77],"swatch":3,"combinationIds":[49,51,88,143,154,186,191,215,257,267,295,333]},{"id":123,"name":"Antwarp Blue","slug":"antwarp-blue","hex":"#007190","rgb":[0,113,144],"cmyk":[100,40,30,10],"lab":[42.03,-29.12,-27.73],"swatch":3,"combinationIds":[85,106,114,140,163,172,208,244,258,281,299,302,334]},{"id":124,"name":"Helvetia Blue","slug":"helvetia-blue","hex":"#005b8d","rgb":[0,91,141],"cmyk":[100,62,19,10],"lab":[35.31,-12.1,-36.37],"swatch":3,"combinationIds":[39,48,161,187,218,259,312,347]},{"id":125,"name":"Dark Medici Blue","slug":"dark-medici-blue","hex":"#547076","rgb":[84,112,118],"cmyk":[70,45,45,15],"lab":[45.12,-9.23,-6.86],"swatch":3,"combinationIds":[160,224,241,249]},{"id":126,"name":"Dusky Green","slug":"dusky-green","hex":"#004f46","rgb":[0,79,70],"cmyk":[100,30,64,50],"lab":[27.97,-36.27,-3.28],"swatch":3,"combinationIds":[94,219,225,278,284,318,332,338]},{"id":127,"name":"Deep Lyons Blue","slug":"deep-lyons-blue","hex":"#1c4286","rgb":[28,66,134],"cmyk":[100,85,15,6],"lab":[28.53,6.56,-42.68],"swatch":3,"combinationIds":[22,38,101,126,179,199,236,247,314,344]},{"id":128,"name":"Violet Blue","slug":"violet-blue","hex":"#40456a","rgb":[64,69,106],"cmyk":[85,79,38,16],"lab":[30.15,5.44,-22.38],"swatch":3,"combinationIds":[75,83,89,98,125,233,286,289,297,309,339]},{"id":129,"name":"Vandar Poel's Blue","slug":"vandar-poel-s-blue","hex":"#064f6e","rgb":[6,79,110],"cmyk":[100,73,43,10],"lab":[30.78,-11.26,-24.52],"swatch":3,"combinationIds":[5,77,151,167,168,309,343]},{"id":130,"name":"Dark Tyrian Blue","slug":"dark-tyrian-blue","hex":"#12354e","rgb":[18,53,78],"cmyk":[90,66,36,50],"lab":[20.61,-5.84,-19.08],"swatch":3,"combinationIds":[2,60,67,119,141,245,279]},{"id":131,"name":"Dull Violet Black","slug":"dull-violet-black","hex":"#1e0e3f","rgb":[30,14,63],"cmyk":[95,106,38,50],"lab":[8.1,19.43,-28.81],"swatch":3,"combinationIds":[95,106,145,265,277,289,295,331]},{"id":132,"name":"Deep Indigo","slug":"deep-indigo","hex":"#051230","rgb":[5,18,48],"cmyk":[100,92,52,60],"lab":[5.82,4.14,-21.79],"swatch":3,"combinationIds":[6,28,139,155,182,211,232]},{"id":133,"name":"Deep Slate Green","slug":"deep-slate-green","hex":"#112f2c","rgb":[17,47,44],"cmyk":[80,50,60,70],"lab":[16.88,-12.14,-2.23],"swatch":3,"combinationIds":[84,149,166,271,318,325]},{"id":134,"name":"Grayish Lavender - A","slug":"grayish-lavender-a","hex":"#b5b1d8","rgb":[181,177,216],"cmyk":[28,28,0,0],"lab":[73.42,7.46,-19.35],"swatch":4,"combinationIds":[8,15,159,177,218,248,307]},{"id":135,"name":"Grayish Lavender - B","slug":"grayish-lavender-b","hex":"#c0a9b3","rgb":[192,169,179],"cmyk":[25,33,20,0],"lab":[71.35,10.05,-2.21],"swatch":4,"combinationIds":[47,56,174,187,235,327,329,338]},{"id":136,"name":"Laelia Pink","slug":"laelia-pink","hex":"#ca92a8","rgb":[202,146,168],"cmyk":[20,48,18,0],"lab":[66.52,24.31,-2.66],"swatch":4,"combinationIds":[20,254,280,337]},{"id":137,"name":"Lilac","slug":"lilac","hex":"#b984af","rgb":[185,132,175],"cmyk":[28,54,8,0],"lab":[61.53,25.92,-14.25],"swatch":4,"combinationIds":[143,162,282,347]},{"id":138,"name":"Eupatorium Purple","slug":"eupatorium-purple","hex":"#bf5892","rgb":[191,88,146],"cmyk":[25,79,12,0],"lab":[52.25,46.71,-11.72],"swatch":4,"combinationIds":[215,315,322]},{"id":139,"name":"Light Mauve","slug":"light-mauve","hex":"#9a72aa","rgb":[154,114,170],"cmyk":[43,62,5,0],"lab":[53.64,23.9,-23.98],"swatch":4,"combinationIds":[23,80,128,134,180,274,331]},{"id":140,"name":"Aconite Violet","slug":"aconite-violet","hex":"#a36aa5","rgb":[163,106,165],"cmyk":[39,68,5,0],"lab":[52.67,30.7,-22.37],"swatch":4,"combinationIds":[43,64,90,187,220,257,269,301,307,324,344]},{"id":141,"name":"Dull Blue Violet","slug":"dull-blue-violet","hex":"#80719e","rgb":[128,113,158],"cmyk":[57,60,17,0],"lab":[50.22,13.38,-22.46],"swatch":4,"combinationIds":[9,100]},{"id":142,"name":"Dark Soft Violet","slug":"dark-soft-violet","hex":"#66629c","rgb":[102,98,156],"cmyk":[70,68,13,0],"lab":[44,12.35,-31.17],"swatch":4,"combinationIds":[64,127,197]},{"id":143,"name":"Blue Violet","slug":"blue-violet","hex":"#6450a1","rgb":[100,80,161],"cmyk":[72,80,0,0],"lab":[39.12,23.57,-41.91],"swatch":4,"combinationIds":[116,175,196,322,345]},{"id":144,"name":"Purple Drab","slug":"purple-drab","hex":"#84565b","rgb":[132,86,91],"cmyk":[38,65,49,26],"lab":[41.87,19.87,5.56],"swatch":4,"combinationIds":[236]},{"id":145,"name":"Deep Violet / Plumbeous","slug":"deep-violet-plumbeous","hex":"#70727c","rgb":[112,114,124],"cmyk":[61,52,43,7],"lab":[48.03,0.79,-5.91],"swatch":4,"combinationIds":[183,192,218]},{"id":146,"name":"Veronia Purple","slug":"veronia-purple","hex":"#8c4c62","rgb":[140,76,98],"cmyk":[42,78,46,15],"lab":[40.98,29.56,0.13],"swatch":4,"combinationIds":[13,24,168,183]},{"id":147,"name":"Dark Slate Purple","slug":"dark-slate-purple","hex":"#704357","rgb":[112,67,87],"cmyk":[64,85,60,10],"lab":[34.31,22.22,-3.55],"swatch":4,"combinationIds":[225,248]},{"id":148,"name":"Taupe Brown","slug":"taupe-brown","hex":"#7a4456","rgb":[122,68,86],"cmyk":[30,70,35,40],"lab":[36.17,25.64,0.06],"swatch":4,"combinationIds":[57,123,174,224,275,280,288]},{"id":149,"name":"Violet Carmine","slug":"violet-carmine","hex":"#713b4c","rgb":[113,59,76],"cmyk":[64,90,70,10],"lab":[32.3,25.87,0.82],"swatch":4,"combinationIds":[337]},{"id":150,"name":"Violet","slug":"violet","hex":"#4f4086","rgb":[79,64,134],"cmyk":[85,90,18,0],"lab":[31.49,20.67,-37.93],"swatch":4,"combinationIds":[42,56,130,156,164,181,205,214,226,316,331,335]},{"id":151,"name":"Red Violet","slug":"red-violet","hex":"#59256a","rgb":[89,37,106],"cmyk":[76,100,25,15],"lab":[25.05,33.11,-30.06],"swatch":4,"combinationIds":[4,37,134,136,170,172,183,316]},{"id":152,"name":"Cotinga Purple","slug":"cotinga-purple","hex":"#501345","rgb":[80,19,69],"cmyk":[66,100,42,40],"lab":[18.4,32.86,-15.76],"swatch":4,"combinationIds":[61,181,238,253,307,329,348]},{"id":153,"name":"Dusky Madder Violet","slug":"dusky-madder-violet","hex":"#4e1d4c","rgb":[78,29,76],"cmyk":[75,100,46,30],"lab":[20.1,28.65,-18.26],"swatch":4,"combinationIds":[18,50,53,82,103,314]},{"id":154,"name":"White","slug":"white","hex":"#ffffff","rgb":[255,255,255],"cmyk":[0,0,0,0],"lab":[100,0,0],"swatch":5,"combinationIds":[55]},{"id":155,"name":"Neutral Gray","slug":"neutral-gray","hex":"#b6bfc1","rgb":[182,191,193],"cmyk":[29,18,20,0],"lab":[76.75,-3.03,-2.03],"swatch":5,"combinationIds":[34,139,180,195,197,221,228,229,273,303,324,340]},{"id":156,"name":"Mineral Gray","slug":"mineral-gray","hex":"#a2b0ad","rgb":[162,176,173],"cmyk":[33,18,25,7],"lab":[70.75,-5.62,-0.1],"swatch":5,"combinationIds":[11,30]},{"id":157,"name":"Warm Gray","slug":"warm-gray","hex":"#a1a39a","rgb":[161,163,154],"cmyk":[37,28,36,3],"lab":[66.75,-2.25,4.74],"swatch":5,"combinationIds":[69,76,81,143,169,238,259,261]},{"id":158,"name":"Slate Color","slug":"slate-color","hex":"#34454c","rgb":[52,69,76],"cmyk":[85,70,62,30],"lab":[27.85,-5.39,-6.97],"swatch":5,"combinationIds":[27,33,57,140,202,243,245,251,253,263,296,329,335]},{"id":159,"name":"Black","slug":"black","hex":"#111314","rgb":[17,19,20],"cmyk":[20,10,15,100],"lab":[5.63,-0.4,-1.12],"swatch":5,"combinationIds":[46,52,62,69,112,117,144,190,207,216,221,242,255,256,269,276,288,298,313,323,337,340,344]}];
+
+let currentView = 'combinations'; // 'combinations' | 'live-explorer' | 'colors'
+let currentPaletteId = 1;
+let memoryFavorites = [];
+
+let combSizeFilter = 'all';
+let combSearchQuery = '';
+let combSortOrder = 'id';
+
+let colorSearchQuery = '';
+let colorSortOrder = 'id';
+let activeModalColor = null;
+let toastTimeout = null;
+
+let enrichedColors = [];
+
+function getFavorites() {
+  try {
+    const raw = localStorage.getItem('judarn_wada_favorites');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return memoryFavorites;
+}
+
+function saveFavorites(favs) {
+  try {
+    localStorage.setItem('judarn_wada_favorites', JSON.stringify(favs));
+  } catch (e) {}
+  memoryFavorites = favs;
+  renderFavorites();
+  updateFavButton();
+  renderCombinationsGrid();
+}
+
+function toggleFavoriteId(id) {
+  const favs = [...getFavorites()];
+  const idx = favs.indexOf(id);
+  if (idx > -1) {
+    favs.splice(idx, 1);
+  } else {
+    favs.push(id);
+  }
+  saveFavorites(favs);
+}
+
+function toggleCurrentFavorite() {
+  toggleFavoriteId(currentPaletteId);
+}
+
+function clearAllFavorites() {
+  saveFavorites([]);
+}
+
+function updateFavButton() {
+  const favs = getFavorites();
+  const isFav = favs.includes(currentPaletteId);
+  const btn = document.getElementById('favToggleBtn');
+  const lbl = document.getElementById('favBtnLabel');
+  if (isFav) {
+    btn.classList.add('active');
+    lbl.textContent = 'Favorited';
+  } else {
+    btn.classList.remove('active');
+    lbl.textContent = 'Favorite';
+  }
+}
+
+function renderFavorites() {
+  const favs = getFavorites();
+  const strip = document.getElementById('favStrip');
+  const count = document.getElementById('favCount');
+  const list = document.getElementById('favList');
+  
+  count.textContent = favs.length;
+  if (favs.length === 0) {
+    strip.classList.remove('has-favorites');
+    list.innerHTML = '';
+    return;
+  }
+  strip.classList.add('has-favorites');
+  list.innerHTML = '';
+  
+  favs.forEach(id => {
+    const item = CATALOG.find(p => p.id === id);
+    if (!item) return;
+    const el = document.createElement('div');
+    el.className = 'fav-item';
+    el.title = `Open Combination #${item.id} in Live Explorer`;
+    el.onclick = () => {
+      loadCombinationIntoExplorer(item.id);
+    };
+    
+    let miniSwatches = '<div class="fav-mini-swatches">';
+    item.colors.forEach(c => {
+      miniSwatches += `<div class="fav-mini-swatch" style="background:${c.hex}"></div>`;
+    });
+    miniSwatches += '</div>';
+    
+    el.innerHTML = `${miniSwatches}<span class="fav-label">#${item.id}</span>`;
+    list.appendChild(el);
+  });
+}
+
+function hexToRgb(hex) {
+  const clean = hex.replace('#', '');
+  const bigint = parseInt(clean, 16);
+  return {
+    r: (bigint >> 16) & 255,
+    g: (bigint >> 8) & 255,
+    b: bigint & 255
+  };
+}
+
+function srgbToOklch(r, g, b) {
+  const invGamma = (v) => {
+    v = v / 255.0;
+    return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  const rL = invGamma(r);
+  const gL = invGamma(g);
+  const bL = invGamma(b);
+
+  const l = 0.4122214708 * rL + 0.5363325363 * gL + 0.0514459929 * bL;
+  const m = 0.2119034982 * rL + 0.6806995451 * gL + 0.1073969566 * bL;
+  const s = 0.0883024619 * rL + 0.2817188376 * gL + 0.6299787005 * bL;
+
+  const l_ = l > 0 ? Math.cbrt(l) : 0;
+  const m_ = m > 0 ? Math.cbrt(m) : 0;
+  const s_ = s > 0 ? Math.cbrt(s) : 0;
+
+  const L = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_;
+  const a = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
+  const bVal = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
+
+  const C = Math.sqrt(a * a + bVal * bVal);
+  let H = Math.atan2(bVal, a) * (180 / Math.PI);
+  if (H < 0) H += 360;
+
+  return {
+    l: parseFloat(L.toFixed(3)),
+    c: parseFloat(C.toFixed(3)),
+    h: parseFloat(H.toFixed(1)),
+    css: `oklch(${L.toFixed(3)} ${C.toFixed(3)} ${H.toFixed(1)})`
+  };
+}
+
+function getLuminance(r, g, b) {
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+// -------------------------------------------------------------
+// View Switching Logic (Combinations vs Live Explorer vs All Colors)
+// -------------------------------------------------------------
+function switchView(view) {
+  currentView = view;
+  const combView = document.getElementById('combinationsView');
+  const liveView = document.getElementById('liveExplorerView');
+  const colorsView = document.getElementById('colorsView');
+
+  const combBtn = document.getElementById('viewCombinationsBtn');
+  const liveBtn = document.getElementById('viewLiveExplorerBtn');
+  const colorsBtn = document.getElementById('viewColorsBtn');
+
+  const combActions = document.getElementById('combinationsActions');
+  const liveActions = document.getElementById('liveExplorerActions');
+  const colorsActions = document.getElementById('colorsActions');
+
+  [combBtn, liveBtn, colorsBtn].forEach(b => b.classList.remove('active'));
+  [combView, liveView, colorsView].forEach(v => v.style.display = 'none');
+  [combActions, liveActions, colorsActions].forEach(a => a.style.display = 'none');
+
+  if (view === 'combinations') {
+    combView.style.display = 'block';
+    combBtn.classList.add('active');
+    combActions.style.display = 'flex';
+    renderCombinationsGrid();
+    if (!location.hash.startsWith('#color=') && !location.hash.startsWith('#palette=')) {
+      history.replaceState(null, '', '#combinations');
+    }
+  } else if (view === 'live-explorer') {
+    liveView.style.display = 'block';
+    liveBtn.classList.add('active');
+    liveActions.style.display = 'flex';
+    selectPalette(currentPaletteId);
+    if (!location.hash.startsWith('#color=')) {
+      history.replaceState(null, '', `#palette=${currentPaletteId}`);
+    }
+  } else {
+    colorsView.style.display = 'block';
+    colorsBtn.classList.add('active');
+    colorsActions.style.display = 'flex';
+    renderColorsGrid();
+    if (!location.hash.startsWith('#color=')) {
+      history.replaceState(null, '', '#colors');
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Combinations Gallery Grid Engine
+// -------------------------------------------------------------
+function setCombSizeFilter(size, tabElem) {
+  document.querySelectorAll('#combSizeTabs .pill-tab').forEach(t => t.classList.remove('active'));
+  tabElem.classList.add('active');
+  combSizeFilter = size;
+  renderCombinationsGrid();
+}
+
+function onCombSearchInput(val) {
+  combSearchQuery = val.trim().toLowerCase();
+  const clearBtn = document.getElementById('combSearchClearBtn');
+  clearBtn.style.display = combSearchQuery ? 'block' : 'none';
+  renderCombinationsGrid();
+}
+
+function clearCombSearch() {
+  const input = document.getElementById('combSearchInput');
+  if (input) input.value = '';
+  combSearchQuery = '';
+  const clearBtn = document.getElementById('combSearchClearBtn');
+  if (clearBtn) clearBtn.style.display = 'none';
+  renderCombinationsGrid();
+}
+
+function onCombSortChange(val) {
+  combSortOrder = val;
+  renderCombinationsGrid();
+}
+
+function renderCombinationsGrid() {
+  const grid = document.getElementById('combinationsGrid');
+  const emptyState = document.getElementById('combEmptyState');
+  const favs = getFavorites();
+
+  let list = CATALOG.filter(p => {
+    if (combSizeFilter !== 'all' && p.colors.length !== combSizeFilter) return false;
+    if (!combSearchQuery) return true;
+    if (String(p.id) === combSearchQuery || ('#' + p.id) === combSearchQuery) return true;
+    const names = p.colors.map(c => c.name.toLowerCase()).join(' ');
+    if (names.includes(combSearchQuery)) return true;
+    const hexes = p.colors.map(c => c.hex.toLowerCase()).join(' ');
+    if (hexes.includes(combSearchQuery)) return true;
+    return false;
+  });
+
+  // Sort
+  list.sort((a, b) => {
+    if (combSortOrder === 'size-asc') return a.colors.length - b.colors.length || a.id - b.id;
+    if (combSortOrder === 'size-desc') return b.colors.length - a.colors.length || a.id - b.id;
+    return a.id - b.id;
+  });
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  grid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'combination-card';
+    card.title = `Open Combination #${p.id} in Live Explorer`;
+    card.onclick = (e) => {
+      // Don't trigger if favorite button was clicked
+      if (e.target.closest('.comb-card-fav-btn')) return;
+      loadCombinationIntoExplorer(p.id);
+    };
+
+    const isFav = favs.includes(p.id);
+
+    let stripes = '<div class="comb-swatch-box">';
+    p.colors.forEach(col => {
+      stripes += `<div class="comb-stripe" style="background-color: ${col.hex};" title="${col.name}: ${col.hex}"></div>`;
+    });
+    stripes += '</div>';
+
+    const colorNames = p.colors.map(c => c.name).join(', ');
+
+    card.innerHTML = `
+      ${stripes}
+      <button class="comb-card-fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavoriteId(${p.id})" title="${isFav ? 'Remove favorite' : 'Save favorite'}">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </button>
+      <div class="comb-meta-row">
+        <span class="comb-title mono-nums">Combination #${p.id}</span>
+        <span class="comb-badge small-caps">${p.colors.length} colors</span>
+      </div>
+      <div class="comb-colors-list">${colorNames}</div>
+    `;
+
+    fragment.appendChild(card);
+  });
+
+  grid.appendChild(fragment);
+}
+
+function loadCombinationIntoExplorer(id) {
+  currentPaletteId = id;
+  switchView('live-explorer');
+  document.getElementById('paletteSelect').value = id;
+  selectPalette(id);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function randomCombination() {
+  const rand = CATALOG[Math.floor(Math.random() * CATALOG.length)];
+  if (currentView === 'live-explorer') {
+    document.getElementById('paletteSelect').value = rand.id;
+    selectPalette(rand.id);
+  } else {
+    loadCombinationIntoExplorer(rand.id);
+  }
+}
+
+function stepPalette(step) {
+  const currentIndex = CATALOG.findIndex(p => p.id === currentPaletteId);
+  let nextIndex = currentIndex + step;
+  if (nextIndex < 0) nextIndex = CATALOG.length - 1;
+  if (nextIndex >= CATALOG.length) nextIndex = 0;
+  const nextId = CATALOG[nextIndex].id;
+  document.getElementById('paletteSelect').value = nextId;
+  selectPalette(nextId);
+}
+
+// -------------------------------------------------------------
+// Filled-surface ink: perceptual crossover Y* = 0.50, pure black or white (ADR-0006).
+const PERCEPTUAL_LUMINANCE_CROSSOVER = 0.50;
+function inkFor(lum) { return lum > PERCEPTUAL_LUMINANCE_CROSSOVER ? '#000000' : '#FFFFFF'; }
+
+// Live Explorer & Context Engine
+// -------------------------------------------------------------
+function selectPalette(id) {
+  currentPaletteId = id;
+  updateFavButton();
+  const item = CATALOG.find(x => x.id === id) || CATALOG[0];
+  document.getElementById('pNum').textContent = '#' + item.id;
+  document.getElementById('pName').textContent = `${item.colors.length}-Color Harmony`;
+
+  const enriched = item.colors.map(c => {
+    const rgb = hexToRgb(c.hex);
+    const oklch = srgbToOklch(rgb.r, rgb.g, rgb.b);
+    return {
+      ...c,
+      rgb,
+      oklch,
+      lum: getLuminance(rgb.r, rgb.g, rgb.b)
+    };
+  });
+
+  const sorted = [...enriched].sort((a, b) => b.lum - a.lum);
+  const n = sorted.length;
+
+  const substrate = sorted[0];
+  const ink = sorted[n - 1];
+  let accent1, accent2;
+
+  if (n === 2) {
+    accent1 = substrate;
+    accent2 = ink;
+  } else if (n === 3) {
+    accent1 = sorted[1];
+    accent2 = ink;
+  } else {
+    accent1 = sorted[1];
+    accent2 = sorted[2];
+  }
+
+  const getRoleName = (color) => {
+    if (color.hex === substrate.hex) return 'Substrate / Tint';
+    if (color.hex === ink.hex) return 'Ink / Contrast';
+    if (color.hex === accent1.hex) return 'Accent 1';
+    if (color.hex === accent2.hex) return 'Accent 2';
+    return 'Harmony';
+  };
+
+  const strip = document.getElementById('swatchesStrip');
+  strip.innerHTML = '';
+  enriched.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'swatch-card';
+    card.title = `Inspect ${c.name} (${c.hex}) & view all combinations`;
+    card.onclick = () => openColorModal(c.hex);
+    card.innerHTML = `
+      <div class="swatch-color" style="background-color: ${c.hex}"></div>
+      <div class="swatch-info">
+        <div class="swatch-name-row">
+          <span class="swatch-name">${c.name}</span>
+        </div>
+        <span class="swatch-role-tag">${getRoleName(c)} &bull; ${c.oklch.css}</span>
+      </div>
+    `;
+    strip.appendChild(card);
+  });
+
+  // 1. Context: Presentation Slide Master (Sanzo Wada History)
+  const slide = document.getElementById('slideStage');
+  slide.style.backgroundColor = substrate.hex;
+  const slideTextColor = inkFor(substrate.lum);
+  slide.style.color = slideTextColor;
+  document.getElementById('slideCat').style.color = ink.hex;
+  document.getElementById('slideHead').style.color = slideTextColor;
+  document.getElementById('slideStat').style.color = (n === 2) ? ink.hex : accent1.hex;
+  const slideTag = document.getElementById('slideTag');
+  slideTag.style.backgroundColor = (n === 2) ? ink.hex : accent2.hex;
+  slideTag.style.color = inkFor((n === 2) ? ink.lum : accent2.lum);
+
+  // 2. Context: Technical Specification Document (Pure White Surface)
+  const doc = document.getElementById('docStage');
+  doc.style.backgroundColor = '#FFFFFF';
+  document.getElementById('docEyebrow').style.color = ink.hex;
+  
+  const ths = document.querySelectorAll('#docTable th');
+  ths.forEach(th => th.style.borderBottomColor = ink.hex);
+  
+  const pill = document.getElementById('docRatioPill');
+  pill.style.backgroundColor = accent1.hex;
+  pill.style.color = inkFor(accent1.lum);
+
+  // 3. Context: Native App Interface (Judarn Invariants)
+  const appStage = document.getElementById('appStage');
+  appStage.style.backgroundColor = substrate.hex + '35';
+  const appBadge = document.getElementById('appBadge');
+  appBadge.style.backgroundColor = accent1.hex;
+  appBadge.style.color = inkFor(accent1.lum);
+  const appBadge2 = document.getElementById('appBadge2');
+  appBadge2.style.backgroundColor = accent2.hex;
+  appBadge2.style.color = inkFor(accent2.lum);
+  const appBtn = document.getElementById('appBtn');
+  appBtn.style.backgroundColor = ink.hex;
+  appBtn.style.color = inkFor(ink.lum);
+
+  // 4. Context: Web Editorial Hero
+  const webStage = document.getElementById('webStage');
+  webStage.style.backgroundColor = ink.hex;
+  webStage.style.color = inkFor(ink.lum);
+  const webBtn = document.getElementById('webBtnPrimary');
+  webBtn.style.backgroundColor = accent1.hex;
+  webBtn.style.color = inkFor(accent1.lum);
+  webBtn.onclick = () => switchView('combinations');
+
+  // JSON export: Design Tokens Format Module 2025.10, colours as Color Module objects.
+  const dtcg = (c, extra) => ({
+    "$type": "color",
+    "$value": { colorSpace: "oklch", components: [Number(c.oklch.l), Number(c.oklch.c), Number(c.oklch.h)], ...(extra || {}), hex: c.hex.toLowerCase() }
+  });
+  const exportPayload = {
+    "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+    "color": {
+      "substrate": dtcg(substrate),
+      "surfaceWash": {
+        "$type": "color",
+        "$value": { colorSpace: "oklch", components: [Number(substrate.oklch.l), Number(substrate.oklch.c), Number(substrate.oklch.h)], alpha: 0.15 }
+      },
+      "accent": dtcg(accent1),
+      "accentSecondary": dtcg(accent2),
+      "inkContrast": dtcg(ink)
+    },
+    "$extensions": {
+      "design.judarn": {
+        "theme": `wada-${item.id}`,
+        "title": `Sanzo Wada Harmony #${item.id}`,
+        "paletteSize": item.colors.length,
+        "originalColors": enriched.map(c => ({
+          name: c.name,
+          hex: c.hex,
+          oklch: c.oklch.css
+        }))
+      }
+    }
+  };
+  document.getElementById('exportCode').textContent = JSON.stringify(exportPayload, null, 2);
+
+  if (currentView === 'live-explorer' && !location.hash.startsWith('#color=')) {
+    history.replaceState(null, '', `#palette=${item.id}`);
+  }
+}
+
+function copyThemeJson() {
+  const code = document.getElementById('exportCode').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Copied Judarn OKLCh Token JSON to clipboard');
+  });
+}
+
+function populateSelect(list) {
+  const select = document.getElementById('paletteSelect');
+  select.innerHTML = '';
+  list.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `Combination #${p.id} (${p.colors.length}c: ${p.colors.map(c => c.name).join(', ')})`;
+    select.appendChild(opt);
+  });
+}
+
+// -------------------------------------------------------------
+// 159 Colors Catalog Grid Engine (Search, Filter, Sort)
+// -------------------------------------------------------------
+function onColorSearchInput(val) {
+  colorSearchQuery = val.trim().toLowerCase();
+  const clearBtn = document.getElementById('searchClearBtn');
+  clearBtn.style.display = colorSearchQuery ? 'block' : 'none';
+  renderColorsGrid();
+}
+
+function clearColorSearch() {
+  const input = document.getElementById('colorSearchInput');
+  if (input) input.value = '';
+  colorSearchQuery = '';
+  const clearBtn = document.getElementById('searchClearBtn');
+  if (clearBtn) clearBtn.style.display = 'none';
+  renderColorsGrid();
+}
+
+function onColorSortChange(val) {
+  colorSortOrder = val;
+  renderColorsGrid();
+}
+
+function renderColorsGrid() {
+  const grid = document.getElementById('colorsGrid');
+  const emptyState = document.getElementById('colorsEmptyState');
+  const countBadge = document.getElementById('colorCountBadge');
+
+  let list = enrichedColors.filter(c => {
+    if (!colorSearchQuery) return true;
+    if (c.name.toLowerCase().includes(colorSearchQuery)) return true;
+    if (c.slug.toLowerCase().includes(colorSearchQuery)) return true;
+    if (c.hex.toLowerCase().includes(colorSearchQuery)) return true;
+    if (String(c.id) === colorSearchQuery || ('#' + c.id) === colorSearchQuery) return true;
+    return false;
+  });
+
+  // Sort
+  list.sort((a, b) => {
+    if (colorSortOrder === 'name') return a.name.localeCompare(b.name);
+    if (colorSortOrder === 'usage') return b.combinationIds.length - a.combinationIds.length || a.id - b.id;
+    if (colorSortOrder === 'lightness-desc') return b.lab[0] - a.lab[0];
+    if (colorSortOrder === 'lightness-asc') return a.lab[0] - b.lab[0];
+    if (colorSortOrder === 'hue') return a.oklch.h - b.oklch.h;
+    return a.id - b.id;
+  });
+
+  countBadge.textContent = `Showing ${list.length} of ${enrichedColors.length} colors`;
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  grid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+
+  list.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'color-card';
+    card.title = `Inspect ${c.name} (${c.hex}) & find combinations`;
+    card.onclick = () => openColorModal(c.id);
+
+    const combCount = c.combinationIds.length;
+
+    card.innerHTML = `
+      <div class="color-card-swatch" style="background-color: ${c.hex};">
+        <span class="color-card-badge mono-nums">${combCount} ${combCount === 1 ? 'combo' : 'combos'}</span>
+      </div>
+      <div class="color-card-body">
+        <span class="color-card-hex">${c.hex}</span>
+        <span class="color-card-name">${c.name}</span>
+        <span class="color-card-sub mono-nums">#${c.id} &bull; L* ${c.lab[0].toFixed(1)}</span>
+      </div>
+    `;
+    fragment.appendChild(card);
+  });
+
+  grid.appendChild(fragment);
+}
+
+function randomColor() {
+  const rand = enrichedColors[Math.floor(Math.random() * enrichedColors.length)];
+  openColorModal(rand.id);
+}
+
+// -------------------------------------------------------------
+// Color Detail Inspector Modal
+// -------------------------------------------------------------
+function resolveColor(query) {
+  if (typeof query === 'number') {
+    return enrichedColors.find(c => c.id === query);
+  }
+  if (!query) return null;
+  const q = String(query).toLowerCase().trim();
+  const num = parseInt(q, 10);
+  if (!isNaN(num) && num >= 1 && num <= 159 && (q === String(num) || q === '#' + num)) {
+    const byId = enrichedColors.find(c => c.id === num);
+    if (byId) return byId;
+  }
+  const byHex = enrichedColors.find(c => c.hex.toLowerCase() === (q.startsWith('#') ? q : '#' + q));
+  if (byHex) return byHex;
+  const bySlug = enrichedColors.find(c => c.slug.toLowerCase() === q);
+  if (bySlug) return bySlug;
+  return enrichedColors.find(c => c.name.toLowerCase() === q);
+}
+
+function openColorModal(query) {
+  const color = resolveColor(query);
+  if (!color) return;
+  activeModalColor = color;
+
+  document.getElementById('modalSwatch').style.backgroundColor = color.hex;
+  document.getElementById('modalEyebrow').textContent = `Sanzo Wada Color #${color.id}`;
+  document.getElementById('modalColorName').textContent = color.name;
+  document.getElementById('modalHexBadge').textContent = color.hex;
+
+  const count = color.combinationIds.length;
+  document.getElementById('modalUsageSummary').textContent = `Used across ${count} historical ${count === 1 ? 'combination' : 'combinations'} in A Dictionary of Color Combinations.`;
+  document.getElementById('modalCombinationsTitle').textContent = `Used in ${count} ${count === 1 ? 'Combination' : 'Combinations'}`;
+
+  document.getElementById('valHex').textContent = color.hex;
+  document.getElementById('valRgb').textContent = `${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]}`;
+  document.getElementById('valCmyk').textContent = `${color.cmyk[0]}, ${color.cmyk[1]}, ${color.cmyk[2]}, ${color.cmyk[3]}`;
+  document.getElementById('valLab').textContent = `${color.lab[0]}, ${color.lab[1]}, ${color.lab[2]}`;
+  document.getElementById('valOklch').textContent = color.oklch.css;
+
+  ['hex', 'rgb', 'cmyk', 'lab', 'oklch'].forEach(t => {
+    const btn = document.getElementById(`copyBtn-${t}`);
+    if (btn) {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }
+  });
+
+  const combGrid = document.getElementById('modalCombinationsGrid');
+  combGrid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+
+  color.combinationIds.forEach(combId => {
+    const item = CATALOG.find(p => p.id === combId);
+    if (!item) return;
+
+    const card = document.createElement('div');
+    card.className = 'comb-card';
+    card.title = `Load Combination #${item.id} in Live Explorer`;
+    card.onclick = () => {
+      closeColorModal();
+      loadCombinationIntoExplorer(item.id);
+    };
+
+    let stripes = '<div class="comb-card-strip">';
+    item.colors.forEach(col => {
+      stripes += `<div class="comb-card-stripe" style="background-color: ${col.hex}" title="${col.name}: ${col.hex}"></div>`;
+    });
+    stripes += '</div>';
+
+    card.innerHTML = `
+      ${stripes}
+      <div class="comb-card-meta">
+        <span class="comb-card-title mono-nums">Combination #${item.id}</span>
+        <span class="comb-card-sub small-caps">${item.colors.length} colors</span>
+      </div>
+    `;
+    fragment.appendChild(card);
+  });
+  combGrid.appendChild(fragment);
+
+  const modal = document.getElementById('colorModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  history.replaceState(null, '', `#color=${color.slug}`);
+}
+
+function closeColorModal() {
+  const modal = document.getElementById('colorModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  activeModalColor = null;
+
+  if (currentView === 'live-explorer') {
+    history.replaceState(null, '', `#palette=${currentPaletteId}`);
+  } else if (currentView === 'combinations') {
+    history.replaceState(null, '', '#combinations');
+  } else {
+    history.replaceState(null, '', '#colors');
+  }
+}
+
+function onBackdropClick(e) {
+  if (e.target && e.target.id === 'colorModal') {
+    closeColorModal();
+  }
+}
+
+function copyValue(type) {
+  if (!activeModalColor) return;
+  let text = '';
+  if (type === 'hex') text = activeModalColor.hex;
+  else if (type === 'rgb') text = `rgb(${activeModalColor.rgb.join(', ')})`;
+  else if (type === 'cmyk') text = activeModalColor.cmyk.join(', ');
+  else if (type === 'lab') text = activeModalColor.lab.join(', ');
+  else if (type === 'oklch') text = activeModalColor.oklch.css;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(`copyBtn-${type}`);
+    if (btn) {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+    showToast(`Copied ${text} to clipboard`);
+  });
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2200);
+}
+
+// -------------------------------------------------------------
+// Initialization & Deep Linking
+// -------------------------------------------------------------
+function handleUrlHash() {
+  const hash = location.hash;
+  if (!hash) return;
+
+  if (hash === '#colors') {
+    switchView('colors');
+  } else if (hash === '#combinations') {
+    switchView('combinations');
+  } else if (hash.startsWith('#color=')) {
+    const slug = hash.replace('#color=', '');
+    switchView('colors');
+    openColorModal(slug);
+  } else if (hash.startsWith('#palette=')) {
+    const id = parseInt(hash.replace('#palette=', ''), 10);
+    if (!isNaN(id)) {
+      loadCombinationIntoExplorer(id);
+    }
+  }
+}
+
+function init() {
+  enrichedColors = COLOR_CATALOG.map(c => {
+    const oklch = srgbToOklch(c.rgb[0], c.rgb[1], c.rgb[2]);
+    const lum = getLuminance(c.rgb[0], c.rgb[1], c.rgb[2]);
+    return {
+      ...c,
+      oklch,
+      lum
+    };
+  });
+
+  populateSelect(CATALOG);
+  renderFavorites();
+  renderCombinationsGrid();
+
+  // Escape key closes modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('colorModal').style.display === 'flex') {
+      closeColorModal();
+    }
+  });
+
+  handleUrlHash();
+  window.addEventListener('hashchange', handleUrlHash);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>

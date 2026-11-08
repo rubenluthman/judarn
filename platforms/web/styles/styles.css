@@ -1,0 +1,52 @@
+/* =========================================================================
+   JUDARN DESIGN SYSTEM
+   styles.css – root global stylesheet (compiler entry point)
+   ========================================================================= */
+
+@import "./colors_and_type.css";
+@import "./components.css";
+
+/* ---- Reset / substrate ------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-regular);
+  font-size: var(--size-body);
+  line-height: var(--lh-body);
+  color: var(--fg1);
+  background: var(--bg1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings default to bold neo-grotesque, tight tracking */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--track-head);
+  margin: 0;
+}
+
+p { margin: 0; text-wrap: pretty; }
+
+a { color: inherit; text-decoration: none; }
+
+/* Hairline rule – the canonical divider of the system */
+hr {
+  border: none;
+  border-top: var(--rule) solid var(--line);
+  margin: 0;
+}
+
+/* ---- Utility: the grid ------------------------------------------------- */
+.jd-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap-normal);
+}

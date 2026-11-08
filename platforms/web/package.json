@@ -1,0 +1,84 @@
+{
+  "name": "@judarn/ui",
+  "version": "0.7.1",
+  "description": "Judarn design foundation tokens and React components for the web",
+  "author": "Ruben Luthman",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rubenluthman/judarn.git",
+    "directory": "platforms/web"
+  },
+  "homepage": "https://github.com/rubenluthman/judarn#readme",
+  "bugs": {
+    "url": "https://github.com/rubenluthman/judarn/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "oklch",
+    "react",
+    "tailwind",
+    "sdui",
+    "accessibility",
+    "wcag"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/_ds_bundle.js",
+    "src/tailwind.js",
+    "src/tailwind.d.ts",
+    "styles",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:tokens": "node ../../scripts/compile-tokens.js && node scripts/verify-token-presence.js",
+    "test": "node scripts/verify-token-presence.js && node scripts/build.js && node scripts/verify-unit.js && node scripts/verify-visual.js && node scripts/verify-sdui.js",
+    "test:contrast": "node scripts/verify-contrast.js",
+    "test:visual": "node scripts/verify-visual.js",
+    "test:sdui": "node scripts/verify-sdui.js",
+    "explorer": "open ../../tools/wada-explorer/index.html",
+    "prepack": "node scripts/build.js",
+    "prepublishOnly": "npm test"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./styles": "./styles/styles.css",
+    "./colors": "./styles/colors_and_type.css",
+    "./components.css": "./styles/components.css",
+    "./tailwind": {
+      "types": "./src/tailwind.d.ts",
+      "default": "./src/tailwind.js"
+    },
+    "./theme": "./styles/tailwind-theme.css",
+    "./sdui": {
+      "types": "./dist/sdui/index.d.ts",
+      "import": "./dist/sdui/index.mjs",
+      "require": "./dist/sdui/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

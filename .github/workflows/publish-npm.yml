@@ -1,0 +1,72 @@
+name: Publish npm Package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish, for example v0.7.1"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: platforms/web
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Use an npm CLI that supports trusted publishing
+        run: |
+          npm install -g npm@^11.5.1
+          npm --version
+
+      - name: Verify Release Tag Matches Package Version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "$RELEASE_TAG" != "v${PKG_VERSION}" ]; then
+            echo "::error::Release tag '${RELEASE_TAG}' must equal 'v${PKG_VERSION}' (platforms/web/package.json)" >&2
+            exit 1
+          fi
+
+      - name: Install Dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Verify Token Drift and Parity
+        run: |
+          node ../../scripts/compile-tokens.js --check
+          node scripts/verify-token-presence.js
+
+      - name: Run Web Test Suite
+        run: npm test
+
+      - name: Verify Package Tarball Integrity
+        run: npm pack --dry-run
+
+      - name: Publish to npm Registry (trusted publishing, no stored token)
+        run: npm publish --access public

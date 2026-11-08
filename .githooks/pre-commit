@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Fast checks only. Swift and web tests stay in ./scripts/verify_commit.sh.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+node scripts/verify-adrs.js --staged
+node scripts/compile-tokens.js --check
+node scripts/build-wada-explorer.js --check
+node scripts/sync-version.js --check
+bash scripts/check-release-tag.sh
+python3 scripts/check-markdown-links.py
+
+# House style (Vale): staged prose only, skipped when vale is absent; verify_commit.sh makes it mandatory.
+if command -v vale >/dev/null 2>&1 && [ -d .vale/styles/HouseStyle ]; then
+  staged=$(git diff --cached --name-only --diff-filter=ACM -- '*.md' '*.txt' '*.swift' || true)
+  [ -z "$staged" ] || printf '%s\n' "$staged" | xargs vale --output=line
+fi

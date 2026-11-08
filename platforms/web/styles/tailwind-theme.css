@@ -1,0 +1,59 @@
+/**
+ * Judarn Design System – Tailwind CSS v4 Theme Preset
+ * Bridges Judarn dual-tier OKLCh tokens and 8/4 grid hierarchy directly into Tailwind v4.
+ * Generated from tokens/judarn-tokens.json  –  do not edit directly.
+ */
+@import "./colors_and_type.css";
+
+@theme {
+  /* Surface & Color Tokens */
+  --color-substrate: var(--jd-substrate);
+  --color-surface-elevated: var(--jd-surface-elevated);
+  --color-surface-recessed: var(--jd-surface-recessed);
+  --color-ink-100: var(--jd-ink-100);
+  --color-ink-60: var(--jd-ink-60);
+  --color-ink-30: var(--jd-ink-30);
+  --color-signal-error: var(--jd-signal-error);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
+
+  /* Semantic Aliases. --color-white and --color-black stay at Tailwind's defaults:
+     remapping them to scheme-following colours breaks every white-on-fill utility. */
+  --color-paper: var(--jd-substrate);
+
+  /* Typography Font Slots */
+  --font-display: var(--jd-font-display);
+  --font-body: var(--jd-font-body);
+  --font-data: var(--jd-font-data);
+  --font-mono: var(--jd-font-mono);
+
+  /* 8/4 Spatial Hierarchy Grid */
+  --spacing-half: var(--jd-space-half);
+  --spacing-1: var(--jd-space-1);
+  --spacing-2: var(--jd-space-2);
+  --spacing-3: var(--jd-space-3);
+  --spacing-4: var(--jd-space-4);
+  --spacing-touch: var(--jd-space-touch);
+  --spacing-6: var(--jd-space-6);
+  --spacing-8: var(--jd-space-8);
+  --spacing-12: var(--jd-space-12);
+  --spacing-16: var(--jd-space-16);
+
+  /* Hairline Border Rules */
+  --border-width-rule: var(--jd-rule);
+  --border-width-rule-bold: var(--jd-rule-bold);
+  --border-width-rule-heavy: var(--jd-rule-heavy);
+
+  /* Platform Authority Radii (ADR-0002) */
+  --radius-subtle: var(--jd-radius-subtle, 6px);
+  --radius-control: var(--jd-radius-control, 10px);
+  --radius-card: var(--jd-radius-card, 16px);
+  --radius-badge: var(--jd-radius-badge, 9999px);
+  --radius-sm: var(--jd-radius-subtle, 6px);
+  --radius-md: var(--jd-radius-control, 10px);
+  --radius-lg: var(--jd-radius-card, 16px);
+  --radius-xl: var(--jd-radius-card, 16px);
+  --radius-2xl: var(--jd-radius-card, 16px);
+  --radius-full: var(--jd-radius-badge, 9999px);
+}

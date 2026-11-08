@@ -1,0 +1,6 @@
+# Exclude local build & validation scripts from tarball
+scripts/
+examples/
+**/*.card.html
+*.log
+.DS_Store

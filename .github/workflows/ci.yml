@@ -1,0 +1,77 @@
+name: Judarn Monorepo CI
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-cross-platform:
+    name: Cross-Platform Verification & Governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+
+      - name: Verify ADR Governance
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          node --test scripts/verify-adrs.test.js
+          if [ -n "$BASE_SHA" ]; then
+            node scripts/verify-adrs.js --range "$BASE_SHA..$GITHUB_SHA"
+          else
+            node scripts/verify-adrs.js
+          fi
+
+      - name: Verify Design Token Parity
+        run: node scripts/compile-tokens.js --check
+
+      - name: Web Platform Test & Packaging Hygiene
+        run: |
+          npm --prefix platforms/web ci --no-audit --no-fund
+          npm --prefix platforms/web test
+          (cd platforms/web && npm pack --dry-run)
+
+      - name: Verify Cross-Platform Version Synchronization
+        run: node scripts/sync-version.js --check
+
+      - name: Verify External Consumption Contracts
+        run: node scripts/verify-consumption.js
+
+  apple-native:
+    name: Apple Native Build & Test
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: |
+          XCODE_APP=""
+          for v in 16.2 16.1 16.0; do
+            if [ -d "/Applications/Xcode_${v}.app" ]; then XCODE_APP="/Applications/Xcode_${v}.app"; break; fi
+          done
+          if [ -z "$XCODE_APP" ]; then
+            echo "::error::No Xcode 16.x found on this runner" >&2
+            ls /Applications | grep -i xcode >&2 || true
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE_APP"
+          xcodebuild -version
+
+      - name: Apple Native Build & Test
+        run: |
+          swift build
+          swift test

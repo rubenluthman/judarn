@@ -1,0 +1,30 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "color": {
+    "substrate": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.205, 0, 0], "hex": "#171717" } },
+    "surfaceElevated": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.252, 0, 0], "hex": "#222222" } },
+    "surfaceRecessed": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.173, 0, 0], "hex": "#101010" } },
+    "ink100": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.98, 0, 0], "hex": "#f8f8f8" } },
+    "ink60": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.72, 0.005, 92], "hex": "#a6a4a1" } },
+    "ink30": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.35, 0.004, 92], "hex": "#3b3a38" } },
+    "signalError": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.68, 0.2, 25], "hex": "#fc5855" } }
+  },
+  "theme": {
+    "wada119": {
+      "substrate": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.25, 0.04, 243.1], "hex": "#0f2433" } },
+      "surfaceElevated": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.317, 0.06, 243.1], "hex": "#12354e" },
+        "$extensions": {
+          "design.judarn": { "name": "Dark Tyrian Blue" }
+        }
+      },
+      "surfaceRecessed": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.18, 0.03, 243.1], "hex": "#05131e" } }
+    },
+    "wada264": {
+      "substrate": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.18, 0.02, 14.8], "hex": "#1a0e0f" } },
+      "surfaceElevated": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.22, 0.015, 125.6], "hex": "#191c14" } },
+      "surfaceRecessed": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.12, 0.015, 14.8], "hex": "#0a0404" } }
+    }
+  }
+}

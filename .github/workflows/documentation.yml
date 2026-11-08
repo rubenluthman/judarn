@@ -1,0 +1,55 @@
+name: Deploy DocC Documentation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: |
+          XCODE_APP=""
+          for v in 16.2 16.1 16.0; do
+            if [ -d "/Applications/Xcode_${v}.app" ]; then XCODE_APP="/Applications/Xcode_${v}.app"; break; fi
+          done
+          if [ -z "$XCODE_APP" ]; then
+            echo "::error::No Xcode 16.x found on this runner" >&2
+            ls /Applications | grep -i xcode >&2 || true
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE_APP"
+          xcodebuild -version
+
+      - name: Build DocC Documentation
+        run: |
+          swift package --allow-writing-to-directory ./docs-out \
+            generate-documentation --target Judarn \
+            --output-path ./docs-out \
+            --transform-for-static-hosting \
+            --hosting-base-path judarn
+
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs-out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

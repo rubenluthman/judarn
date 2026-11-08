@@ -1,0 +1,543 @@
+/* =========================================================================
+   JUDARN DESIGN SYSTEM
+   colors_and_type.css  –  design tokens (color + type + grid)
+   Generated from tokens/judarn-tokens.json  –  do not edit directly.
+   Flat color only. No gradients, no shadows, no tints unless explicit.
+   ========================================================================= */
+
+:root {
+  font-optical-sizing: auto;
+
+  /* ---------------------------------------------------------------------
+     GRID & SPACING  –  8pt macro grid + 4pt micro subgrid.
+     --------------------------------------------------------------------- */
+  --jd-space-half: 4px;     /* micro spacing / leading / hairline offset */
+  --jd-space-1: 8px;
+  --jd-space-2: 16px;
+  --jd-space-3: 24px;
+  --jd-space-4: 32px;
+  --jd-space-touch: 44px;   /* Touch target floor (11 * 4px) */
+  --jd-space-6: 48px;
+  --jd-space-8: 64px;
+  --jd-space-12: 96px;
+  --jd-space-16: 128px;
+
+  --jd-pad-default: 16px;   /* standard frame padding, H & V */
+  --jd-pad-large: 32px;     /* larger frames: 24–32 */
+  --jd-gap-tight: 8px;
+  --jd-gap-normal: 16px;
+
+  --jd-rule: 1px;           /* hairline rules  –  the only "decoration" allowed */
+  --jd-rule-bold: 2px;
+  --jd-rule-heavy: 4px;
+
+  --jd-measure-body: 65ch;   /* max column measure for continuous body reading */
+  --jd-measure-compact: 45ch; /* max column measure for cards / sidebars */
+  --jd-measure-sidebar: 260px; /* compact desktop pane and sidebar measure */
+
+  --jd-radius-subtle: 6px;
+  --jd-radius-control: 10px;
+  --jd-radius-card: 16px;
+  --jd-radius-badge: 9999px;
+
+  /* Backward-compatible aliases */
+  --space-half: var(--jd-space-half);
+  --space-1: var(--jd-space-1);
+  --space-2: var(--jd-space-2);
+  --space-3: var(--jd-space-3);
+  --space-4: var(--jd-space-4);
+  --space-touch: var(--jd-space-touch);
+  --space-6: var(--jd-space-6);
+  --space-8: var(--jd-space-8);
+  --space-12: var(--jd-space-12);
+  --space-16: var(--jd-space-16);
+  --pad-default: var(--jd-pad-default);
+  --pad-large: var(--jd-pad-large);
+  --gap-tight: var(--jd-gap-tight);
+  --gap-normal: var(--jd-gap-normal);
+  --rule: var(--jd-rule);
+  --rule-bold: var(--jd-rule-bold);
+  --rule-heavy: var(--jd-rule-heavy);
+  --measure-body: var(--jd-measure-body);
+  --measure-compact: var(--jd-measure-compact);
+  --measure-sidebar: var(--jd-measure-sidebar);
+  --radius-subtle: var(--jd-radius-subtle);
+  --radius-control: var(--jd-radius-control);
+  --radius-card: var(--jd-radius-card);
+  --radius-badge: var(--jd-radius-badge);
+
+  /* ---------------------------------------------------------------------
+     4-TIER SURFACE TAXONOMY & DYNAMIC OKLCH NEUTRALS
+     Authored strictly in OKLCH: oklch(L C H).
+     Light scheme defaults:
+     --------------------------------------------------------------------- */
+  --jd-substrate:        oklch(1.000 0.000 0);  /* #FFFFFF Pure White */
+  --jd-surface-elevated: oklch(0.980 0.000 0);  /* #F8F8F8 Crisp Neutral Box */
+  --jd-surface-recessed: oklch(0.958 0.000 0);  /* #F1F1F1 Sunken Well / Hover */
+
+  --jd-ink-100:          oklch(0.080 0.000 0);       /* #020202 Optical Black */
+  --jd-ink-60:           oklch(0.520 0.005 92);  /* #6A6966 Secondary Ink (>=4.8:1 AA) */
+  --jd-ink-30:           oklch(0.780 0.005 92);  /* #B8B7B4 Hairline / Disabled */
+  --jd-ink100:           var(--jd-ink-100);
+  --jd-ink60:            var(--jd-ink-60);
+  --jd-ink30:            var(--jd-ink-30);
+  --jd-signal-error:     oklch(0.530 0.214 25);  /* #CA0221 Accessible Error */
+  --jd-signal-error-hc:  oklch(0.415 0.168 25);
+
+  /* Aliases dynamically mapped to active scheme */
+  --jd-black:   var(--jd-ink-100);
+  --jd-white:   var(--jd-surface-elevated);
+  --jd-paper:   var(--jd-substrate);
+  --jd-line:    var(--jd-ink-100);
+
+  --black:        var(--jd-black);
+  --white:        var(--jd-white);
+  --paper:        var(--jd-paper);
+  --ink-100:      var(--jd-ink-100);
+  --ink-60:       var(--jd-ink-60);
+  --ink-30:       var(--jd-ink-30);
+  --signal-error: var(--jd-signal-error);
+  --line:         var(--jd-line);
+
+  /* ---------------------------------------------------------------------
+     PROJECT ACCENT  –  single per-project hook. Authored in OKLCH.
+     --------------------------------------------------------------------- */
+  /* Project hooks, unset by default: --jd-accent, --jd-accent-fg, --jd-accent-ink, --jd-accent-2.
+     The resolved --accent, --accent-fg, --accent-ink and --accent-2 are declared in every theme
+     scope so a nested scope resolves its own default; a hook set on :root survives nesting.
+     --accent defaults to ink-100 and --accent-fg to --accent. --accent-ink is static ink on an
+     accent fill (ADR-0006); a project that sets --jd-accent sets --jd-accent-ink too. */
+  --accent:       var(--jd-accent, var(--jd-ink-100));
+  --accent-fg:    var(--jd-accent-fg, var(--accent));
+  --accent-ink:   var(--jd-accent-ink, #ffffff);
+  --accent-2:     var(--jd-accent-2, oklch(0.520 0.005 92));
+
+  /* ---------------------------------------------------------------------
+     THREE-COLOR PALETTE (optional)  –  primary / secondary / tertiary.
+     --------------------------------------------------------------------- */
+  --jd-primary:   var(--accent);
+  --jd-secondary: var(--jd-ink-60);
+  --jd-tertiary:  var(--jd-ink-30);
+  --primary:      var(--jd-primary);
+  --secondary:    var(--jd-secondary);
+  --tertiary:     var(--jd-tertiary);
+
+  /* ---------------------------------------------------------------------
+     SEMANTIC ROLES  –  default (neutral) context
+     --------------------------------------------------------------------- */
+  --jd-fg1: var(--jd-ink-100);   /* primary text */
+  --jd-fg2: var(--jd-ink-60);   /* secondary text / labels */
+  --jd-fg3: var(--jd-ink-30);   /* disabled / hairline ink */
+  --jd-bg1: var(--jd-substrate); /* primary surface / canvas */
+  --jd-bg2: var(--jd-surface-elevated); /* secondary field / elevated */
+
+  --fg1: var(--jd-fg1);
+  --fg2: var(--jd-fg2);
+  --fg3: var(--jd-fg3);
+  --bg1: var(--jd-bg1);
+  --bg2: var(--jd-bg2);
+
+  /* ---------------------------------------------------------------------
+     TYPE  –  System sans-serif by default (e.g. San Francisco, Segoe UI).
+     --------------------------------------------------------------------- */
+  --jd-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --jd-font-bold: var(--jd-font-sans);
+  --font-sans: var(--jd-font-sans);
+  --font-bold: var(--jd-font-bold);
+
+  /* Pluggable Font Slots */
+  --jd-font-display: var(--jd-font-sans);
+  --jd-font-body:    var(--jd-font-sans);
+  --jd-font-data:    var(--jd-font-sans);
+  --jd-font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-display:    var(--jd-font-display);
+  --font-body:       var(--jd-font-body);
+  --font-data:       var(--jd-font-data);
+  --font-mono:       var(--jd-font-mono);
+
+  --jd-weight-regular: 400;  /* Roman */
+  --jd-weight-medium: 500;   /* Medium */
+  --jd-weight-bold: 800;     /* Heavy  –  headings / display */
+  --jd-weight-black: 900;    /* Black  –  large display only */
+
+  --weight-regular: var(--jd-weight-regular);
+  --weight-medium: var(--jd-weight-medium);
+  --weight-bold: var(--jd-weight-bold);
+  --weight-black: var(--jd-weight-black);
+
+  /* Tracking */
+  --jd-track-display: -0.02em;
+  --jd-track-head: -0.01em;
+  --jd-track-body: 0em;
+  --jd-track-label: 0.06em;
+  --jd-track-micro: 0.08em;
+
+  --track-display: var(--jd-track-display);
+  --track-head: var(--jd-track-head);
+  --track-body: var(--jd-track-body);
+  --track-label: var(--jd-track-label);
+  --track-micro: var(--jd-track-micro);
+
+  /* Type scale */
+  --jd-size-display: 96px;
+  --jd-size-h1: 64px;
+  --jd-size-h2: 44px;
+  --jd-size-h3: 32px;
+  --jd-size-h4: 24px;
+  --jd-size-body-lg: 20px;
+  --jd-size-body: 16px;
+  --jd-size-small: 14px;
+  --jd-size-label: 12px;
+  --jd-size-micro: 10px;
+  --jd-size-data: 14px;
+  --jd-size-mono: 12px;
+
+  --size-display: var(--jd-size-display);
+  --size-h1: var(--jd-size-h1);
+  --size-h2: var(--jd-size-h2);
+  --size-h3: var(--jd-size-h3);
+  --size-h4: var(--jd-size-h4);
+  --size-body-lg: var(--jd-size-body-lg);
+  --size-body: var(--jd-size-body);
+  --size-small: var(--jd-size-small);
+  --size-label: var(--jd-size-label);
+  --size-micro: var(--jd-size-micro);
+  --size-data: var(--jd-size-data);
+  --size-mono: var(--jd-size-mono);
+
+  --lh-tight: 1;
+  --lh-head: 1.0625;
+  --lh-body: 1.25;
+}
+
+/* =========================================================================
+   SEMANTIC TYPE CLASSES
+   ========================================================================= */
+.t-display {
+  font-family: var(--jd-font-display);
+  font-weight: var(--jd-weight-black);
+  font-size: var(--jd-size-display);
+  line-height: 1;
+  letter-spacing: var(--jd-track-display);
+  text-wrap: balance;
+  color: var(--jd-ink-100);
+}
+.t-h1 {
+  font-family: var(--jd-font-display);
+  font-weight: var(--jd-weight-bold);
+  font-size: var(--jd-size-h1);
+  line-height: 1.0625;
+  letter-spacing: var(--jd-track-head);
+  text-wrap: balance;
+  color: var(--jd-ink-100);
+}
+.t-h2 {
+  font-family: var(--jd-font-display);
+  font-weight: var(--jd-weight-bold);
+  font-size: var(--jd-size-h2);
+  line-height: 1.0909090909090908;
+  letter-spacing: var(--jd-track-head);
+  text-wrap: balance;
+  color: var(--jd-ink-100);
+}
+.t-h3 {
+  font-family: var(--jd-font-display);
+  font-weight: var(--jd-weight-bold);
+  font-size: var(--jd-size-h3);
+  line-height: 1.125;
+  letter-spacing: var(--jd-track-head);
+  text-wrap: balance;
+  color: var(--jd-ink-100);
+}
+.t-h4 {
+  font-family: var(--jd-font-body);
+  font-weight: var(--jd-weight-bold);
+  font-size: var(--jd-size-h4);
+  line-height: 1.1666666666666667;
+  letter-spacing: var(--jd-track-head);
+  text-wrap: balance;
+  color: var(--jd-ink-100);
+}
+.t-body-lg {
+  font-family: var(--jd-font-body);
+  font-weight: var(--jd-weight-regular);
+  font-size: var(--jd-size-body-lg);
+  line-height: 1.2;
+  letter-spacing: var(--jd-track-body);
+  text-wrap: pretty;
+  color: var(--jd-ink-100);
+}
+.t-body {
+  font-family: var(--jd-font-body);
+  font-weight: var(--jd-weight-regular);
+  font-size: var(--jd-size-body);
+  line-height: 1.25;
+  letter-spacing: var(--jd-track-body);
+  text-wrap: pretty;
+  color: var(--jd-ink-100);
+}
+.t-small {
+  font-family: var(--jd-font-body);
+  font-weight: var(--jd-weight-regular);
+  font-size: var(--jd-size-small);
+  line-height: 1.1428571428571428;
+  letter-spacing: var(--jd-track-body);
+  color: var(--jd-ink-60);
+}
+.t-label {
+  font-family: var(--jd-font-body);
+  font-weight: var(--jd-weight-bold);
+  font-size: var(--jd-size-label);
+  line-height: 1.3333333333333333;
+  letter-spacing: var(--jd-track-label);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--jd-ink-60);
+}
+.t-micro {
+  font-family: var(--jd-font-body);
+  font-weight: var(--jd-weight-medium);
+  font-size: var(--jd-size-micro);
+  line-height: 1.2;
+  letter-spacing: var(--jd-track-micro);
+  text-transform: uppercase;
+  font-feature-settings: "case" 1;
+  color: var(--jd-ink-60);
+}
+.t-data {
+  font-family: var(--jd-font-data);
+  font-weight: var(--jd-weight-regular);
+  font-size: var(--jd-size-data);
+  line-height: 1.4285714285714286;
+  letter-spacing: var(--jd-track-body);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  color: var(--jd-ink-100);
+}
+.t-mono {
+  font-family: var(--jd-font-mono);
+  font-weight: var(--jd-weight-regular);
+  font-size: var(--jd-size-mono);
+  line-height: 1.3333333333333333;
+  letter-spacing: 0em;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-ligatures: none;
+  color: var(--jd-ink-100);
+}
+/* As-written casing for the uppercase label styles: statuses, counts, values, units, messages, controls (ADR-0009). */
+.t-label.t-as-written,
+.t-micro.t-as-written {
+  text-transform: none;
+  letter-spacing: var(--jd-track-body);
+  font-feature-settings: normal;
+}
+.t-editorial-nums {
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-feature-settings: "onum" 1, "pnum" 1;
+}
+
+/* =========================================================================
+   DYNAMIC SCHEME: DUAL-TIER CARBON (DARK MODE)
+   ========================================================================= */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --jd-substrate:        oklch(0.205 0.000 0);  /* #171717 Deep Carbon */
+    --jd-surface-elevated: oklch(0.252 0.000 0);  /* #222222 Carbon Surface */
+    --jd-surface-recessed: oklch(0.173 0.000 0);  /* #101010 Sunken Well / Hover */
+
+    --jd-ink-100:          oklch(0.980 0.000 0);       /* #F8F8F8 Optical White (>=15.0:1 AAA) */
+    --jd-ink-60:           oklch(0.720 0.005 92);  /* #A6A4A1 Secondary Ink (>6.4:1 AA) */
+    --jd-ink-30:           oklch(0.350 0.004 92);  /* #3B3A38 Hairline / Disabled */
+    --jd-signal-error:     oklch(0.680 0.200 25);  /* #FC5855 Accessible Error */
+    --jd-signal-error-hc:  oklch(0.762 0.141 25);
+    --accent-ink:          var(--jd-accent-ink, #000000);
+  }
+}
+
+/* Standalone so a bundle that drops the dark scope selector below (a downstream bundler may strip
+   the [data-theme="dark"] list entry and the prefers-color-scheme block) still gives a dark page its dark ink. */
+:root[data-theme="dark"] {
+  --accent-ink: var(--jd-accent-ink, #000000);
+}
+
+[data-theme="dark"],
+.palette-dark {
+  --jd-substrate:        oklch(0.205 0.000 0);
+  --jd-surface-elevated: oklch(0.252 0.000 0);
+  --jd-surface-recessed: oklch(0.173 0.000 0);
+
+  --jd-ink-100:          oklch(0.980 0.000 0);
+  --jd-ink-60:           oklch(0.720 0.005 92);
+  --jd-ink-30:           oklch(0.350 0.004 92);
+  --jd-signal-error:     oklch(0.680 0.200 25);
+  --jd-signal-error-hc:  oklch(0.762 0.141 25);
+  --jd-ink100:    var(--jd-ink-100);
+  --jd-ink60:     var(--jd-ink-60);
+  --jd-ink30:     var(--jd-ink-30);
+  --jd-black:     var(--jd-ink-100);
+  --jd-white:     var(--jd-surface-elevated);
+  --jd-paper:     var(--jd-substrate);
+  --jd-line:      var(--jd-ink-100);
+  --black:        var(--jd-black);
+  --white:        var(--jd-white);
+  --paper:        var(--jd-paper);
+  --ink-100:      var(--jd-ink-100);
+  --ink-60:       var(--jd-ink-60);
+  --ink-30:       var(--jd-ink-30);
+  --signal-error: var(--jd-signal-error);
+  --line:         var(--jd-line);
+  --rule:         var(--jd-rule);
+  --accent:       var(--jd-accent, var(--jd-ink-100));
+  --accent-fg:    var(--jd-accent-fg, var(--accent));
+  --accent-2:     var(--jd-accent-2, oklch(0.520 0.005 92));
+  --accent-ink:   var(--jd-accent-ink, #000000);
+  --jd-primary:   var(--accent);
+  --jd-secondary: var(--jd-ink-60);
+  --jd-tertiary:  var(--jd-ink-30);
+  --primary:      var(--jd-primary);
+  --secondary:    var(--jd-secondary);
+  --tertiary:     var(--jd-tertiary);
+  --jd-fg1: var(--jd-ink-100);
+  --jd-fg2: var(--jd-ink-60);
+  --jd-fg3: var(--jd-ink-30);
+  --jd-bg1: var(--jd-substrate);
+  --jd-bg2: var(--jd-surface-elevated);
+  --fg1: var(--jd-fg1);
+  --fg2: var(--jd-fg2);
+  --fg3: var(--jd-fg3);
+  --bg1: var(--jd-bg1);
+  --bg2: var(--jd-bg2);
+}
+
+/* Nested light subtree inside a dark page. */
+[data-theme="light"] {
+  --jd-substrate:        oklch(1.000 0.000 0);
+  --jd-surface-elevated: oklch(0.980 0.000 0);
+  --jd-surface-recessed: oklch(0.958 0.000 0);
+
+  --jd-ink-100:          oklch(0.080 0.000 0);
+  --jd-ink-60:           oklch(0.520 0.005 92);
+  --jd-ink-30:           oklch(0.780 0.005 92);
+  --jd-signal-error:     oklch(0.530 0.214 25);
+  --jd-signal-error-hc:  oklch(0.415 0.168 25);
+  --jd-ink100:    var(--jd-ink-100);
+  --jd-ink60:     var(--jd-ink-60);
+  --jd-ink30:     var(--jd-ink-30);
+  --jd-black:     var(--jd-ink-100);
+  --jd-white:     var(--jd-surface-elevated);
+  --jd-paper:     var(--jd-substrate);
+  --jd-line:      var(--jd-ink-100);
+  --black:        var(--jd-black);
+  --white:        var(--jd-white);
+  --paper:        var(--jd-paper);
+  --ink-100:      var(--jd-ink-100);
+  --ink-60:       var(--jd-ink-60);
+  --ink-30:       var(--jd-ink-30);
+  --signal-error: var(--jd-signal-error);
+  --line:         var(--jd-line);
+  --rule:         var(--jd-rule);
+  --accent:       var(--jd-accent, var(--jd-ink-100));
+  --accent-fg:    var(--jd-accent-fg, var(--accent));
+  --accent-2:     var(--jd-accent-2, oklch(0.520 0.005 92));
+  --accent-ink:   var(--jd-accent-ink, #ffffff);
+  --jd-primary:   var(--accent);
+  --jd-secondary: var(--jd-ink-60);
+  --jd-tertiary:  var(--jd-ink-30);
+  --primary:      var(--jd-primary);
+  --secondary:    var(--jd-secondary);
+  --tertiary:     var(--jd-tertiary);
+  --jd-fg1: var(--jd-ink-100);
+  --jd-fg2: var(--jd-ink-60);
+  --jd-fg3: var(--jd-ink-30);
+  --jd-bg1: var(--jd-substrate);
+  --jd-bg2: var(--jd-surface-elevated);
+  --fg1: var(--jd-fg1);
+  --fg2: var(--jd-fg2);
+  --fg3: var(--jd-fg3);
+  --bg1: var(--jd-bg1);
+  --bg2: var(--jd-bg2);
+}
+
+/* =========================================================================
+   ACCESSIBILITY: HIGH CONTRAST (PREFERS-CONTRAST: MORE & DATA-CONTRAST="HIGH")
+   Promotes secondary ink to AAA (>=7.0:1) and calibrates signalError to AAA.
+   Scales hairline rules to 2px bold rules.
+   The scheme-specific AAA error colour lives in --jd-signal-error-hc, set by the scheme
+   rules above, so one high-contrast rule serves light and dark. Every selector below has
+   specificity equal to or above the matching scheme rule and appears after it.
+   ========================================================================= */
+@media (prefers-contrast: more) {
+  :root:not([data-contrast="normal"]),
+  [data-theme]:not([data-contrast="normal"]),
+  .palette-dark:not([data-contrast="normal"]) {
+    --jd-rule: var(--jd-rule-bold);
+    --rule: var(--jd-rule-bold);
+    --jd-ink-60: var(--jd-ink-100);
+    --jd-ink-30: var(--jd-ink-100);
+    --jd-signal-error: var(--jd-signal-error-hc);
+  }
+}
+
+:root[data-contrast="high"],
+[data-contrast="high"],
+[data-contrast="high"] [data-theme],
+[data-contrast="high"] .palette-dark,
+[data-theme][data-contrast="high"],
+.palette-dark[data-contrast="high"] {
+  --jd-rule: var(--jd-rule-bold);
+  --rule: var(--jd-rule-bold);
+  --jd-ink-60: var(--jd-ink-100);
+  --jd-ink-30: var(--jd-ink-100);
+  --jd-signal-error: var(--jd-signal-error-hc);
+}
+
+/* =========================================================================
+   EXAMPLE PALETTES
+   ========================================================================= */
+.palette-pastel {
+  --jd-ink100:    var(--jd-ink-100);
+  --jd-ink60:     var(--jd-ink-60);
+  --jd-ink30:     var(--jd-ink-30);
+  --jd-black:     var(--jd-ink-100);
+  --jd-white:     var(--jd-surface-elevated);
+  --jd-paper:     var(--jd-substrate);
+  --jd-line:      var(--jd-ink-100);
+  --black:        var(--jd-black);
+  --white:        var(--jd-white);
+  --paper:        var(--jd-paper);
+  --ink-100:      var(--jd-ink-100);
+  --ink-60:       var(--jd-ink-60);
+  --ink-30:       var(--jd-ink-30);
+  --signal-error: var(--jd-signal-error);
+  --line:         var(--jd-line);
+  --rule:         var(--jd-rule);
+  --accent:       var(--jd-accent, var(--jd-ink-100));
+  --accent-fg:    var(--jd-accent-fg, var(--accent));
+  --accent-2:     var(--jd-accent-2, oklch(0.520 0.005 92));
+  --jd-primary:   var(--accent);
+  --jd-secondary: var(--jd-ink-60);
+  --jd-tertiary:  var(--jd-ink-30);
+  --primary:      var(--jd-primary);
+  --secondary:    var(--jd-secondary);
+  --tertiary:     var(--jd-tertiary);
+  --jd-fg1: var(--jd-ink-100);
+  --jd-fg2: var(--jd-ink-60);
+  --jd-fg3: var(--jd-ink-30);
+  --jd-bg1: var(--jd-substrate);
+  --jd-bg2: var(--jd-surface-elevated);
+  --fg1: var(--jd-fg1);
+  --fg2: var(--jd-fg2);
+  --fg3: var(--jd-fg3);
+  --bg1: var(--jd-bg1);
+  --bg2: var(--jd-bg2);
+  --jd-bg1: var(--jd-paper);
+  --jd-bg2: oklch(0.93 0.012 92);
+  --jd-fg1: oklch(0.20 0 0);
+  --jd-fg2: var(--jd-ink-60);
+  --jd-line: oklch(0.20 0 0);
+  --jd-primary:   oklch(0.88 0.05 250);
+  --jd-secondary: oklch(0.88 0.06 30);
+  --jd-tertiary:  oklch(0.88 0.05 150);
+  --jd-accent: var(--jd-primary);
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judarn Slide Starter – Technical / Data (Light)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Judarn Typography Primitives */
+    --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+    /* Base Light Surfaces & Text */
+    --paper: #FFFFFF;
+    --ink-100: #0C0C0C;
+    --ink-60: #6B6A68;
+    --border-subtle: #E5E7EB;
+    --border-strong: #12354e;
+
+    /* Sanzo Wada Harmony: Combination 119 */
+    --accent-dark: #12354e; /* Dark Tyrian Blue */
+    --accent: #a5c8d1;      /* Light Glaucous Blue */
+    --accent-tint: rgba(165, 200, 209, 0.22);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #E5E7EB;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  /* 16:9 Presentation Slide Canvas */
+  .slide-container {
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    background: var(--paper);
+    color: var(--ink-100);
+    border-radius: 12px;
+    padding: 56px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+  }
+
+  /* Header Group */
+  .slide-header {
+    margin-bottom: 24px;
+  }
+
+  .slide-h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent-dark);
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+
+  .slide-sub {
+    font-size: 14.5px;
+    color: var(--ink-60);
+    line-height: 1.45;
+  }
+
+  /* Full-Width Tabular Data Matrix */
+  .slide-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .slide-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-dark);
+    padding: 10px 14px;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 2px solid var(--border-strong);
+  }
+
+  .slide-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #EAEAEA;
+    color: var(--ink-100);
+    vertical-align: middle;
+  }
+
+  .slide-table td.num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .slide-table th.num {
+    text-align: right;
+  }
+
+  /* Right-Aligned Status Column */
+  .slide-table th.status-col,
+  .slide-table td.status-col {
+    text-align: right;
+  }
+
+  .status-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .status-pass {
+    background: var(--accent-tint);
+    color: var(--accent-dark);
+  }
+
+  .status-opt {
+    background: #E8F5E9;
+    color: #1B5E20;
+  }
+
+  /* Optional Numbering Hook (Omitted by default) */
+  .slide-number-slot {
+    display: none;
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-60);
+    font-variant-numeric: tabular-nums;
+  }
+  .slide-container.show-number .slide-number-slot {
+    display: block;
+  }
+
+  /* Print Stylesheet for Presentation Deck PDF Export */
+  @media print {
+    body {
+      background: transparent;
+      padding: 0;
+      min-height: auto;
+    }
+    .slide-container {
+      max-width: none;
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      box-shadow: none;
+      page-break-after: always;
+    }
+    @page {
+      size: 16in 9in landscape;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- Header Section -->
+  <div class="slide-header">
+    <h1 class="slide-h1">Cross-Platform Surface Hierarchy &amp; Contrast Matrix</h1>
+    <p class="slide-sub">
+      Contrast of the color roles against the substrate, per appearance.
+    </p>
+  </div>
+
+  <!-- Tabular Matrix with Right-Aligned Status -->
+  <table class="slide-table">
+    <thead>
+      <tr>
+        <th style="width: 22%;">Role</th>
+        <th style="width: 20%;">Token Slot</th>
+        <th style="width: 24%;">OKLCh Coordinates</th>
+        <th class="num" style="width: 12%;">Luminance</th>
+        <th class="num" style="width: 10%;">Contrast</th>
+        <th class="status-col" style="width: 12%;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Primary Canvas</strong></td>
+        <td><code>color.substrate</code></td>
+        <td><code>oklch(0.317 0.060 243.1)</code></td>
+        <td class="num">0.032</td>
+        <td class="num">12.77:1</td>
+        <td class="status-col"><span class="status-pill status-pass">Passed AAA</span></td>
+      </tr>
+      <tr>
+        <td><strong>Accent Highlight</strong></td>
+        <td><code>color.accent</code></td>
+        <td><code>oklch(0.598 0.088 254.1)</code></td>
+        <td class="num">0.214</td>
+        <td class="num">3.21:1</td>
+        <td class="status-col"><span class="status-pill status-opt">AA, large text</span></td>
+      </tr>
+      <tr>
+        <td><strong>Grid Hairline</strong></td>
+        <td><code>border.rule</code></td>
+        <td><code>1px solid var(--accent-dark)</code></td>
+        <td class="num">0.032</td>
+        <td class="num">&gt;7.0:1</td>
+        <td class="status-col"><span class="status-pill status-pass">Passed AAA</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Optional Number Hook (Can be activated via class "show-number") -->
+  <div class="slide-number-slot">04/11</div>
+
+</div>
+
+</body>
+</html>

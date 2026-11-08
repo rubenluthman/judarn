@@ -1,0 +1,64 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "color": {
+    "substrate": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [1, 0, 0], "hex": "#ffffff" } },
+    "surfaceElevated": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.98, 0, 0], "hex": "#f8f8f8" } },
+    "surfaceRecessed": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.958, 0, 0], "hex": "#f1f1f1" } },
+    "ink100": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.08, 0, 0], "hex": "#020202" } },
+    "ink60": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.52, 0.005, 92], "hex": "#6a6966" } },
+    "ink30": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.78, 0.005, 92], "hex": "#b8b7b4" } },
+    "signalError": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.53, 0.214, 25], "hex": "#ca0221" } }
+  },
+  "theme": {
+    "wada119": {
+      "substrate": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [1, 0, 0], "hex": "#ffffff" } },
+      "surfaceElevated": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.98, 0, 0], "hex": "#f8f8f8" } },
+      "surfaceRecessed": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.958, 0, 0], "hex": "#f1f1f1" } },
+      "accent": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.81, 0.039, 215.1], "hex": "#a5c8d1" },
+        "$extensions": {
+          "design.judarn": { "name": "Light Glaucous Blue" }
+        }
+      },
+      "accentSecondary": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.317, 0.06, 243.1], "hex": "#12354e" },
+        "$extensions": {
+          "design.judarn": { "name": "Dark Tyrian Blue" }
+        }
+      }
+    },
+    "wada264": {
+      "substrate": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.784, 0.035, 125.6], "hex": "#b3bda5" },
+        "$extensions": {
+          "design.judarn": { "name": "Dark Greenish Glaucous" }
+        }
+      },
+      "surfaceElevated": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.838, 0.077, 14.8], "hex": "#f8b6ba" },
+        "$extensions": {
+          "design.judarn": { "name": "Corinthian Pink" }
+        }
+      },
+      "surfaceRecessed": { "$type": "color", "$value": { "colorSpace": "oklch", "components": [0.74, 0.03, 125.6], "hex": "#a6af9a" } },
+      "accent": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.575, 0.118, 214.5], "hex": "#00879e" },
+        "$extensions": {
+          "design.judarn": { "name": "Cerulian Blue" }
+        }
+      },
+      "accentSecondary": {
+        "$type": "color",
+        "$value": { "colorSpace": "oklch", "components": [0.574, 0.219, 38.2], "hex": "#ce4100" },
+        "$extensions": {
+          "design.judarn": { "name": "Red Orange" }
+        }
+      }
+    }
+  }
+}

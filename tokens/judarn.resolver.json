@@ -1,0 +1,58 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+  "version": "2025.10",
+  "name": "Judarn",
+  "description": "Foundation tokens plus one colour context per appearance. High-contrast contexts layer their overrides on the matching light or dark context.",
+  "sets": {
+    "foundation": {
+      "description": "Space, measure, border, radius, fonts, tracking, typography and harmony metadata.",
+      "sources": [
+        {
+          "$ref": "judarn-tokens.json"
+        }
+      ]
+    }
+  },
+  "modifiers": {
+    "theme": {
+      "description": "Appearance: colour values per mode.",
+      "default": "light",
+      "contexts": {
+        "light": [
+          {
+            "$ref": "modes/light.tokens.json"
+          }
+        ],
+        "dark": [
+          {
+            "$ref": "modes/dark.tokens.json"
+          }
+        ],
+        "lightHighContrast": [
+          {
+            "$ref": "modes/light.tokens.json"
+          },
+          {
+            "$ref": "modes/light-high-contrast.tokens.json"
+          }
+        ],
+        "darkHighContrast": [
+          {
+            "$ref": "modes/dark.tokens.json"
+          },
+          {
+            "$ref": "modes/dark-high-contrast.tokens.json"
+          }
+        ]
+      }
+    }
+  },
+  "resolutionOrder": [
+    {
+      "$ref": "#/sets/foundation"
+    },
+    {
+      "$ref": "#/modifiers/theme"
+    }
+  ]
+}

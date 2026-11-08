@@ -1,0 +1,729 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JudarnSDUINode",
+  "description": "Declarative Server-Driven UI node schema for Judarn design foundation. Props are allowlisted per node type; any other prop is rejected. Mirrors SDUI_PROP_ALLOWLIST in serializer.js.",
+  "type": "object",
+  "required": [
+    "type"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "button",
+        "badge",
+        "tag",
+        "card",
+        "data-matrix",
+        "data-table",
+        "text-field",
+        "container",
+        "text"
+      ]
+    },
+    "props": {
+      "type": "object"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "#"
+      }
+    },
+    "content": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "button"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "variant": {
+                "type": "string",
+                "enum": [
+                  "primary",
+                  "outline",
+                  "secondary",
+                  "ghost",
+                  "accent"
+                ]
+              },
+              "size": {
+                "type": "string",
+                "enum": [
+                  "sm",
+                  "md",
+                  "lg"
+                ]
+              },
+              "block": {
+                "type": "boolean"
+              },
+              "disabled": {
+                "type": "boolean"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "button",
+                  "submit",
+                  "reset"
+                ]
+              },
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "badge"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "variant": {
+                "type": "string",
+                "enum": [
+                  "outline",
+                  "solid",
+                  "accent",
+                  "accent-outline"
+                ]
+              },
+              "accentColor": {
+                "type": "string",
+                "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\([\\d\\s.,%/]+\\)|oklch\\([\\d\\s.%/deg]+\\))$"
+              },
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "tag"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "card"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "eyebrow": {
+                "type": "string"
+              },
+              "eyebrowCasing": {
+                "type": "string",
+                "enum": [
+                  "uppercase",
+                  "asWritten"
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "flat": {
+                "type": "boolean"
+              },
+              "compact": {
+                "type": "boolean"
+              },
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "data-matrix"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "columns": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "key",
+                        "label"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "numeric": {
+                          "type": "boolean"
+                        },
+                        "width": {
+                          "type": [
+                            "number",
+                            "string"
+                          ]
+                        },
+                        "casing": {
+                          "type": "string",
+                          "enum": [
+                            "uppercase",
+                            "asWritten"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "label": {
+                "type": "string"
+              },
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "data-table"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "columns": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "key",
+                        "label"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "numeric": {
+                          "type": "boolean"
+                        },
+                        "width": {
+                          "type": [
+                            "number",
+                            "string"
+                          ]
+                        },
+                        "casing": {
+                          "type": "string",
+                          "enum": [
+                            "uppercase",
+                            "asWritten"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "hint": {
+                "type": "string"
+              },
+              "error": {
+                "type": "string"
+              },
+              "as": {
+                "type": "string",
+                "enum": [
+                  "input",
+                  "textarea",
+                  "select"
+                ]
+              },
+              "invalid": {
+                "type": "boolean"
+              },
+              "disabled": {
+                "type": "boolean"
+              },
+              "labelCasing": {
+                "type": "string",
+                "enum": [
+                  "uppercase",
+                  "asWritten"
+                ]
+              },
+              "placeholder": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "email",
+                  "number",
+                  "password",
+                  "search",
+                  "tel",
+                  "url"
+                ]
+              },
+              "defaultValue": {
+                "type": "string"
+              },
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "container"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "props": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "token": {
+                "type": "string",
+                "enum": [
+                  "substrate",
+                  "surfaceElevated",
+                  "surfaceRecessed",
+                  "ink100",
+                  "ink60",
+                  "ink30",
+                  "signalError",
+                  "subtle",
+                  "control",
+                  "card",
+                  "badge",
+                  "half",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "8",
+                  "12",
+                  "16",
+                  "touch",
+                  "body",
+                  "compact",
+                  "sidebar"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

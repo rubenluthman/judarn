@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judarn Presentation Deck – Widescreen Slide Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-serif: "IBM Plex Serif", Georgia, Cambria, serif;
+    --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+    /* Sanzo Wada Combination 119 Palette */
+    --wada-dark: #12354e;           /* Dark Tyrian Blue */
+    --wada-accent: #a5c8d1;         /* Light Glaucous Blue */
+    --wada-accent-tint: rgba(165, 200, 209, 0.22);
+    --wada-accent-wash: rgba(165, 200, 209, 0.08);
+
+    /* Surfaces & Inks */
+    --paper: #FFFFFF;
+    --substrate-light: #F8F8F8;
+    --substrate-alt: #F0F4F8;
+    --callout-bg: #F5F8FC;
+    --ink-black: #000000;
+    --ink-dark: #0C0C0C;
+    --ink-slate: #55585B;
+    --ink-caption: #747775;
+    --ink-light: #FFFFFF;
+    --ink-muted-light: #8AA3BA;
+    --dark-card: #0D2538;
+    --border-subtle: #E5E7EB;
+    --status-green: #137333;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #E5E7EB;
+    font-family: var(--font-sans);
+    color: var(--ink-dark);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Presentation Toolbar */
+  .deck-controls {
+    position: fixed;
+    bottom: 24px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(18, 53, 78, 0.94);
+    backdrop-filter: blur(12px);
+    padding: 10px 18px;
+    border-radius: 9999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    color: var(--ink-light);
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  .deck-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: var(--ink-light);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 12px;
+    transition: background 0.15s ease;
+  }
+
+  .deck-btn:hover {
+    background: var(--wada-accent);
+  }
+
+  .deck-indicator {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0 8px;
+  }
+
+  /* Presentation Viewport Container */
+  .deck-stage {
+    width: 100%;
+    max-width: 1280px;
+    padding: 40px 20px 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  /* Single 16:9 Slide Canvas */
+  .slide {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    padding: 56px 64px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(18, 53, 78, 0.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Theme Modes */
+  .slide.theme-dark {
+    background: var(--wada-dark);
+    color: var(--ink-light);
+  }
+
+  .slide.theme-light {
+    background: var(--paper);
+    color: var(--ink-dark);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Header Group */
+  .slide-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    font-feature-settings: "case" 1;
+  }
+  .theme-dark .slide-eyebrow { color: var(--wada-accent); }
+  .theme-light .slide-eyebrow { color: var(--wada-dark); }
+
+  .slide-title {
+    font-family: var(--font-sans);
+    font-size: 24pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.18;
+    margin-bottom: 6px;
+  }
+  .theme-dark .slide-title { color: var(--ink-light); }
+  .theme-light .slide-title { color: var(--wada-dark); }
+
+  .slide-subtitle {
+    font-family: var(--font-sans);
+    font-size: 13pt;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.35;
+    margin-bottom: 24px;
+  }
+  .theme-dark .slide-subtitle { color: var(--ink-muted-light); }
+  .theme-light .slide-subtitle { color: var(--ink-slate); }
+
+  /* Slide 1: Focus Dark / Cover */
+  .slide-focus-dark {
+    justify-content: space-between;
+    padding: 64px 72px;
+  }
+  .slide-focus-center {
+    max-width: 920px;
+    margin-top: 16px;
+  }
+  .cover-title {
+    font-family: var(--font-serif);
+    font-size: 38pt;
+    font-weight: 600;
+    color: var(--ink-light);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+  .cover-title .accent-text {
+    color: var(--wada-accent);
+  }
+  .cover-subtitle {
+    font-family: var(--font-sans);
+    font-size: 16pt;
+    font-weight: 400;
+    font-style: normal;
+    color: var(--ink-muted-light);
+    line-height: 1.45;
+    max-width: 780px;
+    margin-bottom: 0;
+  }
+  .slide-focus-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .focus-metric-val {
+    font-family: var(--font-mono);
+    font-size: 32pt;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--wada-accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+    margin-bottom: 6px;
+  }
+  .focus-metric-lbl {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--ink-light);
+    margin-bottom: 2px;
+  }
+  .focus-metric-sub {
+    font-family: var(--font-sans);
+    font-size: 10pt;
+    color: var(--ink-muted-light);
+    line-height: 1.4;
+  }
+
+  /* Slide 2: Section Divider */
+  .divider-num {
+    font-family: var(--font-mono);
+    font-size: 56pt;
+    font-weight: 700;
+    color: var(--wada-accent);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .divider-title {
+    font-family: var(--font-serif);
+    font-size: 34pt;
+    font-weight: 600;
+    color: var(--ink-light);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .divider-desc {
+    font-family: var(--font-sans);
+    font-size: 15pt;
+    font-style: normal;
+    color: var(--ink-muted-light);
+    line-height: 1.45;
+    max-width: 780px;
+  }
+
+  /* Slide 3: Executive 2-Column */
+  .grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    margin-bottom: 24px;
+  }
+  .col-h2 {
+    font-family: var(--font-serif);
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--wada-dark);
+    margin-bottom: 8px;
+  }
+  .col-body {
+    font-size: 11.5pt;
+    line-height: 1.45;
+    color: var(--ink-black);
+  }
+  .callout-box {
+    margin-top: auto;
+    background: var(--callout-bg);
+    border-left: 3px solid var(--wada-accent);
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  /* Slide 4: Three Pillars */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    height: 100%;
+    margin-top: 8px;
+  }
+  .pillar-card {
+    background: var(--substrate-light);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .pillar-num {
+    font-family: var(--font-mono);
+    font-size: 20pt;
+    font-weight: 700;
+    color: var(--wada-accent);
+    margin-bottom: 14px;
+  }
+  .pillar-title {
+    font-family: var(--font-sans);
+    font-size: 15pt;
+    font-weight: 700;
+    color: var(--wada-dark);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .pillar-desc {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    line-height: 1.45;
+    color: var(--ink-black);
+  }
+
+  /* Slide 5 & 6: Pullquote */
+  .quote-container {
+    display: flex;
+    gap: 24px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 0 20px;
+  }
+  .quote-bar {
+    width: 6px;
+    background: var(--wada-accent);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .quote-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .quote-text {
+    font-family: var(--font-serif);
+    font-size: 24pt;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .theme-light .quote-text { color: var(--ink-black); }
+  .theme-dark .quote-text { color: var(--ink-light); }
+  .quote-author {
+    font-family: var(--font-sans);
+    font-size: 14pt;
+    font-weight: 700;
+  }
+  .theme-light .quote-author { color: var(--wada-dark); }
+  .theme-dark .quote-author { color: var(--wada-accent); }
+  .quote-role {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+  }
+  .theme-light .quote-role { color: var(--ink-slate); }
+  .theme-dark .quote-role { color: var(--ink-muted-light); }
+
+  /* Slide 7: Dense Table */
+  .slide-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11pt;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  .slide-table th {
+    background: transparent;
+    color: var(--wada-dark);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 9.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px;
+    text-align: left;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 2px solid var(--wada-dark);
+  }
+  .slide-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #EAEAEA;
+    color: var(--ink-black);
+    font-family: var(--font-sans);
+    vertical-align: middle;
+  }
+  .slide-table td.num,
+  .slide-table th.num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .slide-table th.status-col,
+  .slide-table td.status-col {
+    text-align: right;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-family: var(--font-sans);
+    font-size: 9.5pt;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+  .badge-complete {
+    background: #E8F5E9;
+    color: #1B5E20;
+  }
+  .badge-progress {
+    background: var(--wada-accent-tint);
+    color: var(--wada-dark);
+  }
+  .badge-active {
+    background: var(--wada-accent-wash);
+    color: var(--wada-dark);
+    border: 1px solid var(--wada-accent);
+  }
+
+  /* Slide 8: KPI Metrics */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  .metric-card {
+    background: var(--dark-card);
+    border-radius: 8px;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  .metric-num {
+    font-family: var(--font-mono);
+    font-size: 38pt;
+    font-weight: 700;
+    color: var(--wada-accent);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .metric-label {
+    font-family: var(--font-sans);
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted-light);
+    margin-bottom: 6px;
+  }
+  .metric-detail {
+    font-family: var(--font-sans);
+    font-size: 10.5pt;
+    color: var(--ink-light);
+    line-height: 1.35;
+  }
+
+  /* Slide 9: Code Block */
+  .code-container {
+    background: var(--substrate-light);
+    border-left: 3px solid var(--wada-dark);
+    padding: 20px 24px;
+    border-radius: 0 6px 6px 0;
+    font-family: var(--font-mono);
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--wada-dark);
+    white-space: pre;
+  }
+
+  /* Slide 10: Comparison Cards */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    height: 100%;
+  }
+  .comp-card {
+    border-radius: 8px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .comp-card.conv { background: var(--substrate-light); }
+  .comp-card.judarn { background: var(--substrate-alt); }
+  .comp-h {
+    font-family: var(--font-serif);
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--wada-dark);
+    margin-bottom: 4px;
+  }
+  .comp-item {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    line-height: 1.4;
+    display: flex;
+    gap: 8px;
+  }
+
+  /* Slide Number Watermark Slot (Hidden by default; opt-in via .show-numbers) */
+  .slide-idx-slot {
+    display: none;
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    font-family: var(--font-mono);
+    font-size: 10pt;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-caption);
+  }
+  .theme-dark .slide-idx-slot {
+    color: var(--ink-muted-light);
+  }
+  .deck-stage.show-numbers .slide-idx-slot,
+  .slide.show-number .slide-idx-slot {
+    display: block;
+  }
+
+  /* Print Media Layout */
+  @media print {
+    body {
+      background: none;
+      padding: 0;
+    }
+    .deck-controls {
+      display: none !important;
+    }
+    .deck-stage {
+      padding: 0;
+      gap: 0;
+      max-width: none;
+    }
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      page-break-after: always;
+      break-after: page;
+    }
+    @page {
+      size: 16in 9in landscape;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck-stage" id="deckStage">
+
+  <!-- SLIDE 1: Cover / Focus Headline (Dark) -->
+  <div class="slide theme-dark slide-focus-dark" id="slide-1">
+    <div class="slide-focus-center">
+      <div class="slide-eyebrow">DESIGN SPECIFICATION</div>
+      <h1 class="cover-title">Host geometry with <span class="accent-text">OKLCh color</span> from one token set.</h1>
+      <p class="cover-subtitle">Judarn sets color, spatial rhythm, and typography. The host platform shapes geometry, depth, and touch behavior.</p>
+    </div>
+    <div class="slide-focus-metrics">
+      <div>
+        <div class="focus-metric-val">348</div>
+        <div class="focus-metric-lbl">Combinations</div>
+        <div class="focus-metric-sub">Sanzo Wada color dictionary</div>
+      </div>
+      <div>
+        <div class="focus-metric-val">159</div>
+        <div class="focus-metric-lbl">Colors</div>
+        <div class="focus-metric-sub">Named in the dictionary</div>
+      </div>
+      <div>
+        <div class="focus-metric-val">2</div>
+        <div class="focus-metric-lbl">Compiled hosts</div>
+        <div class="focus-metric-sub">Apple and web, from one token set</div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">01 / 10</div>
+  </div>
+
+  <!-- SLIDE 2: Section Divider (Dark) -->
+  <div class="slide theme-dark" id="slide-2">
+    <div class="cover-body">
+      <div class="divider-num">01</div>
+      <h2 class="divider-title">Scope and Typographic Rhythm</h2>
+      <p class="divider-desc">Scope, type scale, spacing grid, and optional Sanzo Wada color combinations.</p>
+    </div>
+    <div class="slide-idx-slot">02 / 10</div>
+  </div>
+
+  <!-- SLIDE 3: Executive Narrative & Textual Information (Light) -->
+  <div class="slide theme-light" id="slide-3">
+    <div class="slide-eyebrow">EXECUTIVE BRIEFING</div>
+    <h2 class="slide-title">Cross-Platform Spatial Rhythm &amp; Surface Contrasts</h2>
+    <p class="slide-subtitle">Surfaces are grouped by fill, not by outline</p>
+    
+    <div class="grid-2col">
+      <div>
+        <h3 class="col-h2">Why not borders</h3>
+        <p class="col-body">Borders drawn around every card compete with the content inside them. Grouping by fill keeps the eye on the data instead of the container.</p>
+      </div>
+      <div>
+        <h3 class="col-h2">Fill instead of outline</h3>
+        <p class="col-body">Judarn groups surfaces by background fill. Elevated cards (#F8F8F8) sit on a white (#FFFFFF) substrate with no perimeter border; the step in fill separates them.</p>
+      </div>
+    </div>
+
+    <div class="callout-box">
+      <strong>Core Invariant:</strong> Distinguish surfaces by background fill contrast (surfaceElevated on substrate). Never apply .border() or .overlay(strokeBorder()) around card perimeters. Hairlines belong only inside tabular matrices.
+    </div>
+    <div class="slide-idx-slot">03 / 10</div>
+  </div>
+
+  <!-- SLIDE 4: Three-Pillar Architecture Grid (Light) -->
+  <div class="slide theme-light" id="slide-4">
+    <div class="slide-eyebrow">FOUNDATIONAL ARCHITECTURE</div>
+    <h2 class="slide-title">The Three Judarn Platform Invariants</h2>
+    <p class="slide-subtitle">A clean authority split between design tokens and native operating system mechanics</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <div class="pillar-title">OKLCh Color &amp; Grid</div>
+        <div class="pillar-desc">Colors are authored in OKLCh for light and dark appearances. Spacing snaps to an 8 pt grid with a 4 pt subgrid.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <div class="pillar-title">Native Curve Authority</div>
+        <div class="pillar-desc">Judarn never overrides host platform physics, hardware curves, or native interaction states. Squircle geometry and corner radii belong to the operating system.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <div class="pillar-title">Sanzo Wada Harmony</div>
+        <div class="pillar-desc">Optional accents from Sanzo Wada's color combinations (Tyrian Blue and Olympic Blue), used here for indicators, data tables, and badges.</div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">04 / 10</div>
+  </div>
+
+  <!-- SLIDE 5: Editorial Pullquote (Light) -->
+  <div class="slide theme-light" id="slide-5">
+    <div class="slide-eyebrow">EDITORIAL PERSPECTIVE</div>
+    <h2 class="slide-title">Platform Authority Invariant</h2>
+    <p class="slide-subtitle"></p>
+
+    <div class="quote-container">
+      <div class="quote-bar"></div>
+      <div class="quote-content">
+        <div class="quote-text">“Design systems that override host platform physics inevitably feel foreign. Judarn sets color, spatial rhythm, and typography – the operating system owns geometry, depth, and touch mechanics.”</div>
+        <div>
+          <div class="quote-author">Judarn Design Principles</div>
+          <div class="quote-role">Section 1.1 · Platform Invariants Contract</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">05 / 10</div>
+  </div>
+
+  <!-- SLIDE 6: Impact Pullquote (Dark) -->
+  <div class="slide theme-dark" id="slide-6">
+    <div class="slide-eyebrow">TYPOGRAPHY</div>
+    <h2 class="slide-title">Body Text</h2>
+    <p class="slide-subtitle"></p>
+
+    <div class="quote-container">
+      <div class="quote-bar"></div>
+      <div class="quote-content">
+        <div class="quote-text">“Body text is set in black on white, with lines close together so a paragraph reads as one block.”</div>
+        <div>
+          <div class="quote-author">Judarn Typography Specification</div>
+          <div class="quote-role">Typography contract</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">06 / 10</div>
+  </div>
+
+  <!-- SLIDE 7: Dense Tabular Data Matrix (Light) -->
+  <div class="slide theme-light" id="slide-7">
+    <div class="slide-eyebrow">HOSTS</div>
+    <h2 class="slide-title">Package Matrix</h2>
+    <p class="slide-subtitle">Hosts, distribution, and status</p>
+
+    <table class="slide-table">
+      <thead>
+        <tr>
+          <th style="width: 26%;">Package Target</th>
+          <th style="width: 24%;">Runtime</th>
+          <th style="width: 18%;">Distribution</th>
+          <th style="width: 14%;">Tokens</th>
+          <th class="status-col" style="width: 18%;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Apple Native (SwiftUI)</strong></td>
+          <td style="color: var(--ink-slate);">macOS 14+ / iOS 17+</td>
+          <td style="color: var(--ink-slate);">Swift package</td>
+          <td style="color: var(--ink-slate);">Compiled</td>
+          <td class="status-col"><span class="badge badge-complete">Available</span></td>
+        </tr>
+        <tr>
+          <td><strong>Web (@judarn/ui)</strong></td>
+          <td style="color: var(--ink-slate);">React / Tailwind v4</td>
+          <td style="color: var(--ink-slate);">npm package</td>
+          <td style="color: var(--ink-slate);">Compiled</td>
+          <td class="status-col"><span class="badge badge-complete">Available</span></td>
+        </tr>
+        <tr>
+          <td><strong>Android Compose</strong></td>
+          <td style="color: var(--ink-slate);">Jetpack Compose</td>
+          <td style="color: var(--ink-slate);">Not published</td>
+          <td style="color: var(--ink-slate);">Not compiled</td>
+          <td class="status-col"><span class="badge badge-active">Parked</span></td>
+        </tr>
+        <tr>
+          <td><strong>Design Tokens</strong></td>
+          <td style="color: var(--ink-slate);">Design Tokens Format 2025.10</td>
+          <td style="color: var(--ink-slate);">JSON in repository</td>
+          <td style="color: var(--ink-slate);">Source</td>
+          <td class="status-col"><span class="badge badge-complete">Available</span></td>
+        </tr>
+        <tr>
+          <td><strong>Document &amp; Slide Starters</strong></td>
+          <td style="color: var(--ink-slate);">Word, PowerPoint, Google</td>
+          <td style="color: var(--ink-slate);">Files in repository</td>
+          <td style="color: var(--ink-slate);">Local variant</td>
+          <td class="status-col"><span class="badge badge-complete">Available</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="slide-idx-slot">07 / 10</div>
+  </div>
+
+  <!-- SLIDE 8: KPI Metrics (Dark) -->
+  <div class="slide theme-dark" id="slide-8">
+    <div class="slide-eyebrow">VERIFICATION</div>
+    <h2 class="slide-title">What the Checks Cover</h2>
+    <p class="slide-subtitle">Figures come from the token set and the web test suite</p>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-num">348</div>
+        <div class="metric-label">Wada Combinations</div>
+        <div class="metric-detail">From the dictionary, calibrated in OKLCh</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">159</div>
+        <div class="metric-label">Wada Colors</div>
+        <div class="metric-detail">Named in the dictionary</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">15:1</div>
+        <div class="metric-label">Minimum Ink Contrast</div>
+        <div class="metric-detail">ink100 on surfaceElevated; WCAG AAA asks for 7:1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">2</div>
+        <div class="metric-label">Compiled Hosts</div>
+        <div class="metric-detail">Apple and web, from one token set</div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">08 / 10</div>
+  </div>
+
+  <!-- SLIDE 9: Code Block (Light) -->
+  <div class="slide theme-light" id="slide-9">
+    <div class="slide-eyebrow">SPECIFICATION</div>
+    <h2 class="slide-title">Token Interface</h2>
+    <p class="slide-subtitle">Shared contract between compile-time token sources and runtime renderers</p>
+
+    <div class="grid-2col" style="align-items: center;">
+      <div>
+        <h3 class="col-h2">Token Pipeline</h3>
+        <p class="col-body" style="margin-bottom: 12px;">Design tokens originate in <code>tokens/judarn-tokens.json</code> which follows the Design Tokens Format Module 2025.10. A build script compiles them into Swift constants and CSS custom properties, and a check fails when the output drifts from the source.</p>
+              </div>
+      <div>
+        <div class="code-container">// Judarn token excerpt
+const judarnContract = {
+  grid: { macro: 8, micro: 4 },
+  colors: {
+    substrate: "oklch(1.000 0.000 0)",
+    elevated:  "oklch(0.980 0.000 0)",
+    tyrian:    "#12354e",
+    glaucous:  "#a5c8d1"
+  },
+  authority: {
+    judarn: ["color", "type", "grid"],
+    native: ["curves", "motion", "touch"]
+  }
+};</div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">09 / 10</div>
+  </div>
+
+  <!-- SLIDE 10: Comparison (Light) -->
+  <div class="slide theme-light" id="slide-10">
+    <div class="slide-eyebrow">TRADE-OFFS</div>
+    <h2 class="slide-title">Conventional Libraries and Judarn</h2>
+    <p class="slide-subtitle">What changes when the host owns geometry and touch</p>
+
+    <div class="comp-grid">
+      <div class="comp-card conv">
+        <div class="comp-h">Conventional UI Libraries</div>
+        <div class="comp-item"><span style="color: var(--ink-caption);">–</span> <span>Overrides native controls, so touch behavior differs from the host</span></div>
+        <div class="comp-item"><span style="color: var(--ink-caption);">–</span> <span>Applies decorative stroke borders around every card perimeter</span></div>
+        <div class="comp-item"><span style="color: var(--ink-caption);">–</span> <span>Uses one-off spacing values that break the rhythm</span></div>
+        <div class="comp-item"><span style="color: var(--ink-caption);">–</span> <span>Ties styling to large components that change often</span></div>
+      </div>
+      <div class="comp-card judarn">
+        <div class="comp-h">Judarn Design Foundation</div>
+        <div class="comp-item"><span style="color: var(--wada-accent); font-weight: bold;">✓</span> <span><strong>Leaves platform physics</strong>, curves, and haptics to the host</span></div>
+        <div class="comp-item"><span style="color: var(--wada-accent); font-weight: bold;">✓</span> <span><strong>Groups surfaces by background fill</strong>, no perimeter borders</span></div>
+        <div class="comp-item"><span style="color: var(--wada-accent); font-weight: bold;">✓</span> <span><strong>8 pt grid</strong> with a 4 pt subgrid</span></div>
+        <div class="comp-item"><span style="color: var(--wada-accent); font-weight: bold;">✓</span> <span><strong>Every host compiled</strong> from one token source</span></div>
+      </div>
+    </div>
+    <div class="slide-idx-slot">10 / 10</div>
+  </div>
+
+</div>
+
+<!-- Deck Controls Floating Pill -->
+<div class="deck-controls">
+  <button class="deck-btn" id="prevBtn" title="Previous Slide (Left Arrow)">◀ Prev</button>
+  <span class="deck-indicator" id="slideIndicator">01 / 10</span>
+  <button class="deck-btn" id="nextBtn" title="Next Slide (Right Arrow / Space)">Next ▶</button>
+  <button class="deck-btn" id="numberBtn" title="Toggle Slide Numbers (#)"># Numbers</button>
+  <button class="deck-btn" id="fullscreenBtn" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+</div>
+
+<script>
+  let currentIdx = 1;
+  const totalSlides = 10;
+  const indicator = document.getElementById('slideIndicator');
+  const deckStage = document.getElementById('deckStage');
+  const numberBtn = document.getElementById('numberBtn');
+
+  function updateSlide(idx) {
+    if (idx < 1) idx = 1;
+    if (idx > totalSlides) idx = totalSlides;
+    currentIdx = idx;
+    const target = document.getElementById(`slide-${currentIdx}`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    indicator.textContent = `${String(currentIdx).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+  }
+
+  function toggleNumbers() {
+    deckStage.classList.toggle('show-numbers');
+    numberBtn.style.background = deckStage.classList.contains('show-numbers') ? 'var(--wada-accent)' : '';
+    numberBtn.style.color = deckStage.classList.contains('show-numbers') ? 'var(--wada-dark)' : '';
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => updateSlide(currentIdx - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => updateSlide(currentIdx + 1));
+  numberBtn.addEventListener('click', toggleNumbers);
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      updateSlide(currentIdx + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      updateSlide(currentIdx - 1);
+    } else if (e.key === '#' || e.key === '3' && e.shiftKey) {
+      e.preventDefault();
+      toggleNumbers();
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

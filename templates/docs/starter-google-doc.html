@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judarn Document Starter – Pure Black Hierarchy with Wada Harmony</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Judarn Typography Primitives */
+    --font-serif: "IBM Plex Serif", Georgia, Cambria, serif;
+    --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+    /* Base Surfaces & High-Contrast Ink */
+    --paper: #FFFFFF;
+    --ink-black: #000000;
+    --ink-subtle: #55585B;
+    --ink-caption: #747775;
+    --border-subtle: #E5E7EB;
+    --border-strong: #D1D5DB;
+
+    /* Sanzo Wada Harmony: Combination 119 (Structural Accent Role) */
+    --wada-dark: #12354e;           /* Dark Tyrian Blue */
+    --wada-accent: #a5c8d1;         /* Light Glaucous Blue */
+    --wada-accent-tint: rgba(165, 200, 209, 0.22);
+    --wada-accent-wash: rgba(165, 200, 209, 0.08);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #F4F5F7;
+    color: var(--ink-black);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.0;
+  }
+
+  /* Standard 8.5 x 11 inch Letter Page */
+  .doc-page {
+    width: 816px;
+    min-height: 1056px;
+    background: var(--paper);
+    box-shadow: 0 1px 3px 0 rgba(60,64,67,.15), 0 4px 12px 3px rgba(60,64,67,.06);
+    padding: 96px 96px; /* 1 inch margins */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    color: var(--ink-black);
+  }
+
+  /* Eyebrow / Category Label: IBM Plex Sans (Bold, Tracked Uppercase) */
+  .doc-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 9.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--wada-dark);
+    margin-bottom: 4pt;
+    line-height: 1.15;
+  }
+
+  /* Document Title: IBM Plex Serif (Warmth, Editorial Authority) */
+  .doc-title {
+    font-family: var(--font-serif);
+    font-size: 28pt;
+    font-weight: 600;
+    color: var(--ink-black);
+    line-height: 1.08;
+    margin-bottom: 8pt;
+  }
+
+  /* Subtitle & Scope: IBM Plex Sans (Upright Slate Gray #55585B) */
+  .doc-subtitle {
+    font-family: var(--font-sans);
+    font-size: 13pt;
+    font-style: normal;
+    color: var(--ink-subtle);
+    line-height: 1.20;
+    margin-bottom: 24pt;
+  }
+
+  /* Heading 1: IBM Plex Sans (Bold, Structural Chapter Marker - 36pt before, 6pt after) */
+  .doc-h1 {
+    font-family: var(--font-sans);
+    font-size: 20pt;
+    font-weight: 700;
+    color: var(--ink-black);
+    margin-top: 36pt;
+    margin-bottom: 6pt;
+    line-height: 1.15;
+  }
+
+  /* Lead Body Paragraph: IBM Plex Sans (Editorial Lead / Abstract) */
+  .doc-lead-p {
+    font-family: var(--font-sans);
+    font-size: 13pt;
+    line-height: 1.25;
+    color: var(--ink-black);
+    margin-bottom: 8pt;
+  }
+
+  /* Heading 2: IBM Plex Serif (Semi-Bold, Section Rhythm Divider - 24pt before, 5pt after) */
+  .doc-h2 {
+    font-family: var(--font-serif);
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--ink-black);
+    margin-top: 24pt;
+    margin-bottom: 5pt;
+    line-height: 1.15;
+  }
+
+  /* Heading 3: IBM Plex Sans (Semi-Bold, Sub-topic - 16pt before, 4pt after) */
+  .doc-h3 {
+    font-family: var(--font-sans);
+    font-size: 13pt;
+    font-weight: 600;
+    color: var(--ink-black);
+    margin-top: 16pt;
+    margin-bottom: 4pt;
+    line-height: 1.15;
+  }
+
+  /* Heading 4: IBM Plex Sans (Bold, Run-in / Subsection - 12pt before, 3pt after) */
+  .doc-h4 {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--ink-black);
+    margin-top: 12pt;
+    margin-bottom: 3pt;
+    line-height: 1.15;
+  }
+
+  /* Normal Body Paragraph: Pure Black, Calibrated Single Leading, 8pt Space After */
+  .doc-body-p {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    line-height: 1.25;
+    color: var(--ink-black);
+    margin-bottom: 8pt;
+  }
+
+  /* Micro / Caption Labels & Footnotes */
+  .doc-caption-label {
+    font-family: var(--font-sans);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-subtle);
+    margin-top: 24pt;
+    margin-bottom: 2pt;
+    line-height: 1.15;
+  }
+
+  .doc-footnote {
+    font-family: var(--font-sans);
+    font-size: 9pt;
+    line-height: 1.25;
+    color: var(--ink-caption);
+    margin-top: 4pt;
+    margin-bottom: 8pt;
+  }
+
+  /* Decision Callout Block (Sanzo Wada Olympic Blue Border & Substrate) */
+  .doc-callout {
+    border-left: 3.5px solid var(--wada-accent);
+    padding: 10pt 14pt;
+    margin: 12pt 0 16pt 0;
+    background: var(--wada-accent-wash);
+  }
+
+  .doc-callout-text {
+    font-size: 10.5pt;
+    line-height: 1.15;
+    color: var(--ink-black);
+  }
+
+  .doc-callout-text strong {
+    color: var(--wada-dark);
+  }
+
+  /* Milestone Matrix: Wada Dark Tyrian Blue Header Accent */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin: 14pt 0 16pt;
+  }
+
+  .doc-table th {
+    background: #F8F8F8;
+    font-size: 9.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wada-dark);
+    text-align: left;
+    padding: 8pt 10pt;
+    border-top: 1.5px solid var(--wada-dark);
+    border-bottom: 1.5px solid var(--border-strong);
+  }
+
+  .doc-table td {
+    padding: 9pt 10pt;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--ink-black);
+    vertical-align: middle;
+    line-height: 1.15;
+  }
+
+  .doc-table tr:hover td {
+    background: #FDFDFE;
+  }
+
+  .doc-table th.col-date,
+  .doc-table td.col-date {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .doc-table th.col-status,
+  .doc-table td.col-status {
+    text-align: right;
+  }
+
+  /* Status Badges with Wada Combination 119 Accents */
+  .status-badge {
+    display: inline-block;
+    padding: 2.5px 8px;
+    border-radius: 4px;
+    font-size: 9.5pt;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .status-progress {
+    background: var(--wada-accent-tint);
+    color: var(--wada-dark);
+  }
+
+  .status-done {
+    background: #E6F4EA;
+    color: #137333;
+  }
+
+  .status-pending {
+    background: #F3F4F6;
+    color: var(--ink-subtle);
+  }
+
+  /* Checklist section */
+  .doc-checklist {
+    list-style: none;
+    margin: 8pt 0 16pt;
+  }
+
+  .doc-checklist li {
+    font-size: 11pt;
+    color: var(--ink-black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6pt;
+    line-height: 1.0;
+  }
+
+  .doc-checkbox {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #9CA3AF;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .doc-checkbox.checked {
+    border-color: var(--wada-accent);
+    background: var(--wada-accent);
+    color: #FFFFFF;
+    font-size: 10px;
+  }
+
+  /* Print Stylesheet */
+  @media print {
+    body {
+      background: #FFFFFF;
+      padding: 0;
+    }
+    .doc-page {
+      box-shadow: none;
+      padding: 0;
+      width: 100%;
+      min-height: auto;
+    }
+    @page {
+      size: letter portrait;
+      margin: 1in;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-page">
+
+  <!-- Document Header -->
+  <div class="doc-eyebrow">SPECIFICATION &amp; ARCHITECTURE FRAMEWORK</div>
+  <h1 class="doc-title">Judarn Document Design Specification</h1>
+  <div class="doc-subtitle">
+    Judarn Design Foundation &bull; Typography Specification
+  </div>
+
+  <!-- Heading 1: Sans -->
+  <h2 class="doc-h1">1. Scope and Typographic System</h2>
+  <p class="doc-lead-p">
+    This specification establishes the official typographic, spatial, and color foundation for all Judarn long-form documents. It covers the page's type, spacing, and color.
+  </p>
+  <p class="doc-body-p">
+    Body text is set in black (#000000) for long-form reading.
+  </p>
+  <p class="doc-body-p">
+    Intra-paragraph line spacing is held strictly to single leading (1.0 in word processors, 1.25 in rendering engines), which keeps a paragraph together as one block. Paragraphs are separated by an 8 pt trailing margin instead of empty lines.
+  </p>
+
+  <!-- Heading 2: Serif -->
+  <h3 class="doc-h2">1.1 Alternating Typeface Hierarchy</h3>
+  <p class="doc-body-p">
+    To tell heading levels apart at a glance, this template alternates typefaces: the Title is set in IBM Plex Serif, Heading 1 steps into IBM Plex Sans, and Heading 2 returns to IBM Plex Serif.
+  </p>
+
+  <!-- Heading 3: Sans -->
+  <h4 class="doc-h3">1.1.1 Sub-Topics</h4>
+  <p class="doc-body-p">
+    Sub-topics step down to 13 pt IBM Plex Sans Semi-Bold. That is 18% larger than the 11 pt body text, in a heavier weight, so sub-sections stand apart from body prose.
+  </p>
+
+  <!-- Heading 4: Sans Bold -->
+  <h5 class="doc-h4">1.1.1.1 Run-In Subsection &amp; Micro Hierarchy</h5>
+  <p class="doc-body-p">
+    When micro subsections require demarcation, Heading 4 matches the 11 pt body baseline in full Bold (700) weight. It marks the boundary without adding height.
+  </p>
+
+  <!-- Heading 2: Serif -->
+  <h3 class="doc-h2">1.2 Tabular Numbers &amp; Monospace Invariants</h3>
+  <p class="doc-body-p">
+    For code snippets, technical hashes, and numeric data matrices, <strong>IBM Plex Mono</strong> provides equal-width tabular lining figures. Because IBM Plex Sans and Mono share identical vertical metrics (516 x-height, 698 cap height), inline code like <code style="font-family: var(--font-mono); font-size: 11pt; color: var(--wada-dark);">JudarnColors.substrate</code> sits on the 11 pt body baseline without changing the line height. Standalone code blocks are calibrated to 9.5 pt with single line leading to balance the wider horizontal advance of monospace glyphs and maximize column capacity:
+  </p>
+  <p class="doc-body-p" style="font-family: var(--font-mono); font-size: 9.5pt; background: #F8F8F8; padding: 6pt 10pt; border-radius: 4px; border-left: 2px solid var(--wada-dark);">
+    const judarnTokens = {<br>
+    &nbsp;&nbsp;body: "11pt",<br>
+    &nbsp;&nbsp;heading1: "20pt",<br>
+    &nbsp;&nbsp;heading2: "16pt",<br>
+    &nbsp;&nbsp;heading3: "13pt",<br>
+    &nbsp;&nbsp;codeBlock: "9.5pt",<br>
+    &nbsp;&nbsp;spaceAfter: "8pt"<br>
+    };
+  </p>
+
+  <!-- Decision Callout: Wada Accent -->
+  <div class="doc-callout">
+    <div class="doc-callout-text">
+      <strong>Core Architecture Principle:</strong> Color is strictly removed from body paragraphs and restricted to structural anchors: callout indicator rules, table header boundaries, and metadata status badges using Sanzo Wada Combination 119.
+    </div>
+  </div>
+
+  <!-- Heading 1: Sans -->
+  <h2 class="doc-h1">2. Deliverables &amp; Sanzo Wada Harmony</h2>
+  <p class="doc-body-p">
+    Sanzo Wada Combination 119 pairs Dark Tyrian Blue (#12354e) and Light Glaucous Blue (#a5c8d1) as structural anchors across tables and status badges.
+  </p>
+
+  <!-- Table with Wada Dark Header Rule -->
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th style="width: 36%;">Deliverable Track</th>
+        <th style="width: 24%;">Owner</th>
+        <th class="col-date" style="width: 20%;">Target Date</th>
+        <th class="col-status" style="width: 20%;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Wire Protocol Specification</strong></td>
+        <td>Alice M.</td>
+        <td class="col-date">Oct 08, 2026</td>
+        <td class="col-status"><span class="status-badge status-done">&check; Complete</span></td>
+      </tr>
+      <tr>
+        <td><strong>Log Replication Engine</strong></td>
+        <td>Bob K.</td>
+        <td class="col-date">Oct 12, 2026</td>
+        <td class="col-status"><span class="status-badge status-progress">&bull; In Progress</span></td>
+      </tr>
+      <tr>
+        <td><strong>Compaction Pipeline</strong></td>
+        <td>Charlie T.</td>
+        <td class="col-date">Oct 16, 2026</td>
+        <td class="col-status"><span class="status-badge status-pending">&minus; Pending</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Heading 2: Serif -->
+  <h3 class="doc-h2">2.1 Verification Checklist</h3>
+  <ul class="doc-checklist">
+    <li>
+      <span class="doc-checkbox checked">&check;</span>
+      <span>Add IBM Plex Serif, IBM Plex Sans, and IBM Plex Mono to font library</span>
+    </li>
+    <li>
+      <span class="doc-checkbox checked">&check;</span>
+      <span>Verify single leading inside paragraphs with 8 pt space after</span>
+    </li>
+    <li>
+      <span class="doc-checkbox"></span>
+      <span>Confirm pure black (#000000) normal text across all body content</span>
+    </li>
+  </ul>
+
+  <!-- Caption / Micro & Footnotes -->
+  <div class="doc-caption-label">FIGURE 1.0 &ndash; METRIC REFERENCE &amp; MICRO METADATA</div>
+  <p class="doc-footnote">
+    &sup1; Judarn design system specifications adhere strictly to W3C Design Tokens Community Group standards. All measurements are mathematically aligned to the 8pt macro grid and 4pt micro subgrid.
+  </p>
+
+</div>
+
+</body>
+</html>
