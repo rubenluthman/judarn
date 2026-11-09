@@ -1,11 +1,14 @@
 ---
-status: accepted
+status: accepted (amended by ADR-0016)
 date: 2026-11-08
 deciders: Ruben Luthman
 tags: [typography, leading, tokens, apple, web, accessibility]
 ---
 
 # Tight Leading Within Paragraphs
+
+> [!NOTE]
+> Amended by [ADR-0016](0016-tight-leading-saves-two-points-per-line-break.md). Superseded: the figures in the Negative Consequences bullets "Apple's tight leading is a platform variant, not a number" and "A consuming app's real use". Tight leading saves 2pt per line break, not per line; single-line text keeps its height, and the samples were three-line text. Surviving: the decision and all of its invariants.
 
 ## Context and Problem Statement
 

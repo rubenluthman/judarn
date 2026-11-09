@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.5] - 2026-11-09
+
+### Changed
+
+- On Apple hosts, tight leading shortens text by 2pt per line break, not per line, and single-line text keeps its height. [ADR-0016](docs/adr/0016-tight-leading-saves-two-points-per-line-break.md) corrects the figures in ADR-0012.
+
 ## [0.7.4] - 2026-11-09
 
 ### Changed

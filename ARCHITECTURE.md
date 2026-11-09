@@ -124,3 +124,4 @@ System architecture choices, token invariants, and platform boundaries are recor
 - [ADR-0013: Apps Consume @judarn/ui from the Public npm Registry](docs/adr/0013-apps-consume-judarn-ui-from-the-public-npm-registry.md)
 - [ADR-0014: Public Repository Starts from a Fresh History](docs/adr/0014-public-repository-starts-from-a-fresh-history.md)
 - [ADR-0015: First npm Publish of a New Package Is Manual](docs/adr/0015-first-npm-publish-of-a-new-package-is-manual.md)
+- [ADR-0016: Tight Leading Saves Two Points per Line Break](docs/adr/0016-tight-leading-saves-two-points-per-line-break.md)
