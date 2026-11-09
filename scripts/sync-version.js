@@ -24,6 +24,22 @@ const targets = {
       return JSON.stringify(pkg, null, 2) + '\n';
     }
   },
+  webLockfile: {
+    path: path.join(rootDir, 'platforms/web/package-lock.json'),
+    // npm records the package's own version twice; a mismatch between them reports as no version.
+    get: (content) => {
+      const lock = JSON.parse(content);
+      const root = lock.packages && lock.packages[''];
+      return root && root.version === lock.version ? lock.version : null;
+    },
+    set: (content, version) => {
+      const lock = JSON.parse(content);
+      lock.version = version;
+      if (!lock.packages || !lock.packages['']) throw new Error('Setter for web lockfile matched nothing');
+      lock.packages[''].version = version;
+      return JSON.stringify(lock, null, 2) + '\n';
+    }
+  },
   mcpServer: {
     path: path.join(rootDir, 'tools/wada-explorer/mcp/server.js'),
     get: (content) => {

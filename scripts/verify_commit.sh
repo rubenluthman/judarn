@@ -66,7 +66,7 @@ python3 scripts/check-markdown-links.py
 
 echo "8b. Private Path Scan..."
 # Home paths and file URLs tie a tracked file to one machine.
-if git grep -nI -e '/Users/' -e '~/Developer' -e '~/\.gemini' -e '~/\.claude' -e 'file:///' -- . ':!previews' ':!scripts/verify_commit.sh'; then
+if git grep -nI -e '/Users/' -e '~/Developer' -e '~/\.gemini' -e '~/\.claude' -e 'file:///' -- . ':!scripts/verify_commit.sh'; then
   echo "❌ tracked files contain private paths" >&2
   exit 1
 fi
