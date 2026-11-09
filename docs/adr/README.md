@@ -33,8 +33,9 @@ Decisions move through the following lifecycle states:
 | [0010](0010-per-platform-apple-text-styles.md) | Per-Platform Apple Text Styles | 2026-11-03 | Accepted | typography, tokens, platforms, apple |
 | [0011](0011-web-package-ships-compiled-javascript.md) | Web Package Ships Compiled JavaScript | 2026-11-06 | Accepted | web, packaging, react, build |
 | [0012](0012-tight-leading-within-paragraphs.md) | Tight Leading Within Paragraphs | 2026-11-08 | Accepted | typography, leading, tokens, apple, web, accessibility |
-| [0013](0013-apps-consume-judarn-ui-from-the-public-npm-registry.md) | Apps Consume @judarn/ui from the Public npm Registry | 2026-11-08 | Accepted | web, packaging, distribution, ci |
+| [0013](0013-apps-consume-judarn-ui-from-the-public-npm-registry.md) | Apps Consume @judarn/ui from the Public npm Registry | 2026-11-08 | Accepted (amended by ADR-0015) | web, packaging, distribution, ci |
 | [0014](0014-public-repository-starts-from-a-fresh-history.md) | Public Repository Starts from a Fresh History | 2026-11-08 | Accepted | repository, visibility, history, adr-governance |
+| [0015](0015-first-npm-publish-of-a-new-package-is-manual.md) | First npm Publish of a New Package Is Manual | 2026-11-09 | Accepted | web, packaging, distribution, security |
 
 ## Consolidation and Former Numbers
 

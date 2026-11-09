@@ -1,11 +1,14 @@
 ---
-status: accepted
+status: accepted (amended by ADR-0015)
 date: 2026-11-08
 deciders: Ruben Luthman
 tags: [web, packaging, distribution, ci]
 ---
 
 # Apps Consume @judarn/ui from the Public npm Registry
+
+> [!NOTE]
+> Amended by [ADR-0015](0015-first-npm-publish-of-a-new-package-is-manual.md). A package's first version cannot use trusted publishing, so it is published by hand. Invariant 4 now allows an npm login token on the owner's machine between that first publish and the first workflow publish, after which the owner logs out. The positive consequence "Every published version carries a provenance attestation" holds from a package's second version: `@judarn/ui` 0.7.1 has none. Invariants 1, 2, 3 and 5 are unchanged.
 
 ## Context and Problem Statement
 

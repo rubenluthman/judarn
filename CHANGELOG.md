@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.4] - 2026-11-09
+
+### Changed
+
+- Repository checks run on GitHub for every push to `main` that changes code, on current macOS runners and Xcode.
+- A decision record explains why the first npm version, 0.7.1, was published by hand and has no provenance attestation ([ADR-0015](docs/adr/0015-first-npm-publish-of-a-new-package-is-manual.md)).
+- There is no 0.7.3 release: tag `v0.7.3` was created by mistake on the 0.7.2 commit and is kept unchanged.
+
 ## [0.7.2] - 2026-11-09
 
 ### Changed
