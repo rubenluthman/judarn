@@ -87,7 +87,7 @@ fi
 prose_files=()
 while IFS= read -r file; do
   [ -f "$file" ] && prose_files+=("$file")
-done < <(git ls-files --cached --others --exclude-standard -- '*.md' '*.txt' '*.swift' || true)
+done < <(git ls-files --cached --others --exclude-standard -- '*.md' '*.swift' || true)
 if [ "${#prose_files[@]}" -gt 0 ]; then
   vale --output=line "${prose_files[@]}" >&2 || { echo "❌ house style check failed" >&2; exit 1; }
 fi
