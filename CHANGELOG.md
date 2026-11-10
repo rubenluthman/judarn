@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.8] - 2026-11-10
+
+### Changed
+
+- Pin the shared Vale package house-style to v0.2.1 and use its reworded house style paragraph in `docs/house-style.md`. No rules change.
+
 ## [0.7.7] - 2026-11-10
 
 ### Added
