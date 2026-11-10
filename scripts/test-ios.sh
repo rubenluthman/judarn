@@ -7,7 +7,10 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 TIMEOUT_SECONDS="${JUDARN_IOS_TEST_TIMEOUT:-900}"
-UDID="$(xcrun simctl list devices available | grep -m1 'iPhone' | grep -oE '[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}' || true)"
+# Prefer an already booted iPhone, then "iPhone 17", then any iPhone: a simulator that never booted can stall for minutes on its first data migration.
+DEVICES="$(xcrun simctl list devices available | grep 'iPhone' || true)"
+UDID_PATTERN='[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}'
+UDID="$( { printf '%s\n' "$DEVICES" | grep -m1 '(Booted)'; printf '%s\n' "$DEVICES" | grep -m1 'iPhone 17 ('; printf '%s\n' "$DEVICES" | head -n1; } | grep -m1 -oE "$UDID_PATTERN" || true)"
 if [ -z "$UDID" ]; then
   echo "❌ No available iPhone simulator found" >&2
   exit 1
