@@ -1,4 +1,4 @@
-# Public Repository Starts from a Fresh History
+# Public repository starts from a fresh history
 Status: Active · 2026-11-08
 
 ## Decision

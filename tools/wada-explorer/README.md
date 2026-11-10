@@ -1,4 +1,4 @@
-# Judarn Color Dictionary
+# Judarn color dictionary
 
 Interactive multi-context visual dictionary for the 348 historic Japanese color combinations documented by Sanzo Wada (1883–1967) in *A Dictionary of Color Combinations* (*Haishoku Sōkan*, 1933–1934), calibrated in wide-gamut OKLCh for modern screens.
 
@@ -14,16 +14,18 @@ The Judarn Color Dictionary provides three unified exploration tiers:
    - **Web Editorial Hero**: A landing-page hero set in the chosen palette.
 3. **All Colors Catalog (159)**: Individual catalog of all 159 historical colors with search and sorting by Index, Name (A – Z), Most combinations, Darkest first, Lightest first, and Hue.
 
-## Color Detail Inspector
+## Color detail inspector
 Modal inspection for any color providing large swatch previews, one-click clipboard copying across 5 color spaces (HEX, RGB, CMYK, CIE L*a*b*, and OKLCh), and cross-references to every combination containing the color with direct click-through to the Live Explorer.
 
-## Model Context Protocol (MCP) Server
+## Model context protocol (MCP) server
 Judarn includes a local stdio MCP server with no dependencies for AI coding assistants (Claude Desktop, Cursor, Antigravity):
 ```bash
 node tools/wada-explorer/mcp/server.js
 ```
 
-### Claude Desktop Configuration
+<!-- vale HouseStyle.Headings = NO -->
+### Claude Desktop configuration
+<!-- vale HouseStyle.Headings = YES -->
 Add to `claude_desktop_config.json`:
 ```json
 {
@@ -36,7 +38,7 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
-### Available Tools
+### Available tools
 - `search_colors`: Search individual colors by keyword, hex, or index.
 - `get_color`: Retrieve full specifications (HEX, RGB, CMYK, CIE L*a*b*, OKLCh) for a color.
 - `search_combinations`: Filter combinations by size (2, 3, or 4) or color name.
@@ -50,7 +52,7 @@ Open `tools/wada-explorer/index.html` in any modern web browser or run:
 open tools/wada-explorer/index.html
 ```
 
-## Attribution & Provenance
+## Attribution & provenance
 - Original harmonies by **Sanzo Wada** (*A Dictionary of Color Combinations*, 1930s, Public Domain).
 - Digitized color dataset based on the open-source archive by **Matt DesLauriers** ([mattdesl/dictionary-of-colour-combinations](https://github.com/mattdesl/dictionary-of-colour-combinations)), MIT License.
 - Harmonic reference: [espectro.dev](https://espectro.dev) by Labro.

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.10] - 2026-11-10
+
+### Changed
+
+- Pinned house-style v0.3.0: Markdown headings now use sentence case, with the generated `docs/DESIGN.md` left as compiled.
+
 ## [0.7.9] - 2026-11-10
 
 ### Changed

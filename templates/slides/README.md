@@ -1,4 +1,4 @@
-# Judarn Slide Starters (Google Slides & Presentation Ready)
+# Judarn slide starters (Google Slides & presentation ready)
 
 16:9 presentation slide layouts.
 
@@ -11,7 +11,7 @@
 - [`starter-focus-dark.html`](starter-focus-dark.html): dark focus headline slide.
 - [`starter-data-light.html`](starter-data-light.html): light technical data slide.
 
-## Features & Archetypes
+## Features & archetypes
 - **Canvas Aspect Ratio**: Strict 16:9 widescreen (16 × 9 in, 1920 × 1080 px on screen) print-calibrated via `@page { size: 16in 9in landscape; margin: 0; }`.
 - **Typography**: Built using an aligned three-family hierarchy (modeled on the Google Docs document specification):
   - **IBM Plex Serif**: Reserved sparsely for Cover Titles, Section Divider Titles, Pullquotes, and H2 Column Headers for editorial authority.
@@ -26,7 +26,7 @@
 
 ---
 
-## 10 Production Slide Archetypes
+## 10 Production slide archetypes
 
 1. **Cover / Focus Headline Slide (Dark)**: Uppercase tracked eyebrow (`#a5c8d1`), 40 pt IBM Plex Serif title with inline Light Glaucous Blue accent run, upright IBM Plex Sans subtitle in `#8AA3BA`, and a 3-figure row (`348 Combinations`, `159 Colors`, `2 Compiled hosts`).
 2. **Section Divider / Chapter Break (Dark)**: Oversized monospace chapter index (`01` in `#a5c8d1`), 34 pt IBM Plex Serif chapter title, and 15 pt scoping summary in `#8AA3BA`.
@@ -41,21 +41,21 @@
 
 ---
 
-## Quickstart: How to Use in Google Slides
+## Quickstart: How to use in Google Slides
 
-### Option 1: Direct Presentation Upload (Recommended)
+### Option 1: Direct presentation upload (recommended)
 1. Open Google Drive in your browser.
 2. Drag and drop [`Judarn-Presentation-Template.pptx`](Judarn-Presentation-Template.pptx) into Google Drive.
 3. Right-click the file and select **Open with**, then **Google Slides**.
 4. All 10 slides and formatting are immediately available to duplicate, edit, and present.
 
-### Option 2: Import Slides into an Existing Deck
+### Option 2: Import slides into an existing deck
 1. Open any existing Google Slides presentation.
 2. Click **File**, then **Import slides**.
 3. Under the **Upload** tab, select [`Judarn-Presentation-Template.pptx`](Judarn-Presentation-Template.pptx).
 4. Select all slides and click **Import slides**. Choose "Keep original theme" to preserve the Judarn typography and Wada colors.
 
-### Option 3: Interactive HTML Deck & Print to PDF
+### Option 3: Interactive HTML deck & print to PDF
 1. Open [`starter-deck.html`](starter-deck.html) in Chrome or Safari.
 2. Navigate slides using keyboard arrow keys (Left/Right), Space, or the floating control pill. Toggle Fullscreen with `F`.
 3. Press `Cmd+P`, select **Landscape**, set margins to **None**, and choose **Save as PDF** for print-ready 16:9 slides.

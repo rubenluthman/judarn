@@ -1,4 +1,4 @@
-# Agent Skill Lives Outside the Repository
+# Agent skill lives outside the repository
 Status: Active · 2026-10-31
 
 ## Decision

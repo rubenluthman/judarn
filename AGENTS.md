@@ -1,6 +1,6 @@
-# Agent Operating Invariants & Workflow Guide
+# Agent operating invariants & workflow guide
 
-## Commands & Verification Suites
+## Commands & verification suites
 - **Token Compilation**: `node scripts/compile-tokens.js` (or `node scripts/compile-tokens.js --check`)
 - **Token Conformance Tests**: `node --test scripts/lib/design-tokens.test.js`
 - **Wada Explorer Build**: `node scripts/build-wada-explorer.js` (or `--check`). `tools/wada-explorer/index.html` is generated; edit the script, never the HTML.
@@ -17,7 +17,7 @@
 - **Hook Test**: `.githooks/commit-msg <msg-file>`
 - **Monorepo Pre-Commit Suite**: `./scripts/verify_commit.sh` (requires `vale`: `brew install vale`; the house-style package is fetched on first run)
 
-## Project Invariants
+## Project invariants
 1. Follow Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, etc.).
 2. Swift 6 strict concurrency (`@MainActor`, `@Sendable`).
 3. Maintain at most four root documentation files besides `AGENTS.md` (`README.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CHANGELOG.md`, `AGENTS.md`) plus `LICENSE`.

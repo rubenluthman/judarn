@@ -1,11 +1,11 @@
-# Architecture & System Topology
+# Architecture & system topology
 
 ## Overview
 `Judarn` is a personal design system: general rules for anything visual or designed, plus rules per host. This monorepo holds those rules, the design tokens compiled into Apple Native (iOS/macOS) and web (React/CSS) packages, and local variants for hosts that cannot use them.
 
-## System Boundaries & Subsystems
+## System boundaries & subsystems
 
-### Domain Subsystem Contract Matrix
+### Domain subsystem contract matrix
 
 | Subsystem / Directory | Target Role | Positive Invariants | Negative Boundaries |
 | :--- | :--- | :--- | :--- |
@@ -14,7 +14,7 @@
 | `tools/wada-explorer/` | Color explorers & MCP clients | Standalone OKLCh palette explorer for 348 Sanzo Wada harmonies; zero-dependency stdio MCP server for AI tools. | Optional add-on; core Judarn contrast guarantees and substrate identity do not depend on Wada themes (ADR-0007). |
 | `docs/profiles/` | Project contributors | Single-file override records capturing explicit owner departures from Judarn defaults. | Profiles depend on Judarn, never the reverse; departures apply only to the project that declares them. |
 
-### Core Topologies & Subsystems
+### Core topologies & subsystems
 
 - **Canonical Tokens & Compiler Pipeline (`tokens/judarn-tokens.json`, `tokens/judarn.resolver.json`, `scripts/lib/design-tokens.js`, `scripts/compile-tokens.js`)**: Design Tokens Format Module 2025.10 files (`judarn-tokens.json` foundation, `modes/*.tokens.json` colour contexts, `judarn.resolver.json` resolver) specifying color registers (OKLCh dual-tier & 4-quadrant high contrast), spatial scales (8/4 grid), reading measures (`65ch`, `45ch`, `260pt` sidebar), border widths, and corner radii. The compiler translates the schema into Swift, CSS, Kotlin, and emits the `docs/DESIGN.md` specification for AI coding tools. `--check` fails on drift.
 - **Judarn Color Dictionary & MCP Server (`tools/wada-explorer/`, `tokens/judarn-tokens.json`)**: Optional add-on, outside Judarn's core identity and contrast guarantees. Curated Japanese color harmonies derived from Sanzo Wada's 1930s dictionary (*Haishoku Sōkan*), defined in OKLCh for digital screens. Includes the 348-combination gallery landing view, live multi-context previewer across slides, specifications, app mockups, and web heroes, and a zero-dependency Model Context Protocol (MCP) server for AI coding assistants.
@@ -41,7 +41,7 @@
   - External consumption contract test engine (`scripts/verify-consumption.js`) verifying package export maps, symbol manifests, and distribution readiness.
   - ADR governance gate (`scripts/verify-adrs.js`) enforcing the four-heading record format and index parity, run by the `pre-commit` hook and `scripts/verify_commit.sh`.
 
-## Architecture Flow Diagram
+## Architecture flow diagram
 
 ```mermaid
 flowchart TD
@@ -81,7 +81,7 @@ flowchart TD
     Verifier --> WebTest
 ```
 
-## Invariants & Design Contracts
+## Invariants & design contracts
 
 1. **Concurrency**: Swift 6 strict concurrency (`@MainActor`, `@Sendable`).
 2. **Encapsulation**: Default to `public` only for exported token APIs and styles; internal helpers remain private.
@@ -106,14 +106,14 @@ flowchart TD
      - **Grid Density**: Desktop tabular cell insets (8pt) vs touch cell insets (16pt).
      - **Tag Hierarchy**: Auxiliary keyword tags (`micro`, `.caption2`: 11pt iOS, 10pt macOS) rank strictly below status badges (`label`: `.footnote` 13pt on iOS, `.subheadline` 11pt on macOS).
 
-## Architectural Decision Records
+## Architectural decision records
 
 System architecture choices, token invariants, and platform boundaries are recorded as Markdown Architectural Decision Records in [`docs/adr/`](docs/adr/README.md):
 
-- [ADR-0001: Design Tokens Are the Single Source of Truth](docs/adr/0001-design-tokens-are-the-single-source-of-truth.md)
-- [ADR-0005: Compile-Time Contrast Checks and Gamut Mapping](docs/adr/0005-compile-time-contrast-checks-and-gamut-mapping.md)
-- [ADR-0007: Sanzo Wada Dictionary, Explorer, and MCP Server](docs/adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md)
-- [ADR-0008: Agent Skill Lives Outside the Repository](docs/adr/0008-agent-skill-lives-outside-the-repository.md)
-- [ADR-0011: Web Package Ships Compiled JavaScript](docs/adr/0011-web-package-ships-compiled-javascript.md)
-- [ADR-0013: Apps Consume @judarn/ui from the Public npm Registry](docs/adr/0013-apps-consume-judarn-ui-from-the-public-npm-registry.md)
-- [ADR-0014: Public Repository Starts from a Fresh History](docs/adr/0014-public-repository-starts-from-a-fresh-history.md)
+- [ADR-0001: Design tokens are the single source of truth](docs/adr/0001-design-tokens-are-the-single-source-of-truth.md)
+- [ADR-0005: Compile-time contrast checks and gamut mapping](docs/adr/0005-compile-time-contrast-checks-and-gamut-mapping.md)
+- [ADR-0007: Sanzo Wada dictionary, explorer, and MCP server](docs/adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md)
+- [ADR-0008: Agent skill lives outside the repository](docs/adr/0008-agent-skill-lives-outside-the-repository.md)
+- [ADR-0011: Web package ships compiled JavaScript](docs/adr/0011-web-package-ships-compiled-javascript.md)
+- [ADR-0013: Apps consume @judarn/ui from the public npm registry](docs/adr/0013-apps-consume-judarn-ui-from-the-public-npm-registry.md)
+- [ADR-0014: Public repository starts from a fresh history](docs/adr/0014-public-repository-starts-from-a-fresh-history.md)

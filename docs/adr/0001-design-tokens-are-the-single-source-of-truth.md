@@ -1,4 +1,4 @@
-# Design Tokens Are the Single Source of Truth
+# Design tokens are the single source of truth
 Status: Active · 2026-11-08
 
 ## Decision

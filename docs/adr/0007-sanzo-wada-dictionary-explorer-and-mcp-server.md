@@ -1,4 +1,4 @@
-# Sanzo Wada Dictionary, Explorer, and MCP Server
+# Sanzo Wada dictionary, explorer, and MCP server
 Status: Active · 2026-10-31
 
 ## Decision

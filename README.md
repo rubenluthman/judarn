@@ -8,9 +8,9 @@ Judarn sets colors, spatial cadence, and typography, leaving curves, depth, and 
 
 ---
 
-## Design Rules
+## Design rules
 
-### 1. Perceptual OKLCh Color Model
+### 1. Perceptual OKLCh color model
 Every color token is defined in OKLCh (`oklch(L C H)`) and resolves across standard and high-contrast light and dark schemes:
 - **Substrate / Paper**: `#FFFFFF` (light), `#171717` (dark)
 - **Surface Elevated**: `#F8F8F8` (light), `#222222` (dark)
@@ -18,23 +18,23 @@ Every color token is defined in OKLCh (`oklch(L C H)`) and resolves across stand
 - **Secondary Ink (`ink60`)**: At least 4.8:1 (AA), and AAA under high-contrast modes
 - **Signal Error (`signalError`)**: At least 4.5:1 (AA), and AAA under high-contrast modes
 
-### 2. 8pt Macro Grid / 4pt Micro Subgrid
+### 2. 8pt macro grid / 4pt micro subgrid
 - **Micro subgrid** (`4pt`): Typographic leading, hairline offsets, and micro cell insets.
 - **Touch target floors**: `44pt` on Apple, as in Apple's HIG; the tokens also carry the `48dp` floor of Android Material Design 3.
 - **Macro grid** (`8pt` increments): Standard margin and card padding progression (`8`, `16`, `24`, `32`, `48`, `64`, `96`, `128`).
 
-### 3. Native Platform Geometry
+### 3. Native platform geometry
 Judarn never fights platform curves or physics:
 - **Apple (SwiftUI)**: Native continuous squircles (`RoundedRectangle(cornerRadius: 16, style: .continuous)`), system materials (`.regularMaterial`), and spring transitions.
 - **web (React / CSS)**: CSS custom properties, system font slots, and semantic tokenized radii.
 
-### 4. Tabular Density & Surface Contrast
+### 4. Tabular density & surface contrast
 - **Surface Hierarchy**: Grouping is achieved exclusively through background fill contrast (`surfaceElevated` or a light accent tint on `substrate`). Perimeter borders and overlays around cards are prohibited.
 - **Tabular Figures**: Numeric data uses monospaced digit formatting (`.monospacedDigit()`, `.t-data`) with zero-width space baseline preservation. Hairlines (`rule = 1pt`) belong only within data matrices.
 
 ---
 
-## Components & Tools
+## Components & tools
 
 - **Design Tokens**: Tokens for color, spatial cadence, and typography available as native packages for Apple (SwiftUI) and web (React / CSS), alongside the AI reference in [`docs/DESIGN.md`](docs/DESIGN.md).
 - **Judarn Color Dictionary & MCP Server** (optional add-on): Curated Japanese color harmonies derived from Sanzo Wada's 1930s dictionary (*Haishoku Sōkan*), calibrated in wide-gamut OKLCh. The colour data derives from Matt DesLauriers' [dictionary-of-colour-combinations](https://github.com/mattdesl/dictionary-of-colour-combinations) (MIT), itself built on Dain M. Blodorn Kim's dataset; the licence sits in [`tools/wada-explorer/data/LICENSE`](tools/wada-explorer/data/LICENSE). Browse all 348 combinations and 159 individual colors in an interactive combinations gallery and multi-context previewer ([`tools/wada-explorer/`](tools/wada-explorer/README.md)), with a local Model Context Protocol (MCP) server for AI coding assistants.
@@ -45,7 +45,7 @@ Judarn never fights platform curves or physics:
 
 ---
 
-## Monorepo Topology
+## Monorepo topology
 
 ```text
 judarn/
@@ -80,7 +80,7 @@ judarn/
 
 Judarn is in beta. The Apple package integrates through SwiftPM from GitHub. The web package is published to npm as `@judarn/ui`.
 
-### Apple Native (SwiftUI)
+### Apple native (SwiftUI)
 
 Add Judarn to your `Package.swift` dependencies:
 
@@ -134,7 +134,7 @@ export function Dashboard() {
 
 ---
 
-## WCAG Accessibility Matrix
+## WCAG accessibility matrix
 
 | Pairing | Normal appearance | High-contrast appearance | Standard |
 | :--- | :--- | :--- | :--- |

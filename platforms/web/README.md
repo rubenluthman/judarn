@@ -1,4 +1,4 @@
-# @judarn/ui
+# `@judarn/ui`
 
 React components and CSS tokens for the Judarn design system, with colors in OKLCh and a fixed 8 px spacing grid.
 

@@ -1,4 +1,4 @@
-# Compile-Time Contrast Checks and Gamut Mapping
+# Compile-time contrast checks and gamut mapping
 Status: Active · 2026-10-31
 
 ## Decision

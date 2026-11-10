@@ -1,4 +1,4 @@
-# Web Package Ships Compiled JavaScript
+# Web package ships compiled JavaScript
 Status: Active · 2026-11-06
 
 ## Decision

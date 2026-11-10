@@ -1,4 +1,4 @@
-# Apps Consume @judarn/ui from the Public npm Registry
+# Apps consume @judarn/ui from the public npm registry
 Status: Active · 2026-11-08
 
 ## Decision
