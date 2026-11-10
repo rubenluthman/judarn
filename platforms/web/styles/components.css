@@ -67,21 +67,29 @@
   text-transform: uppercase;
   color: var(--black);
 }
+/* A field is a well set apart by fill alone (DESIGN.md, Surface Hierarchy): surfaceRecessed on the
+   page, substrate inside a card. The resting border is transparent: it keeps the field's size, and
+   Windows high-contrast mode still draws it. High-contrast modes turn it into an ink-100 outline. */
 .field__input {
   font-family: var(--font-sans);
   font-size: var(--size-body);
   color: var(--black);
-  background: var(--white);
-  border: var(--rule) solid var(--black);
+  background: var(--jd-surface-recessed);
+  border: var(--rule) solid transparent;
   border-radius: var(--radius-control);
   padding: var(--space-2);
   width: 100%;
   transition: border-color 120ms linear, box-shadow 120ms linear;
 }
+.card .field__input { background: var(--paper); }
+@media (prefers-contrast: more) {
+  :where(:root:not([data-contrast="normal"])) .field__input { border-color: var(--ink-100); }
+}
+:where([data-contrast="high"]) .field__input { border-color: var(--ink-100); }
 .field__input::placeholder { color: var(--ink-60); }
 .field__input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 .field__input:focus-visible { outline: var(--rule-bold) solid var(--accent); outline-offset: 2px; }
-.field__input:disabled { color: var(--ink-30); border-color: var(--ink-30); background: var(--jd-surface-recessed); cursor: not-allowed; }
+.field__input:disabled { color: var(--ink-30); cursor: not-allowed; }
 .field__input[aria-invalid="true"], .field__input.is-invalid { border-color: var(--signal-error); box-shadow: 0 0 0 1px var(--signal-error); }
 .field__hint { font-size: var(--size-small); color: var(--ink-60); }
 .field__hint.is-error, .field__hint--error { color: var(--signal-error); font-weight: var(--weight-medium); }

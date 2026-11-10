@@ -1,6 +1,10 @@
 import SwiftUI
 
-/// Judarn TextField component with hairline borders, optional label, and focus coloring.
+/// Judarn TextField component: a well set apart by fill alone, with an optional label and an accent focus ring.
+///
+/// The field fills with `surfaceRecessed`, or `substrate` inside a `JudarnCard` or any view that sets
+/// `judarnOnElevatedSurface`. It draws no outline at rest; Increase Contrast adds an `ink100` outline.
+/// The fill's low ratio is an accepted cost (DESIGN.md, Surface Hierarchy).
 public struct JudarnTextField: View {
     public let label: String?
     public let placeholder: String
@@ -14,6 +18,7 @@ public struct JudarnTextField: View {
     @FocusState private var isFocused: Bool
     @Environment(\.judarnAccent) private var accentColor
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+    @Environment(\.judarnOnElevatedSurface) private var isOnElevatedSurface
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     public init(
@@ -78,17 +83,17 @@ public struct JudarnTextField: View {
             .accessibilityHint(Self.accessibilityHint(hint: hint, isInvalid: isInvalid) ?? "")
             // Input Corner Curvature: macOS text fields use subtle 6pt continuous rounding; iOS inputs use 10pt continuous squircles.
             .background(
-                JudarnColors.surfaceElevated,
+                Self.fill(isOnElevatedSurface: isOnElevatedSurface),
                 in: RoundedRectangle(cornerRadius: fieldCornerRadius, style: .continuous)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: fieldCornerRadius, style: .continuous)
-                    .strokeBorder(borderColor, lineWidth: borderWidth)
+                    .strokeBorder(border.color, lineWidth: border.width)
             )
             // Outer Keyboard Focus Ring: macOS desktop text fields require a visible outer focus halo when active. Never clip the text field perimeter with .clipShape(); draw an outer accent ring with negative padding.
             .overlay(
                 RoundedRectangle(cornerRadius: fieldCornerRadius + JudarnSpacing.ruleBold, style: .continuous)
-                    .strokeBorder(accentColor, lineWidth: isFocused ? JudarnSpacing.ruleBold : 0)
+                    .strokeBorder(focusRingColor, lineWidth: isFocused ? JudarnSpacing.ruleBold : 0)
                     .padding(-JudarnSpacing.spaceHalf / 2)
                     .opacity(isFocused ? 1.0 : 0.0)
             )
@@ -129,18 +134,52 @@ public struct JudarnTextField: View {
         return hint
     }
     
-    private var borderColor: Color {
-        if isInvalid {
-            return JudarnColors.signalError
-        }
-        return isFocused ? accentColor : JudarnColors.ink100
+    // MARK: - Fill and Border
+
+    /// The well fill: `substrate` inside an elevated surface, `surfaceRecessed` directly on the substrate.
+    static func fill(isOnElevatedSurface: Bool) -> Color {
+        isOnElevatedSurface ? JudarnColors.substrate : JudarnColors.surfaceRecessed
     }
-    
-    private var borderWidth: CGFloat {
-        if colorSchemeContrast == .increased {
-            return JudarnSpacing.ruleBold
+
+    /// The surface around the field, which the focus ring must reach 3:1 against.
+    static func surroundingSurface(isOnElevatedSurface: Bool) -> Color {
+        isOnElevatedSurface ? JudarnColors.surfaceElevated : JudarnColors.substrate
+    }
+
+    /// The field's own border. None at rest; the invalid ring wins over focus, and Increase Contrast adds an `ink100` outline.
+    static func border(
+        isFocused: Bool,
+        isInvalid: Bool,
+        increasedContrast: Bool,
+        focusColor: Color
+    ) -> (color: Color, width: CGFloat) {
+        if isInvalid {
+            return (JudarnColors.signalError, JudarnSpacing.ruleBold)
         }
-        return (isFocused || isInvalid) ? JudarnSpacing.ruleBold : JudarnSpacing.rule
+        if isFocused {
+            return (focusColor, JudarnSpacing.ruleBold)
+        }
+        if increasedContrast {
+            return (JudarnColors.ink100, JudarnSpacing.ruleBold)
+        }
+        return (.clear, 0)
+    }
+
+    /// The accent, clamped so the focus ring reaches 3:1 against the surface around the field.
+    private var focusRingColor: Color {
+        accentColor.contrastingAccent(
+            against: Self.surroundingSurface(isOnElevatedSurface: isOnElevatedSurface),
+            minRatio: 3.0
+        )
+    }
+
+    private var border: (color: Color, width: CGFloat) {
+        Self.border(
+            isFocused: isFocused,
+            isInvalid: isInvalid,
+            increasedContrast: colorSchemeContrast == .increased,
+            focusColor: focusRingColor
+        )
     }
 
     private var fieldCornerRadius: CGFloat {
@@ -150,4 +189,10 @@ public struct JudarnTextField: View {
         return JudarnRadius.control
         #endif
     }
+}
+
+public extension EnvironmentValues {
+    /// Whether the views below sit on an elevated surface, so a `JudarnTextField` fills with `substrate`
+    /// instead of `surfaceRecessed`. `JudarnCard` sets it; set it on your own elevated containers.
+    @Entry var judarnOnElevatedSurface: Bool = false
 }

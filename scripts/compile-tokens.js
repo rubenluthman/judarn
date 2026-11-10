@@ -501,7 +501,8 @@ public enum JudarnColors {
         dark: ${fmtOklch(elvD)}
     )
     
-    /// Tier 2 Recessed surface: Input wells, sunken canvas, matrix hovers (Light: ${hx('surfaceRecessed', 'light')}, Dark: ${hx('surfaceRecessed', 'dark')})
+    /// Tier 2 Recessed surface: Text field wells on the substrate, sunken canvas, matrix hovers (Light: ${hx('surfaceRecessed', 'light')}, Dark: ${hx('surfaceRecessed', 'dark')}).
+    /// A field inside a card fills with \`substrate\` instead. Fields draw no outline at rest; the fill's low ratio is an accepted cost (DESIGN.md, Surface Hierarchy).
     public static let surfaceRecessed = Color.dynamic(
         light: ${fmtOklch(recL)},
         dark: ${fmtOklch(recD)}
@@ -1923,6 +1924,13 @@ function generateDesignMarkdown() {
 \n`;
   }
 
+  // Field fill against what surrounds it: substrate in surfaceElevated, surfaceRecessed on substrate.
+  const fieldRatios = ['light', 'dark'].flatMap((m) => [
+    contrastRatio(parseOklch(c.substrate[m].$value), parseOklch(c.surfaceElevated[m].$value)),
+    contrastRatio(parseOklch(c.surfaceRecessed[m].$value), parseOklch(c.substrate[m].$value))
+  ]);
+  const fieldRange = `${Math.min(...fieldRatios).toFixed(2)} – ${Math.max(...fieldRatios).toFixed(2)}:1`;
+
   const typeRows = Object.entries(t).map(([key, spec]) => {
     const appleStyle = spec.appleTextStyleMacOS
       ? `\`.${spec.appleTextStyle}\` (macOS \`.${spec.appleTextStyleMacOS}\`)`
@@ -1987,6 +1995,9 @@ These hold on every host.
    - Hairlines belong strictly inside tables and divider rules.
    - Where the host offers native translucent materials, elevated cards use them over synthetic fills.
    - Why: an outline breaks the white reading canvas and competes with the fill hierarchy, and dark mode keeps its order through fill alone.
+   - **Text fields** are wells, set apart by fill alone: \`substrate\` inside an elevated surface or tint, and \`surfaceRecessed\` directly on the substrate. The label, the field's place in the form, and its focus ring identify it, so it draws no outline at rest.
+   - Every field has a visible label, and a placeholder is not a label. The focus ring and the invalid ring each reach 3:1 against the surface around the field. High-contrast modes add an \`ink100\` outline.
+   - The fill sits at ${fieldRange} against its surroundings, below the 3:1 that WCAG's Understanding document for 1.4.11 gives for fill-only inputs. That is an accepted cost, like white ink: **never darken a field fill or add an outline on ratios alone.** A project that must claim formal WCAG conformance records an outline in its profile.
 
 3. **Rhythm**:
    - Space things on an 8-unit grid, with a 4-unit subgrid for fine offsets.
@@ -2027,6 +2038,8 @@ Apple and web take their values from \`tokens/judarn-tokens.json\`, with zero dr
   - Contrast surfaces by background fill (\`surfaceElevated\` on \`substrate\`).
   - **Never apply \`.border(...)\` or \`.overlay(strokeBorder(...))\` around card perimeters.**
   - Hairlines use \`rule = 1px\`.
+  - Text fields fill with \`surfaceRecessed\`, or \`substrate\` inside a card (\`.card\` on web, \`JudarnCard\` on Apple). At rest they keep a transparent border on web, so Windows high-contrast mode can still draw it, and no stroke on Apple. \`prefers-contrast: more\`, \`data-contrast="high"\`, and Apple's Increase Contrast turn it into an \`ink100\` outline.
+  - The focus ring takes the accent and the invalid ring \`signalError\`. Apple clamps the focus ring to 3:1 with \`contrastingAccent\`; on web a project that sets \`--jd-accent\` measures it.
 - **Type**:
   - Use the 12-step scale in section 5, and the system font stack in the tokens.
   - Apple takes leading from the role's \`appleLeading\` through \`Font.leading\`, never \`lineSpacing\`, so text styles and Dynamic Type stay intact. Roles for running text and headings are \`tight\`, and \`label\`, \`micro\`, \`data\`, and \`mono\` are \`standard\`. Tight leading removes 2pt per line break and leaves single-line text unchanged (measured on iOS 27.2 and macOS, 2026-11-09).
@@ -2089,7 +2102,7 @@ ${typeRows}
 | :--- | :--- | :--- | :--- |
 | \`substrate\` | \`${c.substrate.light.$value}\` | \`${c.substrate.dark.$value}\` | Canvas substrate |
 | \`surfaceElevated\` | \`${c.surfaceElevated.light.$value}\` | \`${c.surfaceElevated.dark.$value}\` | Card substrate |
-| \`surfaceRecessed\` | \`${c.surfaceRecessed.light.$value}\` | \`${c.surfaceRecessed.dark.$value}\` | Input wells & hovers |
+| \`surfaceRecessed\` | \`${c.surfaceRecessed.light.$value}\` | \`${c.surfaceRecessed.dark.$value}\` | Text field wells on the substrate & hovers (fill only, ${fieldRange} accepted, section 2) |
 | \`ink100\` | \`${c.ink100.light.$value}\` | \`${c.ink100.dark.$value}\` | Primary text (\`>= 15.0:1\` AAA) |
 | \`ink60\` | \`${c.ink60.light.$value}\` | \`${c.ink60.dark.$value}\` | Secondary text (\`>= 4.8:1\` AA) |
 | \`ink30\` | \`${c.ink30.light.$value}\` | \`${c.ink30.dark.$value}\` | Hairlines & disabled |

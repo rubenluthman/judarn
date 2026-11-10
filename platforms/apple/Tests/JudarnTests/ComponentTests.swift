@@ -209,6 +209,58 @@ struct ComponentTests {
         #endif
     }
 
+    @Test("Text field fills with substrate inside an elevated surface and surfaceRecessed on the page")
+    func textFieldFill() {
+        #expect(JudarnTextField.fill(isOnElevatedSurface: true) == JudarnColors.substrate)
+        #expect(JudarnTextField.fill(isOnElevatedSurface: false) == JudarnColors.surfaceRecessed)
+        #expect(JudarnTextField.surroundingSurface(isOnElevatedSurface: true) == JudarnColors.surfaceElevated)
+        #expect(JudarnTextField.surroundingSurface(isOnElevatedSurface: false) == JudarnColors.substrate)
+        #expect(EnvironmentValues().judarnOnElevatedSurface == false)
+    }
+
+    @Test("Text field draws no outline at rest, an ink100 outline in Increase Contrast, and keeps focus and error rings")
+    func textFieldBorder() {
+        func border(focused: Bool = false, invalid: Bool = false, increased: Bool = false) -> (color: Color, width: CGFloat) {
+            JudarnTextField.border(isFocused: focused, isInvalid: invalid, increasedContrast: increased, focusColor: .red)
+        }
+        let rest = border()
+        #expect(rest.color == .clear)
+        #expect(rest.width == 0)
+
+        let increased = border(increased: true)
+        #expect(increased.color == JudarnColors.ink100)
+        #expect(increased.width == JudarnSpacing.ruleBold)
+
+        let focused = border(focused: true, increased: true)
+        #expect(focused.color == .red)
+        #expect(focused.width == JudarnSpacing.ruleBold)
+
+        let invalid = border(focused: true, invalid: true)
+        #expect(invalid.color == JudarnColors.signalError)
+        #expect(invalid.width == JudarnSpacing.ruleBold)
+    }
+
+    @Test("Text fields lay out inside standard, flat and glass cards")
+    func textFieldInsideCards() {
+        let field = JudarnTextField(label: "Name", text: .constant("Ada"))
+        let cards = [
+            AnyView(JudarnCard(title: "Standard") { field }),
+            AnyView(JudarnCard(title: "Flat", isFlat: true) { field }),
+            AnyView(JudarnCard(title: "Glass", useGlassBackground: true) { field }),
+            AnyView(field.environment(\.judarnOnElevatedSurface, true)),
+        ]
+        #if os(macOS)
+        for view in cards {
+            let host = NSHostingView(rootView: view)
+            host.layout()
+            #expect(host.fittingSize.width > 0)
+            #expect(host.fittingSize.height > 0)
+        }
+        #else
+        #expect(cards.count == 4)
+        #endif
+    }
+
     @Test("Card container accessibility semantics")
     func cardAccessibilitySemantics() {
         #expect(JudarnCard<EmptyView, EmptyView, EmptyView>.accessibilityLabel(eyebrow: "INFRA", title: "Cluster") == "INFRA, Cluster")

@@ -1,4 +1,4 @@
-<!-- @dsCard group="Components" viewport="700x180" name="TextField" subtitle="Input · textarea · select – focus border switches to accent" -->
+<!-- @dsCard group="Components" viewport="700x380" name="TextField" subtitle="Wells set apart by fill – recessed on the page, substrate in a card, accent focus ring" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +7,7 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="../../dist/_ds_bundle.js"></script>
-<style> body { margin:0; padding:24px; background:var(--white); } .row{ display:flex; gap:16px; align-items:flex-start; } </style>
+<style> body { margin:0; padding:24px; background:var(--bg1); } .row{ display:flex; gap:16px; align-items:flex-start; } .stack{ display:flex; flex-direction:column; gap:24px; } </style>
 </head>
 <body>
 <div id="root"></div>
@@ -15,9 +15,18 @@
   const { TextField } = window.JudarnDesignSystem;
   const e = React.createElement;
   ReactDOM.createRoot(document.getElementById("root")).render(
-    e("div", { className: "row" },
-      e("div", { style:{width:220} }, e(TextField, { label:"E-post", placeholder:"namn@exempel.se", hint:"Vi delar aldrig din adress." })),
-      e("div", { style:{width:220} }, e(TextField, { label:"Meddelande", as:"textarea", placeholder:"Skriv här…" })),
+    e("div", { className: "stack" },
+      e("div", { className: "row" },
+        e("div", { style:{width:200} }, e(TextField, { label:"E-post", placeholder:"namn@exempel.se", hint:"Vi delar aldrig din adress." })),
+        e("div", { style:{width:200} }, e(TextField, { label:"Telefon", defaultValue:"070-12", error:"Numret är för kort." })),
+        e("div", { style:{width:200} }, e(TextField, { label:"Meddelande", as:"textarea", placeholder:"Skriv här…" })),
+      ),
+      e("div", { className: "card", style:{width:440} },
+        e("div", { className: "row" },
+          e("div", { style:{width:200} }, e(TextField, { label:"Namn", placeholder:"Förnamn Efternamn" })),
+          e("div", { style:{width:200} }, e(TextField, { label:"Ort", defaultValue:"Umeå" })),
+        )
+      )
     )
   );
 </script>

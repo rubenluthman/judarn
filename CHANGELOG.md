@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.7] - 2026-11-10
+
+### Added
+
+- A rule for text fields in `docs/DESIGN.md`: a field is a well set apart by fill alone, `surfaceRecessed` on the page and `substrate` inside a card, with a visible label and no outline at rest. The fill's 1.06 – 1.13:1 ratio is an accepted cost, like white ink, not a claim of WCAG conformance; a project that needs formal conformance records an outline in its profile.
+
+### Changed
+
+- The web and Apple text fields drop their resting outline and fill by context. High-contrast modes (`prefers-contrast: more`, `data-contrast="high"`, Apple's Increase Contrast) add an `ink100` outline. The focus and invalid rings stay, and on Apple the focus ring is clamped to 3:1.
+- `JudarnCard` sets the new `judarnOnElevatedSurface` environment value, so fields inside it fill with `substrate`.
+
 ## [0.7.6] - 2026-11-10
 
 ### Changed

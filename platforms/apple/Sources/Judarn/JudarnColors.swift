@@ -26,7 +26,8 @@ public enum JudarnColors {
         dark: Color(oklchL: 0.252, c: 0.000, h: 0.0)
     )
     
-    /// Tier 2 Recessed surface: Input wells, sunken canvas, matrix hovers (Light: #F1F1F1, Dark: #101010)
+    /// Tier 2 Recessed surface: Text field wells on the substrate, sunken canvas, matrix hovers (Light: #F1F1F1, Dark: #101010).
+    /// A field inside a card fills with `substrate` instead. Fields draw no outline at rest; the fill's low ratio is an accepted cost (DESIGN.md, Surface Hierarchy).
     public static let surfaceRecessed = Color.dynamic(
         light: Color(oklchL: 0.958, c: 0.000, h: 0.0),
         dark: Color(oklchL: 0.173, c: 0.000, h: 0.0)

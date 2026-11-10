@@ -26,6 +26,9 @@ export interface TextFieldProps extends FieldControlProps {
   disabled?: boolean;
 }
 
-/** Labelled field – input / textarea / select with Judarn styling. */
+/**
+ * Labelled field – input / textarea / select with Judarn styling. A well set apart by fill alone:
+ * surfaceRecessed on the page, substrate inside a card, and no outline except in high-contrast modes.
+ */
 export function TextField(props: TextFieldProps): React.JSX.Element;
 export default TextField;

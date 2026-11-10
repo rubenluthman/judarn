@@ -144,6 +144,18 @@ test('fields keep a visible focus indicator and a native select', () => {
   assert.ok(!/select\.field__input \{[^}]*appearance:\s*none/.test(components));
 });
 
+test('fields are wells set apart by fill, outlined only in high contrast', () => {
+  const field = rule(components, '.field__input');
+  assert.match(field, /background: var\(--jd-surface-recessed\);/, 'a field on the page fills with surfaceRecessed');
+  assert.match(field, /border: var\(--rule\) solid transparent;/, 'the resting border is transparent');
+  assert.match(rule(components, '.card .field__input'), /background: var\(--paper\);/, 'a field inside a card fills with substrate');
+  assert.ok(!/border-color:\s*var\(--ink-30\)/.test(rule(components, '.field__input:disabled')), 'a disabled field draws no outline');
+  assert.match(components, /@media \(prefers-contrast: more\) \{\n  :where\(:root:not\(\[data-contrast="normal"\]\)\) \.field__input \{ border-color: var\(--ink-100\); \}/);
+  assert.match(components, /:where\(\[data-contrast="high"\]\) \.field__input \{ border-color: var\(--ink-100\); \}/);
+  assert.match(rule(components, '.field__input:focus'), /border-color: var\(--accent\)/);
+  assert.match(rule(components, '.field__input[aria-invalid="true"], .field__input.is-invalid'), /border-color: var\(--signal-error\)/);
+});
+
 test('uppercase eyebrows route through t-label, not hand-rolled text-transform', () => {
   for (const sel of ['.card__eyebrow', '.footer__head', '.lockup__tag']) {
     assert.ok(!/text-transform/.test(rule(components, sel)), `${sel} must not set text-transform`);

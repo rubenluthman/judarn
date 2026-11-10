@@ -34,7 +34,7 @@ The type, space, surface, motion and icon rules below are written for the web. O
 
 Judarn has no default color. Build every surface and all running text from the neutrals. Take accent colors from the owner when they give them, through the project's profile or the request. When the owner gives none, choose a Wada combination for the artifact. The one exception to neutral surfaces is a light tint of an accent color on a box or card. The Wada section says how to choose and check colors.
 
-- Set the page on `jd-substrate`, cards and panels on `jd-surface-elevated`, wells and hover states on `jd-surface-recessed`. In light mode the page is pure white and boxes step down from it. In dark mode `jd-surface-elevated` stays lighter than `jd-substrate`.
+- Set the page on `jd-substrate`, cards and panels on `jd-surface-elevated`, wells and hover states on `jd-surface-recessed`. A text field inside a card or tint fills with `jd-substrate` instead. In light mode the page is pure white and boxes step down from it. In dark mode `jd-surface-elevated` stays lighter than `jd-substrate`.
 - Set primary text in `jd-ink-100` and secondary text in `jd-ink-60`. Use `jd-ink-30` only for table hairlines and disabled states.
 - Use `jd-signal-error` for errors and validation only.
 - Leave `jd-accent` neutral on a page that does not need a color. A neutral page is a valid result.
@@ -71,6 +71,8 @@ Judarn has no default color. Build every surface and all running text from the n
 
 - Separate surfaces by fill contrast: `jd-surface-elevated` or a light accent tint on `jd-substrate`. Never put a border or stroke around a card.
 - Keep hairlines (`jd-rule`, 1px) inside tables and divider rules.
+- Set text fields apart by fill alone: `jd-surface-recessed` on the page, `jd-substrate` inside a card or tint, and no outline at rest. Give every field a visible label; a placeholder is not a label. Keep the accent focus ring and the `jd-signal-error` invalid ring, each at 3:1 or more against the surface around the field. Under `prefers-contrast: more` or `data-contrast="high"`, add a `jd-ink-100` outline.
+- The field fill sits at 1.06 – 1.13:1, below the 3:1 that WCAG's Understanding document for 1.4.11 gives for fill-only inputs. This is the owner's accepted cost, like white ink: never darken a field fill or add an outline on ratios alone. A project that must claim formal WCAG conformance records an outline in its profile.
 - Use `jd-radius-card` for cards, `jd-radius-control` for controls, `jd-radius-badge` for badges and tags, `jd-radius-subtle` for small inner elements. Never clip a card to a sharp rectangle.
 - On Apple platforms use continuous corners. The host owns corner geometry, materials and safe areas.
 

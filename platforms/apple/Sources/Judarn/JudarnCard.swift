@@ -76,6 +76,8 @@ public struct JudarnCard<Content: View, Media: View, Actions: View>: View {
         }
         // Compact Desktop Card Insets: Compact desktop panes, sidebars (~260pt), and small control hierarchies adopt 16pt card padding (`JudarnSpacing.space2`), leaving sufficient typographic envelope for nested content. Standard cards adopt 24pt (`JudarnSpacing.space3`).
         .padding(isFlat ? 0 : (isCompact || controlSize == .small ? JudarnSpacing.space2 : JudarnSpacing.space3))
+        // Text fields inside a card fill with substrate; a flat card has no surface, so its fields stay recessed.
+        .environment(\.judarnOnElevatedSurface, !isFlat)
         .background(backgroundView)
         .modifier(CardClip(isFlat: isFlat))
         // Card Container Accessibility Semantics: Group composite content cards with `.accessibilityElement(children: .contain)` and an identifiable container label, preserving focus hierarchy for nested controls.
