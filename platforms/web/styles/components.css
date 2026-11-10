@@ -101,7 +101,7 @@ select.field__input { cursor: pointer; } /* native appearance keeps the platform
 .card--flat { border: none; padding: 0; border-radius: 0; }
 .card--compact { padding: var(--space-2); }
 .card--field { background: var(--bg2); border: none; }
-.card__eyebrow { color: var(--accent); } /* type comes from t-label (ADR-0009) */
+.card__eyebrow { color: var(--accent); } /* type comes from t-label */
 .card__title { font-size: var(--size-h4); font-weight: var(--weight-bold); letter-spacing: var(--track-head); }
 .card__body { font-size: var(--size-body); line-height: var(--lh-body); }
 .card__media { aspect-ratio: 3 / 2; background: var(--jd-surface-recessed); border-radius: var(--radius-control); overflow: hidden; }
@@ -151,7 +151,7 @@ select.field__input { cursor: pointer; } /* native appearance keeps the platform
   display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-4);
 }
 .footer__col { display: flex; flex-direction: column; gap: var(--gap-tight); }
-.footer__head { margin: 0 0 var(--space-1); color: var(--black); } /* type comes from t-label (ADR-0009) */
+.footer__head { margin: 0 0 var(--space-1); color: var(--black); } /* type comes from t-label */
 .footer__link { font-size: var(--size-small); color: var(--fg2); }
 .footer__link:hover { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
 
@@ -167,7 +167,7 @@ select.field__input { cursor: pointer; } /* native appearance keeps the platform
 .table .num { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* As-written casing for a field label or column header that holds a unit, a mixed-case term,
-   or more than two words (ADR-0009). */
+   or more than two words. */
 .field__label.t-as-written,
 .table th.t-as-written,
 .matrix th.t-as-written { text-transform: none; letter-spacing: var(--track-body); }
@@ -179,7 +179,7 @@ select.field__input { cursor: pointer; } /* native appearance keeps the platform
 .lockup__mark { display: block; flex: none; }
 .lockup__words { display: flex; flex-direction: column; }
 .lockup__name { font-weight: var(--weight-bold); font-size: var(--size-h4); line-height: 1; letter-spacing: var(--track-head); }
-.lockup__tag { color: var(--fg2); margin-top: 4px; } /* type comes from t-label (ADR-0009) */
+.lockup__tag { color: var(--fg2); margin-top: 4px; } /* type comes from t-label */
 .lockup--reversed .lockup__tag { color: var(--ink-30); }
 
 /* ---- DATA MATRIX ------------------------------------------------------- */

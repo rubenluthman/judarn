@@ -18,7 +18,7 @@ public enum JudarnTypographyStyle: Sendable, CaseIterable {
     case mono
 }
 
-/// Casing for the uppercase label styles, label and micro (ADR-0009).
+/// Casing for the uppercase label styles, label and micro.
 /// uppercase is for eyebrows, section labels, column headers, and value labels of at most two words
 /// with no digit, unit symbol, or mixed-case term. asWritten keeps size and weight with body tracking,
 /// for statuses, counts, values, units, messages, and controls.
@@ -185,7 +185,7 @@ public struct JudarnTypographyModifier: ViewModifier {
     public let weight: Font.Weight
     /// Tracking in em, as in the tokens. Points follow the rendered size, so Apple matches the web.
     public let trackingEm: CGFloat
-    /// Font leading from the role's `appleLeading` token: tight removes the open gap Apple's standard leading adds between wrapped lines (ADR-0012).
+    /// Font leading from the role's `appleLeading` token: tight removes the open gap Apple's standard leading adds between wrapped lines.
     public let leading: Font.Leading
     public let isUppercase: Bool
     public let slot: JudarnFontSlot
@@ -368,7 +368,7 @@ public extension View {
         environment(\.judarnFontConfig, config)
     }
 
-    // Semantic Text Style Mapping: Uses Apple system text styles to preserve platform density, optical variant selection (SF Pro Text vs SF Pro Display), and accessibility Dynamic Type scaling. A role takes a different style on macOS only where its own style would match a smaller role's size there: label is .footnote on iOS but .subheadline on macOS, where .footnote equals micro's .caption2 (ADR-0010). Apple has fewer sizes above .body than Judarn has roles above body, so some roles share a size; a shared size goes to roles of different weights, as bodyLg (regular) shares .title3 with h4 (heavy) and display (black) shares .largeTitle with h1 (heavy). Token weights map to the matching Font.Weight, so 800 is .heavy and 900 is .black, as in CSS.
+    // Semantic Text Style Mapping: Uses Apple system text styles to preserve platform density, optical variant selection (SF Pro Text vs SF Pro Display), and accessibility Dynamic Type scaling. A role takes a different style on macOS only where its own style would match a smaller role's size there: label is .footnote on iOS but .subheadline on macOS, where .footnote equals micro's .caption2. Apple has fewer sizes above .body than Judarn has roles above body, so some roles share a size; a shared size goes to roles of different weights, as bodyLg (regular) shares .title3 with h4 (heavy) and display (black) shares .largeTitle with h1 (heavy). Token weights map to the matching Font.Weight, so 800 is .heavy and 900 is .black, as in CSS.
     /// Applies a Judarn typographic style mapped to native platform text styles.
     func judarnTypography(_ style: JudarnTypographyStyle) -> some View {
         modifier(style.typographyModifier)

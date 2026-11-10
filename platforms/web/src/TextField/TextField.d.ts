@@ -10,7 +10,7 @@ type FieldControlProps = Omit<
 export interface TextFieldProps extends FieldControlProps {
   /** Label above the control, uppercase unless labelCasing is "asWritten". */
   label?: string;
-  /** "asWritten" for a label longer than two words or holding a digit, unit, or mixed-case term (ADR-0009). @default "uppercase" */
+  /** "asWritten" for a label longer than two words or holding a digit, unit, or mixed-case term. @default "uppercase" */
   labelCasing?: "uppercase" | "asWritten";
   /** Helper text below the control, linked with `aria-describedby`. */
   hint?: string;

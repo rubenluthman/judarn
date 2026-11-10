@@ -134,7 +134,7 @@ if (!spacingSrc.includes('enum JudarnSpacing') || !spacingSrc.includes('enum Jud
 }
 console.log('  ✓ Swift package targets and public symbol source manifests verified.');
 
-// 3. Negative Invariant & Anti-Pattern Audits (ADR-0002, ADR-0004)
+// 3. Negative Invariant & Anti-Pattern Audits
 console.log('\n3. Validating Negative Architectural Invariants & Anti-Patterns...');
 
 // Pattern 1: 0px Tailwind radius overrides
@@ -142,7 +142,7 @@ const tailwindCssPath = path.join(rootDir, 'platforms/web/styles/tailwind-theme.
 if (fs.existsSync(tailwindCssPath)) {
   const tailwindCss = fs.readFileSync(tailwindCssPath, 'utf8');
   if (/--radius-card:\s*0px|--radius-control:\s*0px/.test(tailwindCss)) {
-    console.error('✗ Invariant violation: 0px radius override found in tailwind-theme.css (violates ADR-0002).');
+    console.error('✗ Invariant violation: 0px radius override found in tailwind-theme.css (violates the shape rules in docs/DESIGN.md).');
     process.exit(1);
   }
 }
@@ -150,7 +150,7 @@ const tailwindJsPath = path.join(rootDir, 'platforms/web/src/tailwind.js');
 if (fs.existsSync(tailwindJsPath)) {
   const tailwindJs = fs.readFileSync(tailwindJsPath, 'utf8');
   if (/'--radius-card':\s*'0px'|'--radius-control':\s*'0px'/.test(tailwindJs)) {
-    console.error('✗ Invariant violation: 0px radius override found in tailwind.js (violates ADR-0002).');
+    console.error('✗ Invariant violation: 0px radius override found in tailwind.js (violates the shape rules in docs/DESIGN.md).');
     process.exit(1);
   }
 }
@@ -160,7 +160,7 @@ console.log('  ✓ Tailwind presets preserve platform corner radii (zero 0px rad
 const appleCardPath = path.join(appleSourcesDir, 'JudarnCard.swift');
 const appleCard = fs.readFileSync(appleCardPath, 'utf8');
 if (/\.overlay\(RoundedRectangle|\.border\(/.test(appleCard)) {
-  console.error('✗ Invariant violation: Perimeter stroke border found on JudarnCard in Swift (violates ADR-0004).');
+  console.error('✗ Invariant violation: Perimeter stroke border found on JudarnCard in Swift (violates the card border rule in docs/DESIGN.md).');
   process.exit(1);
 }
 const webCardCssPath = path.join(rootDir, 'platforms/web/styles/components.css');
@@ -171,7 +171,7 @@ if (cardBlockMatch) {
   if (borderMatch) {
     const val = borderMatch[1].trim();
     if (val !== 'none' && val !== '0' && val !== 'transparent') {
-      console.error('✗ Invariant violation: Perimeter stroke border found in .card CSS (violates ADR-0004).');
+      console.error('✗ Invariant violation: Perimeter stroke border found in .card CSS (violates the card border rule in docs/DESIGN.md).');
       process.exit(1);
     }
   }

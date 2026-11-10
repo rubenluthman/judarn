@@ -63,7 +63,7 @@ function parseLuminance(input) {
 
 /**
  * Resolves the foreground ink (pure black or pure white) for a filled surface
- * from its relative luminance and the perceptual crossover (ADR-0006).
+ * from its relative luminance and the perceptual crossover.
  * Inks are static literals because a fill does not change with color scheme,
  * while `--white` and `--jd-ink-100` invert in dark mode.
  * @param {string} color - Hex (#fff, #ffffff), rgb(r, g, b) or oklch(L C H) string.
@@ -75,12 +75,12 @@ export function getContrastingInk(color) {
   if (lum === null) {
     throw new TypeError(`getContrastingInk: unsupported colour "${String(color)}". Use #hex, rgb() or oklch().`);
   }
-  const perceptualCrossover = 0.50; // ADR-0006 perceptual polarity crossover
+  const perceptualCrossover = 0.50; // perceptual polarity crossover, as in docs/DESIGN.md
   return lum > perceptualCrossover ? "#000000" : "#ffffff";
 }
 
 /**
- * Badge – small status chip, set as written (a status is a value, ADR-0009), with luminance-aware contrasting ink.
+ * Badge – small status chip, set as written (a status is a value), with luminance-aware contrasting ink.
  */
 export function Badge({ children, variant = "outline", accentColor, style, className, ...rest }) {
   const cls = cx(

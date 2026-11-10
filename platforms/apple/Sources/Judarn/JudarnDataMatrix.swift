@@ -6,7 +6,7 @@ public struct JudarnMatrixColumn: Identifiable, Sendable {
     public let title: String
     public let isNumeric: Bool
     public let width: CGFloat?
-    /// Pass .asWritten for a header holding a unit symbol or mixed-case term, such as kg or e1RM (ADR-0009).
+    /// Pass .asWritten for a header holding a unit symbol or mixed-case term, such as kg or e1RM.
     public let casing: JudarnTextCasing
 
     public init(id: String, title: String, isNumeric: Bool = false, width: CGFloat? = nil, casing: JudarnTextCasing = .uppercase) {

@@ -2,7 +2,7 @@ import { cx } from "../internal/cx.js";
 
 /**
  * Footer – three-column footer with hairline top rule. Column heads are `h2` headings set as `t-label`;
- * `headCasing="asWritten"` keeps them as written (ADR-0009).
+ * `headCasing="asWritten"` keeps them as written.
  */
 export function Footer({ brand = "JUDARN", tagline, columns = [], headCasing = "uppercase", className, ...rest }) {
   const headClass = headCasing === "asWritten" ? "footer__head t-label t-as-written" : "footer__head t-label";

@@ -7,7 +7,7 @@ public enum JudarnBadgeVariant: Sendable {
     case accentOutline
 }
 
-/// SwiftUI Status Badge. Set as written, because a status is a value, not a label (ADR-0009). Capsule geometry.
+/// SwiftUI Status Badge. Set as written, because a status is a value, not a label. Capsule geometry.
 public struct JudarnBadge: View {
     public let text: String
     public let variant: JudarnBadgeVariant
@@ -48,7 +48,7 @@ public struct JudarnBadge: View {
     }
 }
 
-// Tag vs. Badge Semantic Scale: Status badges use .judarnLabel (.footnote on iOS, .subheadline on macOS), while auxiliary keyword tags scale down to sentence-case .caption2, preserving a clear hierarchical rank (ADR-0010).
+// Tag vs. Badge Semantic Scale: Status badges use .judarnLabel (.footnote on iOS, .subheadline on macOS), while auxiliary keyword tags scale down to sentence-case .caption2, preserving a clear hierarchical rank.
 /// SwiftUI Keyword Tag. Sentence case, smaller, capsule geometry.
 public struct JudarnTag: View {
     public let text: String

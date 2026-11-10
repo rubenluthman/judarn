@@ -7,18 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.6] - 2026-11-10
+
+### Changed
+
+- Decision records follow the four-heading format (Decision, Why, What we gave up, Revisit if) and are edited in place. Seven records remain; the design rules of the others now live in `docs/DESIGN.md`.
+
 ## [0.7.5] - 2026-11-09
 
 ### Changed
 
-- On Apple hosts, tight leading shortens text by 2pt per line break, not per line, and single-line text keeps its height. [ADR-0016](docs/adr/0016-tight-leading-saves-two-points-per-line-break.md) corrects the figures in ADR-0012.
+- On Apple hosts, tight leading shortens text by 2pt per line break, not per line, and single-line text keeps its height. ADR-0016 corrects the figures in ADR-0012.
 
 ## [0.7.4] - 2026-11-09
 
 ### Changed
 
 - Repository checks run on GitHub for every push to `main` that changes code, on current macOS runners and Xcode.
-- A decision record explains why the first npm version, 0.7.1, was published by hand and has no provenance attestation ([ADR-0015](docs/adr/0015-first-npm-publish-of-a-new-package-is-manual.md)).
+- A decision record explains why the first npm version, 0.7.1, was published by hand and has no provenance attestation (ADR-0015).
 - There is no 0.7.3 release: tag `v0.7.3` was created by mistake on the 0.7.2 commit and is kept unchanged.
 
 ## [0.7.2] - 2026-11-09

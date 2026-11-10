@@ -3,7 +3,7 @@
  * Generated from tokens/judarn-tokens.json  –  do not edit directly.
  */
 module.exports = function judarnTailwindPlugin({ addBase, theme }) {
-  // Do not override global border radius to 0px; adhere to ADR-0002
+  // Do not override global border radius to 0px; adhere to the shape rules in docs/DESIGN.md
 };
 
 module.exports.theme = {

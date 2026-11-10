@@ -3,7 +3,7 @@
 Vertical-page template for specifications and project documentation.
 
 > [!NOTE]
-> This is a local variant of Judarn, not a statement of its rules. Google Docs needs its fonts and colors chosen beforehand, so IBM Plex and Sanzo Wada Combination 119 are set here. They can change at any time, and a change here affects only these files (ADR-0002).
+> This is a local variant of Judarn, not a statement of its rules. Google Docs needs its fonts and colors chosen beforehand, so IBM Plex and Sanzo Wada Combination 119 are set here. They can change at any time, and a change here affects only these files.
 
 ## Features & Template Choices
 - **Canvas**: Standard Letter ($8.5 \times 11\,\text{in}$, $1\,\text{in}$ margins) calibrated for screen reading, direct copy-pasting, and clean print-to-PDF generation (`@media print`).

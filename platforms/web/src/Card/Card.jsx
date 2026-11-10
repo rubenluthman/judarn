@@ -2,7 +2,7 @@ import { cx } from "../internal/cx.js";
 
 /**
  * Card – content block with substrate background contrast. Optional eyebrow, title, body, media, actions.
- * The eyebrow is a `t-label` set in uppercase; `eyebrowCasing="asWritten"` keeps it as written (ADR-0009).
+ * The eyebrow is a `t-label` set in uppercase; `eyebrowCasing="asWritten"` keeps it as written.
  */
 export function Card({
   eyebrow,

@@ -5,7 +5,7 @@ export interface DataColumn {
   label: string;
   /** Right-align with tabular figures. @default false */
   numeric?: boolean;
-  /** "asWritten" for a header holding a unit symbol or mixed-case term, such as kg or e1RM (ADR-0009). @default "uppercase" */
+  /** "asWritten" for a header holding a unit symbol or mixed-case term, such as kg or e1RM. @default "uppercase" */
   casing?: "uppercase" | "asWritten";
 }
 

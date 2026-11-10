@@ -106,7 +106,7 @@
      The resolved --accent, --accent-fg, --accent-ink and --accent-2 are declared in every theme
      scope so a nested scope resolves its own default; a hook set on :root survives nesting.
      --accent defaults to ink-100 and --accent-fg to --accent. --accent-ink is static ink on an
-     accent fill (ADR-0006); a project that sets --jd-accent sets --jd-accent-ink too. */
+     accent fill; a project that sets --jd-accent sets --jd-accent-ink too. */
   --accent:       var(--jd-accent, var(--jd-ink-100));
   --accent-fg:    var(--jd-accent-fg, var(--accent));
   --accent-ink:   var(--jd-accent-ink, #ffffff);
@@ -325,7 +325,7 @@
   font-variant-ligatures: none;
   color: var(--jd-ink-100);
 }
-/* As-written casing for the uppercase label styles: statuses, counts, values, units, messages, controls (ADR-0009). */
+/* As-written casing for the uppercase label styles: statuses, counts, values, units, messages, controls. */
 .t-label.t-as-written,
 .t-micro.t-as-written {
   text-transform: none;

@@ -125,7 +125,7 @@ public extension Color {
         #endif
     }
 
-    /// Perceptual relative luminance crossover Y* = 0.50 (ADR-0006).
+    /// Perceptual relative luminance crossover Y* = 0.50.
     /// Surfaces at or below it receive pureWhite, a deliberate preference over WCAG ratios: lighter surfaces receive pureBlack.
     private static let perceptualLuminanceCrossover: Double = 0.50
 
@@ -143,7 +143,7 @@ public extension Color {
         0.2126 * linearizeSrgbChannel(r) + 0.7152 * linearizeSrgbChannel(g) + 0.0722 * linearizeSrgbChannel(b)
     }
 
-    /// Resolves the foreground ink (pureBlack or pureWhite) for a filled surface from its linearized relative luminance and the perceptual crossover (ADR-0006).
+    /// Resolves the foreground ink (pureBlack or pureWhite) for a filled surface from its linearized relative luminance and the perceptual crossover.
     var contrastingInk: Color {
         #if canImport(UIKit)
         return Color(UIColor { trait in

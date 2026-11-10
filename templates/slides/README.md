@@ -3,7 +3,7 @@
 16:9 presentation slide layouts.
 
 > [!NOTE]
-> This is a local variant of Judarn, not a statement of its rules. Slide tools need their fonts and colors chosen beforehand, so IBM Plex and Sanzo Wada Combination 119 are set here. They can change at any time, and a change here affects only these files (ADR-0002).
+> This is a local variant of Judarn, not a statement of its rules. Slide tools need their fonts and colors chosen beforehand, so IBM Plex and Sanzo Wada Combination 119 are set here. They can change at any time, and a change here affects only these files.
 
 ## Starters
 - [`Judarn-Presentation-Template.pptx`](Judarn-Presentation-Template.pptx): 10-slide PowerPoint file for Google Slides and Keynote.

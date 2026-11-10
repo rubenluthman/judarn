@@ -13,7 +13,7 @@ export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 /**
- * Resolves the foreground ink ("#000000" or "#ffffff") for a fill from its relative luminance and the 0.50 perceptual crossover (ADR-0006).
+ * Resolves the foreground ink ("#000000" or "#ffffff") for a fill from its relative luminance and the 0.50 perceptual crossover.
  * Accepts #hex, rgb() and oklch(); throws a TypeError for any other format.
  */
 export function getContrastingInk(hexOrRgb: string): string;

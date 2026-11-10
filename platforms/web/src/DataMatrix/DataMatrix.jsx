@@ -1,7 +1,7 @@
 import { cx } from "../internal/cx.js";
 
 /**
- * DataMatrix – 1px hairline grid matrix layout (internal rules only, no perimeter border, ADR-0004) with tabular numeric cells,
+ * DataMatrix – 1px hairline grid matrix layout (internal rules only, no perimeter border) with tabular numeric cells,
  * zero-width space baseline preservation, and accessible tabular landmarks.
  */
 export function DataMatrix({ columns = [], rows = [], label = "Data Matrix", className, ...rest }) {

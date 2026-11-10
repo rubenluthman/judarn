@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Stdio tests for the Wada MCP server: protocol behaviour, argument validation, ADR-0004 export polarity.
+// Stdio tests for the Wada MCP server: protocol behaviour, argument validation, light export polarity.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
@@ -65,7 +65,7 @@ test('valid calls still succeed', async () => {
   assert.equal(JSON.parse(replies[1].result.content[0].text).size, 3);
 });
 
-test('export_tokens follows the ADR-0004 light polarity', async () => {
+test('export_tokens follows the light polarity', async () => {
   const [r] = await exchange([call(1, 'export_tokens', { id: 264 })]);
   const roles = JSON.parse(r.result.content[0].text).roles;
   assert.equal(roles.substrate.light.$value.hex, '#ffffff');

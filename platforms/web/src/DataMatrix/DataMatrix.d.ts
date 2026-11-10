@@ -7,7 +7,7 @@ export interface MatrixColumn {
   numeric?: boolean;
   /** Fixed width in pixels (number) or CSS length (string). */
   width?: number | string;
-  /** "asWritten" for a header holding a unit symbol or mixed-case term, such as kg or e1RM (ADR-0009). @default "uppercase" */
+  /** "asWritten" for a header holding a unit symbol or mixed-case term, such as kg or e1RM. @default "uppercase" */
   casing?: "uppercase" | "asWritten";
 }
 

@@ -8,7 +8,7 @@ Judarn sets color, spatial rhythm, and typography while respecting native platfo
 
 ### Key Capabilities
 
-- **Dual-Tier OKLCh Mathematics**: Perceptually uniform color tokens with separate standard and high-contrast values. Contrast ratios are audited per pairing with ``JudarnContrastVerifier``; the white-ink preference of ADR-0006 accepts some pairings below WCAG minimums.
+- **Dual-Tier OKLCh Mathematics**: Perceptually uniform color tokens with separate standard and high-contrast values. Contrast ratios are audited per pairing with ``JudarnContrastVerifier``; the white-ink preference in `docs/DESIGN.md` accepts some pairings below WCAG minimums.
 - **8/4 Spatial Rhythm**: Mathematical grid tokens establishing layout hierarchy without host-specific coupling.
 - **Continuous Squircle Geometry**: Hardware-aligned continuous corner smoothing across cards, controls, and tags.
 - **Accessible Data Matrices**: Tabular VoiceOver rotor navigation, coordinate hints, and baseline-preserving cell geometry.

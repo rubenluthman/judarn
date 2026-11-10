@@ -45,7 +45,7 @@
   --border-width-rule-bold: var(--jd-rule-bold);
   --border-width-rule-heavy: var(--jd-rule-heavy);
 
-  /* Platform Authority Radii (ADR-0002) */
+  /* Platform Authority Radii */
   --radius-subtle: var(--jd-radius-subtle, 6px);
   --radius-control: var(--jd-radius-control, 10px);
   --radius-card: var(--jd-radius-card, 16px);

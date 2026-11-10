@@ -143,7 +143,7 @@ struct ColorTests {
         let blackInk = Color.white.contrastingInk
         #expect(blackInk.relativeLuminance(in: .light) == 0.0)
 
-        // Perceptual Polarity Proofs (ADR-0006):
+        // Perceptual Polarity Proofs:
         // Chromatic accents and mid-tones (Y <= 0.50) resolve to pureWhite (1.0)
         let redOrange = Color(red: 221.0 / 255.0, green: 64.0 / 255.0, blue: 39.0 / 255.0) // Wada Red Orange
         let cerulean = Color(red: 0.0, green: 147.0 / 255.0, blue: 165.0 / 255.0) // Wada Cerulean
@@ -203,7 +203,7 @@ struct ColorTests {
         #expect(EnvironmentValues().judarnAccent2 == JudarnColors.ink60)
     }
 
-    @Test("Mode-polar surface luminance ordering and sRGB hex calibration (ADR-0004)")
+    @Test("Mode-polar surface luminance ordering and sRGB hex calibration")
     func modePolarSurfaceLuminanceOrdering() throws {
         let subLight = try #require(JudarnColors.substrate.relativeLuminance(in: .light))
         let elvLight = try #require(JudarnColors.surfaceElevated.relativeLuminance(in: .light))

@@ -1,7 +1,7 @@
 import { cx } from "../internal/cx.js";
 
 /**
- * Navbar – top bar with brand + nav links set as written (links are controls, ADR-0009).
+ * Navbar – top bar with brand + nav links set as written (links are controls).
  */
 export function Navbar({ brand = "JUDARN", links = [], current, actions, className, ...rest }) {
   return (

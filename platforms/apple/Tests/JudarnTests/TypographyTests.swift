@@ -206,7 +206,7 @@ struct TypographyTests {
         return renderer.cgImage?.height ?? 0
     }
 
-    @Test("Tight leading shortens wrapped body text against standard leading (ADR-0012)")
+    @Test("Tight leading shortens wrapped body text against standard leading")
     func tightLeadingIsShorterThanStandard() {
         let tight = JudarnTypographyStyle.body.typographyModifier
         #expect(tight.leading == .tight)

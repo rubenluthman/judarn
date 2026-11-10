@@ -3,7 +3,7 @@ import * as React from "react";
 export interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** Small accent label, set as a `t-label` (uppercase unless `eyebrowCasing` is "asWritten"). */
   eyebrow?: string;
-  /** "asWritten" for an eyebrow holding a unit, a digit, or a mixed-case term (ADR-0009). @default "uppercase" */
+  /** "asWritten" for an eyebrow holding a unit, a digit, or a mixed-case term. @default "uppercase" */
   eyebrowCasing?: "uppercase" | "asWritten";
   title?: React.ReactNode;
   children?: React.ReactNode;

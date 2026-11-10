@@ -6,7 +6,7 @@
 
 ## 1. Scope & Authority Split
 
-Judarn is a personal design system: general rules for everything its owner makes, plus specific rules for each host. A host is anywhere the work lives: an operating system, a browser, a document editor, a printed page, or an AI tool ([ADR-0002](adr/0002-general-rules-and-host-rules.md)).
+Judarn is a personal design system: general rules for everything its owner makes, plus specific rules for each host. A host is anywhere the work lives: an operating system, a browser, a document editor, a printed page, or an AI tool.
 
 - **General rules** (section 2) hold on every host.
 - **Project profiles** record what one project always wants where it differs from Judarn ([`docs/profiles/`](profiles/README.md)).
@@ -15,7 +15,7 @@ Judarn is a personal design system: general rules for everything its owner makes
 
 ### Defaults and Overrides
 
-Every rule here is the owner's default: how they want things when they ask for nothing else. The owner's word wins without justification ([ADR-0003](adr/0003-judarns-rules-are-the-owners-defaults.md)).
+Every rule here is the owner's default: how they want things when they ask for nothing else. The owner's word wins without justification.
 
 1. **Precedence**: the owner's request, then the project's profile, then Judarn.
 2. **Scope**: an override changes only what it names. Every other rule still applies.
@@ -25,7 +25,7 @@ Every rule here is the owner's default: how they want things when they ask for n
 6. **Agents**: every "never", "only", and "must" binds an agent's own initiative. Depart from a default only at the owner's word.
 7. **This repository**: here the rules define the defaults, so Judarn's tokens, compiled code, components, and generated docs follow them without exception.
 
-Judarn provides colors, spatial rhythm, and typography while each host keeps its native curves, motion, and interaction feel (see [ADR-0002](adr/0002-general-rules-and-host-rules.md)).
+Judarn provides colors, spatial rhythm, and typography while each host keeps its native curves, motion, and interaction feel.
 
 | Domain | Judarn Owns | Host Owns |
 | :--- | :--- | :--- |
@@ -44,15 +44,17 @@ These hold on every host.
 
 1. **Color Roles**:
    - Build surfaces and running text from Judarn's neutrals: a substrate, an elevated surface, a recessed surface, and primary and secondary ink.
-   - In light mode, the reading substrate is pure white (`#FFFFFF`), while boxes and cards step down to the subtle elevated surface (`#F8F8F8`) or a light tint of an accent color ([ADR-0004](adr/0004-surface-hierarchy-without-card-borders.md), [ADR-0003](adr/0003-judarns-rules-are-the-owners-defaults.md)). Replace the substrate only when the owner asks.
+   - In light mode, the reading substrate is pure white (`#FFFFFF`), while boxes and cards step down to the subtle elevated surface (`#F8F8F8`) or a light tint of an accent color. Replace the substrate only when the owner asks.
    - Take accent colors from the owner when they give them, through the project's profile or the request. Otherwise the Sanzo Wada dictionary is a source of suggestions (section 7), and a neutral result is valid.
    - Measure every accent color, the owner's or the dictionary's, against the same ratios per use, and report any shortfall to the owner.
    - Keep the signal color for errors and validation.
 
-2. **Surface Hierarchy** ([ADR-0004](adr/0004-surface-hierarchy-without-card-borders.md), [ADR-0004](adr/0004-surface-hierarchy-without-card-borders.md)):
+2. **Surface Hierarchy**:
    - Group surfaces by fill contrast: an elevated surface (or a light tint of an accent color) on the substrate.
    - **Never outline a card.**
    - Hairlines belong strictly inside tables and divider rules.
+   - Where the host offers native translucent materials, elevated cards use them over synthetic fills.
+   - Why: an outline breaks the white reading canvas and competes with the fill hierarchy, and dark mode keeps its order through fill alone.
 
 3. **Rhythm**:
    - Space things on an 8-unit grid, with a 4-unit subgrid for fine offsets.
@@ -60,16 +62,17 @@ These hold on every host.
 
 4. **Typography**:
    - Use the typefaces the owner or the project's profile names. Otherwise use the host's own typeface when it has one, and where it has none, choose one for the work.
-   - Headings, titles, and the names of buttons and other controls use **sentence case** or **title case** – never forced uppercase, and a wordmark is not a title ([ADR-0009](adr/0009-uppercase-only-for-bounded-labels.md), [ADR-0009](adr/0009-uppercase-only-for-bounded-labels.md)).
-   - A wordmark is a product's name set as its mark, in one dedicated component or image that the project's profile names. It is not a heading. Its case, weight, size, and tracking are the owner's design. Its source string and accessible name are the name as written, and any uppercase comes from the host's case style. Everywhere else – headings, running text, labels, widgets, notifications – the name is written as a word ([ADR-0009](adr/0009-uppercase-only-for-bounded-labels.md)).
-   - Write every string as it reads in a sentence. Capitalize acronyms and codes as they are written (RPE, 1RM, e1RM) and keep unit symbols in their standard case (kg, km, min, kcal). Uppercase is a style, never typed into the text.
+   - Headings, titles, and the names of buttons and other controls use **sentence case** or **title case** – never forced uppercase, and a wordmark is not a title.
+   - A wordmark is a product's name set as its mark, in one dedicated component or image that the project's profile names. It is not a heading. Its case, weight, size, and tracking are the owner's design. Its source string and accessible name are the name as written, and any uppercase comes from the host's case style. Everywhere else – headings, running text, labels, widgets, notifications – the name is written as a word.
+   - Write every string as it reads in a sentence. Capitalize acronyms and codes as they are written (RPE, 1RM, e1RM) and keep unit symbols in their standard case (kg, km, min, kcal). Uppercase is a style, never typed into the text, because a blanket transform garbles terms such as e1RM and the kg column header.
    - A heading is the most prominent text in its block. An eyebrow sits on a larger title or value, and a section label names a group of rows or fields when nothing larger does. Eyebrows and section labels are small labels; section labels keep the host's heading semantics.
    - Set a small label in uppercase only when it is an eyebrow, section label, column header, or value label, runs at most two words, and holds no digit, unit, or mixed-case term. A control's own name (what it does or which option it picks), statuses, counts, values, units, and messages in a small style are set as written.
    - A small label keeps its role inside a control. A disclosure header that names its section is a section label: it keeps heading semantics and exposes whether it is expanded. An eyebrow or value label inside a control keeps its casing only when the control also shows the title or value it names.
    - Pair positive tracking only with uppercase labels, outside a wordmark. Where a host has no case style, write small labels in sentence case.
+   - Wrapped lines in one paragraph or label add no space beyond the role's line height, because the owner reads open leading as gaps inside a paragraph. Space between paragraphs comes from spacing tokens, never from line height. Never set an open line height such as 1.5 on running text.
    - Numbers in tables and metrics **must use tabular lining figures**.
 
-5. **Filled Surface Ink** ([ADR-0006](adr/0006-contrasting-ink-favours-white.md)):
+5. **Filled Surface Ink**:
    - Resolve ink on a filled surface with `contrastingInk`.
    - Judarn deliberately favors white ink beyond what contrast ratios suggest, because contrast math and the human eye disagree on filled components, and black ink turns saturated and mid-tone fills muddy. White ink falls to 1.91:1 at the crossover, an accepted cost rather than a defect.
    - **Never override the resolved ink or add a local ink helper on ratios alone.** The crossover changes only in Judarn, after the owner reviews rendered examples.
@@ -84,16 +87,18 @@ These bind only the host they name. A host gets rules when something is made the
 
 Apple and web take their values from `tokens/judarn-tokens.json`, with zero drift ([ADR-0001](adr/0001-design-tokens-are-the-single-source-of-truth.md)).
 
-- **Shape** ([ADR-0002](adr/0002-general-rules-and-host-rules.md)):
+- **Shape**: host physics, hardware curves, and native interaction states are never overridden.
   - Never clip cards with sharp rectangles (`Rectangle()`).
   - SwiftUI: Cards use `RoundedRectangle(cornerRadius: 16, style: .continuous)`, Controls use `RoundedRectangle(cornerRadius: 10, style: .continuous)` on iOS and `cornerRadius: 6` on macOS, Tags use `Capsule()`.
   - Web CSS: Cards use `var(--jd-radius-card, 16px)`, Controls use `var(--jd-radius-control, 10px)`.
-- **Surfaces** ([ADR-0004](adr/0004-surface-hierarchy-without-card-borders.md)):
+- **Surfaces**:
   - Contrast surfaces by background fill (`surfaceElevated` on `substrate`).
   - **Never apply `.border(...)` or `.overlay(strokeBorder(...))` around card perimeters.**
   - Hairlines use `rule = 1px`.
 - **Type**:
   - Use the 12-step scale in section 5, and the system font stack in the tokens.
+  - Apple takes leading from the role's `appleLeading` through `Font.leading`, never `lineSpacing`, so text styles and Dynamic Type stay intact. Roles for running text and headings are `tight`, and `label`, `micro`, `data`, and `mono` are `standard`. Tight leading removes 2pt per line break and leaves single-line text unchanged (measured on iOS 27.2 and macOS, 2026-11-09).
+  - Apple roles never set a fixed point size. A role names `appleTextStyleMacOS` only where its own style would render at the same size on macOS as a smaller role (`.footnote`, `.caption`, and `.caption2` are all 10pt there), so each role keeps its size rank on every Apple host.
   - Restrict uppercase transformations to `label` and `micro`, with tracking of `+0.06em` on label and `+0.08em` on micro. Both styles take an as-written casing (`judarnLabel(casing: .asWritten)`, `.t-as-written`) that keeps size and weight with body tracking, for every string the general rule does not let uppercase.
   - Never pass a unit symbol or mixed-case term to the uppercase casing. A header row that mixes them sets each cell on its own.
   - Data matrices use `tabular-nums` or `.monospacedDigit()`.
@@ -105,7 +110,7 @@ Apple and web take their values from `tokens/judarn-tokens.json`, with zero drif
 
 ### Local Variants
 
-A local variant keeps its own values, because the tool needs choices made up front or cannot read Judarn's output. It depends on Judarn, and Judarn never depends on it. Its differences from the tokens are not defects, its choices never become general rules or tokens, and it can change at any time ([ADR-0002](adr/0002-general-rules-and-host-rules.md)).
+A local variant keeps its own values, because the tool needs choices made up front or cannot read Judarn's output. It depends on Judarn, and Judarn never depends on it. Its differences from the tokens are not defects, its choices never become general rules or tokens, and it can change at any time.
 
 | Variant | Where | Why it differs |
 | :--- | :--- | :--- |
@@ -171,10 +176,10 @@ A local variant keeps its own values, because the tool needs choices made up fro
 
 ## 7. Optional Sanzo Wada Harmonies
 
-Optional Sanzo Wada color harmonies: an opt-in add-on, not part of Judarn's core identity. Core contrast guarantees cover only Judarn's own surfaces. See [ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md) and [ADR-0004](adr/0004-surface-hierarchy-without-card-borders.md).
+Optional Sanzo Wada color harmonies: an opt-in add-on, not part of Judarn's core identity. Core contrast guarantees cover only Judarn's own surfaces. See [ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md).
 
-- The dictionary suggests accent colors when the owner gives none. Colors the owner gives take precedence and are equally valid ([ADR-0003](adr/0003-judarns-rules-are-the-owners-defaults.md)).
-- Light tints of accent colors, the owner's or the dictionary's (for example, `L ≈ 0.968 – 0.980` at the color's hue or mixing `10% – 18%` of the color with white in OKLCh), are welcome in general work as box and card fills on the white light-mode substrate ([ADR-0004](adr/0004-surface-hierarchy-without-card-borders.md)).
+- The dictionary suggests accent colors when the owner gives none. Colors the owner gives take precedence and are equally valid.
+- Light tints of accent colors, the owner's or the dictionary's (for example, `L ≈ 0.968 – 0.980` at the color's hue or mixing `10% – 18%` of the color with white in OKLCh), are welcome in general work as box and card fills on the white light-mode substrate.
 - Use a full harmony theme (replacing the substrate) only when a project or its owner asks for one ([ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md)).
 - Core inks are not guaranteed on a harmony's surfaces. Resolve foregrounds with `contrastingInk` (`getContrastingInk` on web) or `contrastingAccent` (Apple), then verify the resulting ratio per use, because the compile-time checks do not cover harmony contrast.
 - That check does not relax the filled surface ink invariant in section 2. A low ratio from `contrastingInk` is a finding to report to the project's owner, not a reason to replace the ink.

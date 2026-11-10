@@ -43,7 +43,7 @@ test('reads are tracked per token', () => {
   assert.deepStrictEqual(t.unreadTokens(), ['space.b']);
 });
 
-test('every role keeps web line-height and Apple leading from its token (ADR-0012)', () => {
+test('every role keeps web line-height and Apple leading from its token', () => {
   const fs = require('node:fs');
   const path = require('node:path');
   const { flat } = loadTokens();

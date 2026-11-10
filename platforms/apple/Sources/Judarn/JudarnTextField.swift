@@ -8,7 +8,7 @@ public struct JudarnTextField: View {
     public let hint: String?
     public let isInvalid: Bool
     public let isMultiline: Bool
-    /// Pass .asWritten for a label longer than two words or holding a digit, unit, or mixed-case term (ADR-0009).
+    /// Pass .asWritten for a label longer than two words or holding a digit, unit, or mixed-case term.
     public let labelCasing: JudarnTextCasing
 
     @FocusState private var isFocused: Bool

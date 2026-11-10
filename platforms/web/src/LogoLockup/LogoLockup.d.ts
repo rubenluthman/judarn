@@ -11,7 +11,7 @@ export interface LogoLockupProps {
   variant?: "horizontal" | "vertical" | "icon" | "reversed";
   /** Pixel size of the placeholder mark. */
   markSize?: number;
-  /** "asWritten" keeps the tagline as written (ADR-0009). @default "uppercase" */
+  /** "asWritten" keeps the tagline as written. @default "uppercase" */
   taglineCasing?: "uppercase" | "asWritten";
 }
 

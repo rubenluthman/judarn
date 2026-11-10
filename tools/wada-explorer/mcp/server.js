@@ -144,7 +144,7 @@ function bisectLightnessForContrast(source, target, minRatio, moveDarker) {
 
 /**
  * Calibrates a Wada color combination into light/dark theme tokens satisfying:
- * 1. ADR-0004 light polarity: substrate #FFFFFF, surfaceElevated #F8F8F8, surfaceRecessed below both (the
+ * 1. light polarity: substrate #FFFFFF, surfaceElevated #F8F8F8, surfaceRecessed below both (the
  *    palette colours never replace the light substrate). Dark mode keeps L(recessed) < L(substrate) < L(elevated).
  * 2. WCAG AAA (>= 7.0:1) for ink100 on all surfaces
  * 3. WCAG AA (>= 4.5:1) for accent foreground on surfaceElevated via 1D lightness bisection
@@ -156,7 +156,7 @@ function calibrateWadaTheme(paletteColors) {
   const accentSource = (sortedByLightness[sortedByLightness.length - 1] || sortedByLightness[0]).coords;
   const accent2Source = (sortedByLightness[Math.min(2, sortedByLightness.length - 1)] || accentSource).coords;
 
-  // Light mode surfaces: ADR-0004 neutral values; their contrast against ink100 is fixed by the core tokens.
+  // Light mode surfaces: neutral values; their contrast against ink100 is fixed by the core tokens.
   const neutral = (l) => ({ l, c: 0, h: 0, css: `oklch(${l.toFixed(3)} 0.000 0.0)` });
   const subLight = neutral(1);
   const elvLight = neutral(0.98);
@@ -400,7 +400,7 @@ function handleToolCall(name, args) {
       const calibrated = calibrateWadaTheme(enriched);
 
       if (format === "css") {
-        let css = `/* Judarn Wada Combination #${item.id} (ADR-0004 polarity, WCAG AA/AAA calibrated) */\n:root {\n`;
+        let css = `/* Judarn Wada Combination #${item.id} (light polarity, WCAG AA/AAA calibrated) */\n:root {\n`;
         enriched.forEach((c, i) => {
           css += `  --color-wada-${i + 1}: ${c.oklch}; /* ${c.name} (${c.hex}) */\n`;
         });
@@ -485,7 +485,7 @@ function handleRequest(req) {
       return reply({
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "judarn-color-dictionary", version: "0.7.5" }
+        serverInfo: { name: "judarn-color-dictionary", version: "0.7.6" }
       });
     case "ping":
       return reply({});

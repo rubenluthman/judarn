@@ -10,7 +10,7 @@ public struct JudarnCard<Content: View, Media: View, Actions: View>: View {
     public let isFlat: Bool
     public let useGlassBackground: Bool
     public let isCompact: Bool
-    /// Pass .asWritten for an eyebrow longer than two words or holding a digit, unit, or mixed-case term (ADR-0009).
+    /// Pass .asWritten for an eyebrow longer than two words or holding a digit, unit, or mixed-case term.
     public let eyebrowCasing: JudarnTextCasing
     
     @Environment(\.judarnAccent) private var accentColor

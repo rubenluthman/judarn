@@ -143,7 +143,7 @@ export function Dashboard() {
 | `ink60` on `substrate` | at least 5.5:1 | at least 7.0:1 | AA (4.5:1), AAA under high contrast |
 | `signalError` on `substrate` | at least 5.6:1 | at least 7.0:1 | AA (4.5:1), AAA under high contrast |
 
-Two accepted trade-offs sit outside this matrix. White ink on a mid-tone fill can fall to 1.91:1 at the crossover, below the 4.5:1 AA floor for small text, because Judarn prefers white ink to what contrast math alone suggests ([ADR-0006](docs/adr/0006-contrasting-ink-favours-white.md)). Paragraph line spacing is tighter than 1.5, so Judarn text does not meet WCAG 2.2 SC 1.4.8, a AAA criterion ([ADR-0012](docs/adr/0012-tight-leading-within-paragraphs.md)).
+Two accepted trade-offs sit outside this matrix. White ink on a mid-tone fill can fall to 1.91:1 at the crossover, below the 4.5:1 AA floor for small text, because Judarn prefers white ink to what contrast math alone suggests. Paragraph line spacing is tighter than 1.5, so Judarn text does not meet WCAG 2.2 SC 1.4.8, a AAA criterion.
 
 ---
 

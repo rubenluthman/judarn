@@ -1,6 +1,6 @@
 # Project profiles
 
-A profile records what one project always wants where it differs from Judarn's defaults, so the owner says it once. It names only what differs, and every rule it does not name still applies ([ADR-0003](../adr/0003-judarns-rules-are-the-owners-defaults.md)).
+A profile records what one project always wants where it differs from Judarn's defaults, so the owner says it once. It names only what differs, and every rule it does not name still applies.
 
 A profile lives here as `<project>.md`, in `kebab-case`, or in the project's own design record when the project keeps one. A profile depends on Judarn, and Judarn never depends on it: its choices never become Judarn defaults, tokens, or general rules.
 

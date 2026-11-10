@@ -67,7 +67,7 @@ test('every class the components emit has a rule in components.css', () => {
   }
 });
 
-test('accent fills take a static ink, never the scheme-following --white (ADR-0006)', () => {
+test('accent fills take a static ink, never the scheme-following --white', () => {
   assert.match(rule(components, '.btn--accent'), /color: var\(--accent-ink\)/);
   assert.match(rule(components, '.badge--accent'), /color: var\(--accent-ink\)/);
   assert.match(colors, /--accent-ink:\s+var\(--jd-accent-ink, #(ffffff|000000)\);/);
@@ -131,7 +131,7 @@ test('a dark html page keeps its dark accent ink after the design-system bundle 
   assert.match(dark[3], /--accent-ink:\s+var\(--jd-accent-ink, #000000\);/);
 });
 
-test('cards and matrices draw no perimeter border (ADR-0004)', () => {
+test('cards and matrices draw no perimeter border', () => {
   assert.ok(!/border:\s*var\(--rule\)/.test(rule(components, '.card__media')));
   assert.ok(!/(^|\n)\s*border:/.test(rule(components, '.matrix')));
   assert.ok(!/\[data-contrast="high"\] \.matrix \{/.test(components));
@@ -144,7 +144,7 @@ test('fields keep a visible focus indicator and a native select', () => {
   assert.ok(!/select\.field__input \{[^}]*appearance:\s*none/.test(components));
 });
 
-test('uppercase eyebrows route through t-label, not hand-rolled text-transform (ADR-0009)', () => {
+test('uppercase eyebrows route through t-label, not hand-rolled text-transform', () => {
   for (const sel of ['.card__eyebrow', '.footer__head', '.lockup__tag']) {
     assert.ok(!/text-transform/.test(rule(components, sel)), `${sel} must not set text-transform`);
   }
