@@ -53,6 +53,8 @@ Boxes and cards on the light `jd-substrate` may take a light tint of one of the 
 - Mixing 10% – 18% of the color with white in OKLCh is another route, only when the result stays in that lightness range. A dark color leaves it: an 18% mix keeps `jd-ink-60` at 4.5:1 on only 76 of the 159 colors.
 - Set text on a tint in `jd-ink-100` and `jd-ink-60`, not in the color's `ink`. A tint is a box, not a filled surface. Within the range above, `jd-ink-60` holds 4.7:1 or better on every dictionary hue. Check an owner's hue the same way.
 - Check accent text on the tint in each use. The `light` values in `wada-accents.json` measure only `jd-substrate` and `jd-surface-elevated`.
+- A deeper highlight tint of the same color, at L 0.90 – 0.95 and chroma of 0.04 or less, may mark a highlighted item or a header row inside a white or light-tinted area. For a tint of a blue at hue 264, use `oklch(0.93 0.017 264)`. Set the lightness directly, because the right mix with white depends on how light the color is.
+- Use at most two tint steps per color, the light tint and the highlight tint. Lightness carries the hierarchy and the hue says which color family or section it is. Set text on both in `jd-ink-100` and measure the ratio per use.
 - Keep tints to light mode. In dark mode boxes stay on `jd-surface-elevated`.
 - Never replace the substrate with a tint. A full harmony theme stays opt-in, for when the owner asks for one.
 

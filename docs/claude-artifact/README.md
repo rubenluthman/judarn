@@ -38,7 +38,7 @@ Judarn has no default color. Build every surface and all running text from the n
 - Set primary text in `jd-ink-100` and secondary text in `jd-ink-60`. Use `jd-ink-30` only for table hairlines and disabled states.
 - Use `jd-signal-error` for errors and validation only.
 - Leave `jd-accent` neutral on a page that does not need a color. A neutral page is a valid result.
-- Use flat fills only: no gradients or shadows. On the light substrate a box or card may take a light tint of an accent color instead of `jd-surface-elevated`, with no separate request. The Wada section gives the range.
+- Use flat fills only: no gradients or shadows. On the light substrate a box or card may take a light tint of an accent color instead of `jd-surface-elevated`, with no separate request. A deeper highlight tint of the same color may mark a highlighted item or a header row. The Wada section gives both ranges.
 - Replace the substrate with a full harmony theme, or with a project's own page color, only when the owner asks for one.
 
 ## Content

@@ -51,6 +51,9 @@ These hold on every host.
 
 2. **Surface Hierarchy**:
    - Group surfaces by fill contrast: an elevated surface (or a light tint of an accent color) on the substrate.
+   - A deeper **highlight tint** of the same color, about `L ≈ 0.90 – 0.95` at the color's hue with chroma of 0.04 or less, may mark a highlighted item or a header row inside a white or light-tinted area. Set its lightness directly, because the right mix with white depends on how light the color is.
+   - Use at most two tint steps per color, the light tint and the highlight tint. Lightness carries the hierarchy and the hue says which color family or section it is. `ink100` sits on both, and the ratio is measured per use like any accent use.
+   - Tints belong to light mode. Dark mode keeps its order through neutral fills.
    - **Never outline a card.**
    - Hairlines belong strictly inside tables and divider rules.
    - Where the host offers native translucent materials, elevated cards use them over synthetic fills.
@@ -184,7 +187,7 @@ A local variant keeps its own values, because the tool needs choices made up fro
 Optional Sanzo Wada color harmonies: an opt-in add-on, not part of Judarn's core identity. Core contrast guarantees cover only Judarn's own surfaces. See [ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md).
 
 - The dictionary suggests accent colors when the owner gives none. Colors the owner gives take precedence and are equally valid.
-- Light tints of accent colors, the owner's or the dictionary's (for example, `L ≈ 0.968 – 0.980` at the color's hue or mixing `10% – 18%` of the color with white in OKLCh), are welcome in general work as box and card fills on the white light-mode substrate.
+- Light tints of accent colors, the owner's or the dictionary's (for example, `L ≈ 0.968 – 0.980` at the color's hue or mixing `10% – 18%` of the color with white in OKLCh), are welcome in general work as box and card fills on the white light-mode substrate. The deeper highlight tint in section 2 (`L ≈ 0.90 – 0.95`) follows the same rule, with at most two tint steps per color.
 - Use a full harmony theme (replacing the substrate) only when a project or its owner asks for one ([ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md)).
 - Core inks are not guaranteed on a harmony's surfaces. Resolve foregrounds with `contrastingInk` (`getContrastingInk` on web) or `contrastingAccent` (Apple), then verify the resulting ratio per use, because the compile-time checks do not cover harmony contrast.
 - That check does not relax the filled surface ink invariant in section 2. A low ratio from `contrastingInk` is a finding to report to the project's owner, not a reason to replace the ink.

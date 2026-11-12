@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.11] - 2026-11-12
+
+### Added
+
+- Named a deeper highlight tint (`L ≈ 0.90 – 0.95`) next to the light tint, for a highlighted item or a header row. At most two tint steps per color, in light mode only.
+
 ## [0.7.10] - 2026-11-10
 
 ### Changed
