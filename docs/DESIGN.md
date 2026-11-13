@@ -47,6 +47,7 @@ These hold on every host.
    - In light mode, the reading substrate is pure white (`#FFFFFF`), while boxes and cards step down to the subtle elevated surface (`#F8F8F8`) or a light tint of an accent color. Replace the substrate only when the owner asks.
    - Take accent colors from the owner when they give them, through the project's profile or the request. Otherwise the Sanzo Wada dictionary is a source of suggestions (section 7), and a neutral result is valid.
    - Measure every accent color, the owner's or the dictionary's, against the same ratios per use, and report any shortfall to the owner.
+   - Colors that must be told apart, such as an accent against its tint, two accents side by side, or a fill against its surround, differ in lightness and not only in hue. Check by comparing their OKLCh `L` or by viewing the work in grayscale. When two such colors blend, say so once, in the disclosure line, and use the owner's colors anyway.
    - Keep the signal color for errors and validation.
 
 2. **Surface Hierarchy**:

@@ -32,7 +32,7 @@ The type, space, surface, motion and icon rules below are written for the web. O
 
 ## Color in one rule
 
-Judarn has no default color. Build every surface and all running text from the neutrals. Take accent colors from the owner when they give them, through the project's profile or the request. When the owner gives none, choose a Wada combination for the artifact. The one exception to neutral surfaces is a light tint of an accent color on a box or card. The Wada section says how to choose and check colors.
+Judarn has no default color. Build every surface and all running text from the neutrals. Take accent colors from the owner when they give them, through the project's profile or the request. When the owner gives none, choose a Wada combination for the artifact. The one exception to neutral surfaces is a light tint of an accent color on a box or card. Colors that must be told apart differ in lightness, not only hue: compare their lightness or view the work in grayscale, and say so once if two blend. The Wada section says how to choose and check colors.
 
 - Set the page on `jd-substrate`, cards and panels on `jd-surface-elevated`, wells and hover states on `jd-surface-recessed`. A text field inside a card or tint fills with `jd-substrate` instead. In light mode the page is pure white and boxes step down from it. In dark mode `jd-surface-elevated` stays lighter than `jd-substrate`.
 - Set primary text in `jd-ink-100` and secondary text in `jd-ink-60`. Use `jd-ink-30` only for table hairlines and disabled states.

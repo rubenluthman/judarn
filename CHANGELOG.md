@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.7] - 2026-11-13
+
+### Added
+
+- A color rule: colors that must be told apart differ in lightness, checked by comparing lightness or viewing in grayscale.
+
 ## [0.8.6] - 2026-11-13
 
 ### Changed
