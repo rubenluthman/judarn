@@ -18,6 +18,7 @@ public struct JudarnTextField: View {
     @FocusState private var isFocused: Bool
     @Environment(\.judarnAccent) private var accentColor
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.judarnOnElevatedSurface) private var isOnElevatedSurface
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
@@ -77,6 +78,8 @@ public struct JudarnTextField: View {
             }
             .focused($isFocused)
             .judarnBody()
+            // Disabled text takes `ink30`, never reduced opacity.
+            .foregroundColor(Self.textColor(isEnabled: isEnabled))
             // Form Input Accessibility Semantics: Form inputs must expose explicit accessible names and invalid state hints, while hiding duplicate sibling text elements to streamline VoiceOver navigation.
             .accessibilityLabel(Self.accessibilityLabel(label: label, placeholder: placeholder))
             .accessibilityValue(Self.accessibilityValue(text: text, isInvalid: isInvalid))
@@ -88,7 +91,7 @@ public struct JudarnTextField: View {
             )
             .overlay(
                 RoundedRectangle(cornerRadius: fieldCornerRadius, style: .continuous)
-                    .strokeBorder(border.color, lineWidth: border.width)
+                    .strokeBorder(border.color, style: StrokeStyle(lineWidth: border.width, dash: border.dash))
             )
             // Outer Keyboard Focus Ring: macOS desktop text fields require a visible outer focus halo when active. Never clip the text field perimeter with .clipShape(); draw an outer accent ring with negative padding.
             .overlay(
@@ -146,23 +149,31 @@ public struct JudarnTextField: View {
         isOnElevatedSurface ? JudarnColors.surfaceElevated : JudarnColors.substrate
     }
 
+    /// The text color: `nil` keeps the host's own ink while enabled, and a disabled field takes `ink30`.
+    static func textColor(isEnabled: Bool) -> Color? {
+        isEnabled ? nil : JudarnColors.ink30
+    }
+
     /// The field's own border. None at rest; the invalid ring wins over focus, and Increase Contrast adds an `ink100` outline.
+    /// Increase Contrast promotes `ink30` to `ink100`, so a disabled field's outline is dashed to tell it from an enabled one.
     static func border(
         isFocused: Bool,
         isInvalid: Bool,
         increasedContrast: Bool,
-        focusColor: Color
-    ) -> (color: Color, width: CGFloat) {
+        focusColor: Color,
+        isEnabled: Bool = true
+    ) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
         if isInvalid {
-            return (JudarnColors.signalError, JudarnSpacing.ruleBold)
+            return (JudarnColors.signalError, JudarnSpacing.ruleBold, [])
         }
         if isFocused {
-            return (focusColor, JudarnSpacing.ruleBold)
+            return (focusColor, JudarnSpacing.ruleBold, [])
         }
         if increasedContrast {
-            return (JudarnColors.ink100, JudarnSpacing.ruleBold)
+            let dash: [CGFloat] = isEnabled ? [] : [JudarnSpacing.spaceHalf, JudarnSpacing.spaceHalf]
+            return (JudarnColors.ink100, JudarnSpacing.ruleBold, dash)
         }
-        return (.clear, 0)
+        return (.clear, 0, [])
     }
 
     /// The accent, clamped so the focus ring reaches 3:1 against the surface around the field.
@@ -173,12 +184,13 @@ public struct JudarnTextField: View {
         )
     }
 
-    private var border: (color: Color, width: CGFloat) {
+    private var border: (color: Color, width: CGFloat, dash: [CGFloat]) {
         Self.border(
             isFocused: isFocused,
             isInvalid: isInvalid,
             increasedContrast: colorSchemeContrast == .increased,
-            focusColor: focusRingColor
+            focusColor: focusRingColor,
+            isEnabled: isEnabled
         )
     }
 

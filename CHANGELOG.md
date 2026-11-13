@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.10] - 2026-11-13
+
+### Fixed
+
+- On Apple, a disabled `JudarnTextField` now uses disabled ink and, in Increase Contrast, draws a dashed outline, so it no longer looks like an enabled one.
+
 ## [0.8.9] - 2026-11-13
 
 ### Fixed

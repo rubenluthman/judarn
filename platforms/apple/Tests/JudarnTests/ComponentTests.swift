@@ -264,10 +264,25 @@ struct ComponentTests {
         #expect(EnvironmentValues().judarnOnElevatedSurface == false)
     }
 
+    @Test("A disabled text field takes ink30 text and dashes its Increase Contrast outline")
+    func textFieldDisabled() {
+        #expect(JudarnTextField.textColor(isEnabled: true) == nil)
+        #expect(JudarnTextField.textColor(isEnabled: false) == JudarnColors.ink30)
+        func border(increased: Bool, enabled: Bool) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
+            JudarnTextField.border(isFocused: false, isInvalid: false, increasedContrast: increased, focusColor: .red, isEnabled: enabled)
+        }
+        #expect(border(increased: true, enabled: true).dash.isEmpty, "an enabled outline is solid")
+        // Increase Contrast promotes ink30 to ink100, so only the dashed outline tells a disabled field apart.
+        let disabled = border(increased: true, enabled: false)
+        #expect(disabled.color == JudarnColors.ink100 && disabled.width == JudarnSpacing.ruleBold)
+        #expect(disabled.dash == [JudarnSpacing.spaceHalf, JudarnSpacing.spaceHalf])
+        #expect(border(increased: false, enabled: false).width == 0, "a disabled field draws no outline at rest")
+    }
+
     @Test("Text field draws no outline at rest, an ink100 outline in Increase Contrast, and keeps focus and error rings")
     func textFieldBorder() {
-        func border(focused: Bool = false, invalid: Bool = false, increased: Bool = false) -> (color: Color, width: CGFloat) {
-            JudarnTextField.border(isFocused: focused, isInvalid: invalid, increasedContrast: increased, focusColor: .red)
+        func border(focused: Bool = false, invalid: Bool = false, increased: Bool = false, enabled: Bool = true) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
+            JudarnTextField.border(isFocused: focused, isInvalid: invalid, increasedContrast: increased, focusColor: .red, isEnabled: enabled)
         }
         let rest = border()
         #expect(rest.color == .clear)

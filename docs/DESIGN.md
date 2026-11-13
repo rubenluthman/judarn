@@ -116,7 +116,7 @@ Apple and web take their values from `tokens/judarn-tokens.json`, with zero drif
   - **Never apply `.border(...)` or `.overlay(strokeBorder(...))` around card perimeters.**
   - Hairlines use `rule = 1px`.
   - Text fields fill with `surfaceRecessed`, or `substrate` inside a card (`.jd-card` on web, `JudarnCard` on Apple). At rest they keep a transparent border on web, so Windows high-contrast mode can still draw it, and no stroke on Apple. `prefers-contrast: more`, `data-contrast="high"`, and Apple's Increase Contrast turn it into an `ink100` outline.
-  - Buttons, badges, and tags follow the same rule: a transparent resting border on web, no stroke on Apple, and an `ink100` outline in the same high-contrast modes. The ghost button stays text with its hover underline. A disabled control dashes that outline: `border-style: dashed` on web buttons and fields, a dashed stroke on Apple buttons.
+  - Buttons, badges, and tags follow the same rule: a transparent resting border on web, no stroke on Apple, and an `ink100` outline in the same high-contrast modes. The ghost button stays text with its hover underline. A disabled control dashes that outline: `border-style: dashed` on web buttons and fields, a dashed stroke on Apple buttons and fields.
   - Web component classes carry the `jd-` prefix (`.jd-btn`, `.jd-card`, `.jd-table`), so a project's own class names never pick up Judarn's styles.
   - The focus ring takes the accent and the invalid ring `signalError`. Apple clamps the focus ring to 3:1 with `contrastingAccent`; on web a project that sets `--jd-accent` measures it.
 - **Type**:
