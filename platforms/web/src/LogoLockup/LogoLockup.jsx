@@ -28,23 +28,23 @@ export function LogoLockup({
 }) {
   const isIcon = variant === "icon";
   const cls = [
-    "lockup",
-    variant === "vertical" && "lockup--vertical",
-    variant === "reversed" && "lockup--reversed",
+    "jd-lockup",
+    variant === "vertical" && "jd-lockup--vertical",
+    variant === "reversed" && "jd-lockup--reversed",
   ].filter(Boolean).join(" ");
 
   const theMark = mark || <PlaceholderMark size={markSize || (variant === "vertical" ? 64 : 48)} />;
 
   if (isIcon) {
-    return <span className="lockup__mark" role="img" aria-label={name}>{mark || <PlaceholderMark size={markSize || 64} />}</span>;
+    return <span className="jd-lockup__mark" role="img" aria-label={name}>{mark || <PlaceholderMark size={markSize || 64} />}</span>;
   }
 
   return (
     <div className={cls} role="img" aria-label={tagline ? `${name} – ${tagline}` : name}>
-      <span className="lockup__mark">{theMark}</span>
-      <span className="lockup__words">
-        <span className="lockup__name">{name}</span>
-        {tagline ? <span className={taglineCasing === "asWritten" ? "lockup__tag t-label t-as-written" : "lockup__tag t-label"}>{tagline}</span> : null}
+      <span className="jd-lockup__mark">{theMark}</span>
+      <span className="jd-lockup__words">
+        <span className="jd-lockup__name">{name}</span>
+        {tagline ? <span className={taglineCasing === "asWritten" ? "jd-lockup__tag t-label t-as-written" : "jd-lockup__tag t-label"}>{tagline}</span> : null}
       </span>
     </div>
   );

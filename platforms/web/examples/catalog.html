@@ -90,9 +90,9 @@
     </div>
     <div class="catalog-controls">
       <span class="t-label" style="margin-right: 8px;">Mode:</span>
-      <button class="btn btn--sm" onclick="setTheme('light')">Light</button>
-      <button class="btn btn--sm btn--secondary" onclick="setTheme('dark')">Dark</button>
-      <button class="btn btn--sm btn--outline" onclick="toggleContrast()">High Contrast</button>
+      <button class="jd-btn jd-btn--sm" onclick="setTheme('light')">Light</button>
+      <button class="jd-btn jd-btn--sm jd-btn--secondary" onclick="setTheme('dark')">Dark</button>
+      <button class="jd-btn jd-btn--sm jd-btn--secondary" onclick="toggleContrast()">High Contrast</button>
     </div>
   </header>
 
@@ -103,17 +103,16 @@
       <span class="section-meta">Hover Inversion & Touch Compliance</span>
     </div>
     <div class="demo-row">
-      <button class="btn">Primary Button</button>
-      <button class="btn btn--outline">Outline Button</button>
-      <button class="btn btn--secondary">Secondary Button</button>
-      <button class="btn btn--ghost">Ghost Action</button>
-      <button class="btn btn--accent">Accent Action</button>
-      <button class="btn" disabled>Disabled State</button>
+      <button class="jd-btn">Primary Button</button>
+      <button class="jd-btn jd-btn--secondary">Secondary Button</button>
+      <button class="jd-btn jd-btn--ghost">Ghost Action</button>
+      <button class="jd-btn jd-btn--accent">Accent Action</button>
+      <button class="jd-btn" disabled>Disabled State</button>
     </div>
     <div class="demo-row" style="margin-top: 16px;">
-      <button class="btn btn--sm">Small (44px HIG)</button>
-      <button class="btn">Medium Default</button>
-      <button class="btn btn--lg">Large Display</button>
+      <button class="jd-btn jd-btn--sm">Small (44px HIG)</button>
+      <button class="jd-btn">Medium Default</button>
+      <button class="jd-btn jd-btn--lg">Large Display</button>
     </div>
   </section>
 
@@ -124,12 +123,12 @@
       <span class="section-meta">Luminance Contrasting Ink</span>
     </div>
     <div class="demo-row">
-      <span class="badge">Outline Default</span>
-      <span class="badge badge--solid">Solid Status</span>
-      <span class="badge badge--accent">Accent Indicator</span>
-      <span class="badge badge--accent-outline">Accent Outline</span>
-      <span class="tag">Sentence Case Tag</span>
-      <span class="tag">Tabular Tag #42</span>
+      <span class="jd-badge">Neutral Default</span>
+      <span class="jd-badge jd-badge--solid">Solid Status</span>
+      <span class="jd-badge jd-badge--accent">Accent Indicator</span>
+      <span class="jd-badge jd-badge--accent-tint">Accent Tint</span>
+      <span class="jd-tag">Sentence Case Tag</span>
+      <span class="jd-tag">Tabular Tag #42</span>
     </div>
   </section>
 
@@ -141,7 +140,7 @@
     </div>
     <div class="grid-demo" style="grid-template-columns: 2fr 1fr;">
       <div>
-        <table class="matrix" role="table" aria-label="System Metrics Matrix">
+        <table class="jd-matrix" role="table" aria-label="System Metrics Matrix">
           <thead role="rowgroup">
             <tr role="row" aria-rowindex="1">
               <th scope="col" role="columnheader" aria-colindex="1" style="width: 140px; min-width: 140px;">METRIC</th>
@@ -176,7 +175,7 @@
       <!-- Compression Test Container -->
       <div class="compression-container">
         <div class="t-label" style="margin-bottom: 8px;">Compression Sizing Test (360px)</div>
-        <table class="matrix" role="table" aria-label="Compressed Matrix">
+        <table class="jd-matrix" role="table" aria-label="Compressed Matrix">
           <thead>
             <tr>
               <th style="width: 120px; min-width: 120px;">KEY</th>
@@ -208,22 +207,22 @@
       <span class="section-meta">Sharp Boundaries & Validation</span>
     </div>
     <div class="grid-demo" style="grid-template-columns: repeat(3, 1fr);">
-      <div class="field">
-        <label class="field__label" for="demo-name">Full Name</label>
-        <input class="field__input" id="demo-name" type="text" placeholder="Karl Gerstner" value="Max Bill">
-        <span class="field__hint">Primary identifier</span>
+      <div class="jd-field">
+        <label class="jd-field__label" for="demo-name">Full Name</label>
+        <input class="jd-field__input" id="demo-name" type="text" placeholder="Karl Gerstner" value="Max Bill">
+        <span class="jd-field__hint">Primary identifier</span>
       </div>
 
-      <div class="field">
-        <label class="field__label" for="demo-err">Identifier</label>
-        <input class="field__input is-invalid" id="demo-err" type="text" aria-invalid="true" value="INVALID_TOKEN">
-        <span class="field__hint is-error">Must conform to alphanumeric token format</span>
+      <div class="jd-field">
+        <label class="jd-field__label" for="demo-err">Identifier</label>
+        <input class="jd-field__input is-invalid" id="demo-err" type="text" aria-invalid="true" value="INVALID_TOKEN">
+        <span class="jd-field__hint is-error">Must conform to alphanumeric token format</span>
       </div>
 
-      <div class="field">
-        <label class="field__label" for="demo-dis">Disabled Register</label>
-        <input class="field__input" id="demo-dis" type="text" disabled value="Locked Substrate">
-        <span class="field__hint">Read-only system attribute</span>
+      <div class="jd-field">
+        <label class="jd-field__label" for="demo-dis">Disabled Register</label>
+        <input class="jd-field__input" id="demo-dis" type="text" disabled value="Locked Substrate">
+        <span class="jd-field__hint">Read-only system attribute</span>
       </div>
     </div>
   </section>
@@ -235,22 +234,22 @@
       <span class="section-meta">Solid Elevated Surfaces & Unbound Contrast</span>
     </div>
     <div class="grid-demo" style="grid-template-columns: repeat(2, 1fr);">
-      <div class="card">
-        <div class="card__eyebrow">Architecture Tier 1</div>
-        <div class="card__title">Solid Elevated Substrate</div>
-        <div class="card__body">
+      <div class="jd-card">
+        <div class="jd-card__eyebrow">Architecture Tier 1</div>
+        <div class="jd-card__title">Solid Elevated Substrate</div>
+        <div class="jd-card__body">
           Card content body retains full optical black ink contrast, allowing child text hierarchies and data matrices to render without forced secondary washes.
         </div>
         <div style="display: flex; gap: var(--jd-space-1);">
-          <button class="btn btn--sm">Inspect</button>
-          <button class="btn btn--sm btn--outline">Dismiss</button>
+          <button class="jd-btn jd-btn--sm">Inspect</button>
+          <button class="jd-btn jd-btn--sm jd-btn--secondary">Dismiss</button>
         </div>
       </div>
 
-      <div class="card card--flat">
-        <div class="card__eyebrow">Architecture Tier 0</div>
-        <div class="card__title">Flat Card Container</div>
-        <div class="card__body">
+      <div class="jd-card jd-card--flat">
+        <div class="jd-card__eyebrow">Architecture Tier 0</div>
+        <div class="jd-card__title">Flat Card Container</div>
+        <div class="jd-card__body">
           Border-free container aligned directly with the underlying paper substrate for seamless column measures.
         </div>
       </div>

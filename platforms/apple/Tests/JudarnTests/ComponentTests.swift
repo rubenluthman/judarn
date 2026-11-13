@@ -8,56 +8,96 @@ import AppKit
 @Suite("Judarn Components")
 @MainActor
 struct ComponentTests {
-    private typealias Palette = (background: Color, foreground: Color, border: Color)
+    private typealias Palette = (background: Color, foreground: Color)
 
     private func palette(
         _ variant: JudarnButtonVariant,
         accent: Color = .red,
         pressed: Bool = false,
         enabled: Bool = true,
-        hovered: Bool = false
+        hovered: Bool = false,
+        elevated: Bool = false
     ) -> Palette {
-        JudarnButtonContent.resolveColors(variant: variant, accentColor: accent, isPressed: pressed, isEnabled: enabled, isHovered: hovered)
+        JudarnButtonContent.resolveColors(variant: variant, accentColor: accent, isPressed: pressed, isEnabled: enabled, isHovered: hovered, isOnElevatedSurface: elevated)
     }
 
     private func expectPalette(_ actual: Palette, _ expected: Palette, _ name: String) {
         #expect(actual.background == expected.background, "\(name) background")
         #expect(actual.foreground == expected.foreground, "\(name) foreground")
-        #expect(actual.border == expected.border, "\(name) border")
     }
 
     @Test("Button colour matrix: variant, hover, press and disabled")
     func buttonColourMatrix() {
         typealias C = JudarnColors
-        expectPalette(palette(.primary), (C.ink100, C.substrate, C.ink100), "primary")
-        expectPalette(palette(.primary, hovered: true), (C.surfaceElevated, C.ink100, C.ink100), "primary hover")
-        expectPalette(palette(.outline), (.clear, C.ink100, C.ink100), "outline")
-        expectPalette(palette(.outline, hovered: true), (C.ink100, C.substrate, C.ink100), "outline hover")
-        expectPalette(palette(.secondary), (C.surfaceRecessed, C.ink100, C.ink30), "secondary")
-        expectPalette(palette(.secondary, hovered: true), (C.surfaceElevated, C.ink100, C.ink60), "secondary hover")
-        expectPalette(palette(.ghost), (.clear, C.ink100, .clear), "ghost")
-        expectPalette(palette(.ghost, hovered: true), (.clear, C.ink100, .clear), "ghost hover")
+        expectPalette(palette(.primary), (C.ink100, C.substrate), "primary")
+        expectPalette(palette(.primary, hovered: true), (C.surfaceRecessed, C.ink100), "primary hover")
+        expectPalette(palette(.secondary), (C.surfaceRecessed, C.ink100), "secondary")
+        expectPalette(palette(.secondary, elevated: true), (C.substrate, C.ink100), "secondary on an elevated surface")
+        expectPalette(palette(.secondary, hovered: true), (C.ink100, C.substrate), "secondary hover")
+        expectPalette(palette(.ghost), (.clear, C.ink100), "ghost")
+        expectPalette(palette(.ghost, hovered: true), (.clear, C.ink100), "ghost hover")
 
         // Pressed overrides every variant; disabled overrides pressed.
-        for variant in [JudarnButtonVariant.primary, .secondary, .ghost, .accent, .outline] {
-            expectPalette(palette(variant, pressed: true), (C.ink60, C.substrate, C.ink60), "\(variant) pressed")
-            expectPalette(palette(variant, pressed: true, enabled: false), (C.surfaceRecessed, C.ink30, C.ink30), "\(variant) disabled")
+        for variant in [JudarnButtonVariant.primary, .secondary, .ghost, .accent] {
+            expectPalette(palette(variant, pressed: true), (C.ink60, C.substrate), "\(variant) pressed")
+            expectPalette(palette(variant, pressed: true, enabled: false), (C.surfaceRecessed, C.ink30), "\(variant) disabled")
         }
     }
 
-    @Test("Accent button fills with the accent and clamps its hover ink against the elevated surface")
+    @Test("Buttons, badges and tags draw no stroke at rest and an ink100 outline in Increase Contrast")
+    func controlsSetApartByFill() {
+        for variant in [JudarnButtonVariant.primary, .secondary, .accent] {
+            let rest = JudarnButtonContent.border(variant: variant, increasedContrast: false)
+            #expect(rest.width == 0, "\(variant) draws no stroke at rest")
+            let contrast = JudarnButtonContent.border(variant: variant, increasedContrast: true)
+            #expect(contrast.color == JudarnColors.ink100 && contrast.width == JudarnSpacing.rule, "\(variant) outline in Increase Contrast")
+        }
+        #expect(JudarnButtonContent.border(variant: .ghost, increasedContrast: true).width == 0, "ghost stays text")
+        #expect(judarnControlOutlineStyle(increasedContrast: false).width == 0)
+        #expect(judarnControlOutlineStyle(increasedContrast: true).color == JudarnColors.ink100)
+    }
+
+    @Test("Badge fills: neutral well, solid ink, accent fill, accent tint in light mode only")
+    func badgeColours() {
+        typealias C = JudarnColors
+        let accent = Color(red: 221.0 / 255.0, green: 64.0 / 255.0, blue: 39.0 / 255.0)
+        let tinted = Color.green
+        func colors(_ v: JudarnBadgeVariant, elevated: Bool = false, dark: Bool = false) -> (background: Color, foreground: Color) {
+            JudarnBadge.colors(variant: v, accentColor: accent, isOnElevatedSurface: elevated, isDark: dark, tint: { _ in tinted })
+        }
+        #expect(colors(.neutral).background == C.surfaceRecessed)
+        #expect(colors(.neutral, elevated: true).background == C.substrate)
+        #expect(colors(.solid).background == C.ink100 && colors(.solid).foreground == C.substrate)
+        #expect(colors(.accent).background == accent)
+        #expect(colors(.accentTint).background == tinted && colors(.accentTint).foreground == C.ink100)
+        #expect(colors(.accentTint, dark: true).background == C.surfaceRecessed, "tints belong to light mode")
+    }
+
+    @Test("The accent tint mixes 14% of the color with white in OKLab")
+    func accentTintMix() {
+        var light = EnvironmentValues()
+        light.colorScheme = .light
+        let black = JudarnBadge.tint(Color(.sRGBLinear, red: 0, green: 0, blue: 0), in: light).resolve(in: light)
+        let lab = OKLab(linearRed: Double(black.linearRed), green: Double(black.linearGreen), blue: Double(black.linearBlue))
+        #expect(abs(lab.l - 0.86) < 0.001)
+        #expect(abs(lab.a) < 0.001 && abs(lab.b) < 0.001)
+
+        let red = JudarnBadge.tint(Color(.sRGBLinear, red: 1, green: 0, blue: 0), in: light).resolve(in: light)
+        let redLab = OKLab(linearRed: Double(red.linearRed), green: Double(red.linearGreen), blue: Double(red.linearBlue))
+        #expect(redLab.l > 0.9 && redLab.a > 0, "a light tint keeps the hue")
+    }
+
+    @Test("Accent button fills with the accent and clamps its hover ink against the recessed fill")
     func accentButtonColours() {
         let accent = Color(red: 221.0 / 255.0, green: 64.0 / 255.0, blue: 39.0 / 255.0)
         let rest = palette(.accent, accent: accent)
         #expect(rest.background == accent)
-        #expect(rest.border == accent)
         #expect(rest.foreground.relativeLuminance(in: .light) == accent.contrastingInk.relativeLuminance(in: .light))
 
         let hover = palette(.accent, accent: accent, hovered: true)
-        #expect(hover.background == JudarnColors.surfaceElevated)
-        let ratio = hover.foreground.contrastRatio(to: JudarnColors.surfaceElevated, in: .light)
+        #expect(hover.background == JudarnColors.surfaceRecessed)
+        let ratio = hover.foreground.contrastRatio(to: JudarnColors.surfaceRecessed, in: .light)
         #expect((ratio ?? 0) >= 4.5)
-        #expect(hover.border.relativeLuminance(in: .light) == hover.foreground.relativeLuminance(in: .light))
     }
 
     @Test("Button style keeps an explicit hover override")
@@ -78,7 +118,7 @@ struct ComponentTests {
 
     @Test("Badge presentation variants")
     func badges() {
-        let variants: [JudarnBadgeVariant] = [.outline, .solid, .accent, .accentOutline]
+        let variants: [JudarnBadgeVariant] = [.neutral, .solid, .accent, .accentTint]
         for variant in variants {
             let badge = JudarnBadge("Pro", variant: variant)
             #if os(macOS)
@@ -100,7 +140,7 @@ struct ComponentTests {
 
     @Test("Button view rendering and variants")
     func buttonRendering() {
-        let variants: [JudarnButtonVariant] = [.primary, .secondary, .ghost, .accent, .outline]
+        let variants: [JudarnButtonVariant] = [.primary, .secondary, .ghost, .accent]
         let sizes: [JudarnButtonSize] = [.sm, .md, .lg]
 
         for variant in variants {
@@ -126,7 +166,6 @@ struct ComponentTests {
 
         // Test static ButtonStyle convenience properties
         _ = Button("P") {}.buttonStyle(.judarnPrimary)
-        _ = Button("O") {}.buttonStyle(.judarnOutline)
         _ = Button("S") {}.buttonStyle(.judarnSecondary)
         _ = Button("G") {}.buttonStyle(.judarnGhost)
         _ = Button("A") {}.buttonStyle(.judarnAccent)

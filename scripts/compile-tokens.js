@@ -2014,6 +2014,7 @@ These hold on every host.
    - **Text fields** are wells, set apart by fill alone: \`substrate\` inside an elevated surface or tint, and \`surfaceRecessed\` directly on the substrate. The label, the field's place in the form, and its focus ring identify it, so it draws no outline at rest.
    - Every field has a visible label, and a placeholder is not a label. The focus ring and the invalid ring each reach 3:1 against the surface around the field. High-contrast modes add an \`ink100\` outline.
    - The fill sits at ${fieldRange} against its surroundings, below the 3:1 that WCAG's Understanding document for 1.4.11 gives for fill-only inputs. That is an accepted cost, like white ink: **never darken a field fill or add an outline on ratios alone.** A project that must claim formal WCAG conformance records an outline in its profile.
+   - **Buttons, badges, and tags** are set apart by fill alone too, with no outline at rest and no outlined variant. A quiet control or a neutral badge is a well like a text field, an accent badge may take the light tint of its color, and high-contrast modes add an \`ink100\` outline.
 
 3. **Rhythm**:
    - Space things on an 8-unit grid, with a 4-unit subgrid for fine offsets.
@@ -2055,7 +2056,9 @@ Apple and web take their values from \`tokens/judarn-tokens.json\`, with zero dr
   - Contrast surfaces by background fill (\`surfaceElevated\` on \`substrate\`).
   - **Never apply \`.border(...)\` or \`.overlay(strokeBorder(...))\` around card perimeters.**
   - Hairlines use \`rule = 1px\`.
-  - Text fields fill with \`surfaceRecessed\`, or \`substrate\` inside a card (\`.card\` on web, \`JudarnCard\` on Apple). At rest they keep a transparent border on web, so Windows high-contrast mode can still draw it, and no stroke on Apple. \`prefers-contrast: more\`, \`data-contrast="high"\`, and Apple's Increase Contrast turn it into an \`ink100\` outline.
+  - Text fields fill with \`surfaceRecessed\`, or \`substrate\` inside a card (\`.jd-card\` on web, \`JudarnCard\` on Apple). At rest they keep a transparent border on web, so Windows high-contrast mode can still draw it, and no stroke on Apple. \`prefers-contrast: more\`, \`data-contrast="high"\`, and Apple's Increase Contrast turn it into an \`ink100\` outline.
+  - Buttons, badges, and tags follow the same rule: a transparent resting border on web, no stroke on Apple, and an \`ink100\` outline in the same high-contrast modes. The ghost button stays text with its hover underline.
+  - Web component classes carry the \`jd-\` prefix (\`.jd-btn\`, \`.jd-card\`, \`.jd-table\`), so a project's own class names never pick up Judarn's styles.
   - The focus ring takes the accent and the invalid ring \`signalError\`. Apple clamps the focus ring to 3:1 with \`contrastingAccent\`; on web a project that sets \`--jd-accent\` measures it.
 - **Type**:
   - Use the 12-step scale in section 5, and the system font stack in the tokens.

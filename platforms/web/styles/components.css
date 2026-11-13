@@ -1,12 +1,15 @@
 /* =========================================================================
    JUDARN DESIGN SYSTEM
    components.css – component styles (flat, geometric, no decoration)
-   Interaction model: COLOR INVERSION on hover, flat grey on active.
-   No shadows, no gradients, no radius (unless structurally motivated).
+   Every class carries the jd- prefix, so a project's own .btn or .card never picks these up.
+   Controls are set apart by fill alone (DESIGN.md, Surface Hierarchy). Hover inverts the fill,
+   press is flat grey. No shadows, no gradients, no radius (unless structurally motivated).
    ========================================================================= */
 
 /* ---- BUTTON ------------------------------------------------------------ */
-.btn {
+/* The resting border is transparent: it keeps the control's size, and Windows high-contrast mode
+   still draws it. High-contrast modes turn it into an ink-100 outline (end of file). */
+.jd-btn {
   font-family: var(--font-sans);
   font-weight: var(--weight-medium);
   letter-spacing: var(--track-body);
@@ -16,7 +19,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--gap-tight);
-  border: var(--rule) solid var(--black);
+  border: var(--rule) solid transparent;
   background: var(--black);
   color: var(--paper);
   cursor: pointer;
@@ -28,38 +31,35 @@
   text-align: center;
   white-space: nowrap;
 }
-.btn:hover { background: var(--white); color: var(--black); border-color: var(--black); }     /* invert */
-.btn:active { background: var(--ink-60); border-color: var(--ink-60); color: var(--paper); }
-.btn:focus-visible { outline: var(--rule-bold) solid var(--accent); outline-offset: 2px; }
+.jd-btn:hover { background: var(--jd-surface-recessed); color: var(--black); }     /* invert by fill */
+.jd-btn:active { background: var(--ink-60); color: var(--paper); }
+.jd-btn:focus-visible { outline: var(--rule-bold) solid var(--accent); outline-offset: 2px; }
 
-.btn--outline { background: transparent; color: var(--black); border: var(--rule) solid var(--black); }
-.btn--outline:hover { background: var(--black); color: var(--paper); }
-.btn--outline:active { background: var(--ink-60); border-color: var(--ink-60); color: var(--paper); }
+/* A secondary button is a well like a text field: surfaceRecessed on the page, substrate inside a card. */
+.jd-btn--secondary { background: var(--jd-well, var(--jd-surface-recessed)); color: var(--black); }
+.jd-btn--secondary:hover { background: var(--black); color: var(--paper); }
+.jd-btn--secondary:active { background: var(--ink-60); color: var(--paper); }
 
-.btn--secondary { background: var(--jd-surface-recessed); color: var(--black); border: var(--rule) solid var(--ink-30); }
-.btn--secondary:hover { background: var(--white); color: var(--black); border-color: var(--ink-60); }
-.btn--secondary:active { background: var(--ink-60); border-color: var(--ink-60); color: var(--paper); }
+.jd-btn--ghost { background: transparent; color: var(--black); padding-left: 0; padding-right: 0; }
+.jd-btn--ghost:hover { background: transparent; color: var(--black); border-bottom-color: var(--black); }
+.jd-btn--ghost:active { background: transparent; color: var(--ink-60); border-bottom-color: var(--ink-60); }
 
-.btn--ghost { background: transparent; color: var(--black); border-color: transparent; padding-left: 0; padding-right: 0; }
-.btn--ghost:hover { background: transparent; color: var(--black); border-bottom-color: var(--black); }
-.btn--ghost:active { background: transparent; color: var(--ink-60); border-bottom-color: var(--ink-60); }
+.jd-btn--accent { background: var(--accent); color: var(--accent-ink); }
+.jd-btn--accent:hover { background: var(--jd-surface-recessed); color: var(--accent-fg); }
+.jd-btn--accent:active { filter: none; background: var(--accent); color: var(--accent-ink); }
 
-.btn--accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.btn--accent:hover { background: var(--white); color: var(--accent-fg); border-color: var(--accent-fg); }
-.btn--accent:active { filter: none; background: var(--accent); color: var(--accent-ink); }
+.jd-btn--sm { padding: var(--space-1) var(--space-2); font-size: var(--size-small); min-height: var(--space-touch); }
+.jd-btn--lg { padding: var(--space-3) var(--space-4); font-size: var(--size-body-lg); }
+.jd-btn--block { display: flex; width: 100%; }
 
-.btn--sm { padding: var(--space-1) var(--space-2); font-size: var(--size-small); min-height: var(--space-touch); }
-.btn--lg { padding: var(--space-3) var(--space-4); font-size: var(--size-body-lg); }
-.btn--block { display: flex; width: 100%; }
-
-.btn:disabled, .btn[aria-disabled="true"] {
-  background: var(--jd-surface-recessed); color: var(--ink-30); border-color: var(--ink-30);
+.jd-btn:disabled, .jd-btn[aria-disabled="true"] {
+  background: var(--jd-well, var(--jd-surface-recessed)); color: var(--ink-30);
   cursor: not-allowed; pointer-events: none;
 }
 
 /* ---- FIELD (text input / textarea / select) --------------------------- */
-.field { display: flex; flex-direction: column; gap: var(--gap-tight); }
-.field__label {
+.jd-field { display: flex; flex-direction: column; gap: var(--gap-tight); }
+.jd-field__label {
   font-family: var(--font-sans);
   font-weight: var(--weight-bold);
   font-size: var(--size-label);
@@ -70,7 +70,7 @@
 /* A field is a well set apart by fill alone (DESIGN.md, Surface Hierarchy): surfaceRecessed on the
    page, substrate inside a card. The resting border is transparent: it keeps the field's size, and
    Windows high-contrast mode still draws it. High-contrast modes turn it into an ink-100 outline. */
-.field__input {
+.jd-field__input {
   font-family: var(--font-sans);
   font-size: var(--size-body);
   color: var(--black);
@@ -81,23 +81,28 @@
   width: 100%;
   transition: border-color 120ms linear, box-shadow 120ms linear;
 }
-.card .field__input { background: var(--paper); }
+.jd-card .jd-field__input { background: var(--paper); }
 @media (prefers-contrast: more) {
-  :where(:root:not([data-contrast="normal"])) .field__input { border-color: var(--ink-100); }
+  :where(:root:not([data-contrast="normal"])) .jd-field__input { border-color: var(--ink-100); }
 }
-:where([data-contrast="high"]) .field__input { border-color: var(--ink-100); }
-.field__input::placeholder { color: var(--ink-60); }
-.field__input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.field__input:focus-visible { outline: var(--rule-bold) solid var(--accent); outline-offset: 2px; }
-.field__input:disabled { color: var(--ink-30); cursor: not-allowed; }
-.field__input[aria-invalid="true"], .field__input.is-invalid { border-color: var(--signal-error); box-shadow: 0 0 0 1px var(--signal-error); }
-.field__hint { font-size: var(--size-small); color: var(--ink-60); }
-.field__hint.is-error, .field__hint--error { color: var(--signal-error); font-weight: var(--weight-medium); }
-textarea.field__input { resize: vertical; min-height: var(--space-12); line-height: var(--lh-body); }
-select.field__input { cursor: pointer; } /* native appearance keeps the platform chevron */
+:where([data-contrast="high"]) .jd-field__input { border-color: var(--ink-100); }
+@media (prefers-contrast: more) {
+  :where(:root:not([data-contrast="normal"])) :is(.jd-btn:not(.jd-btn--ghost), .jd-badge, .jd-tag) { border-color: var(--ink-100); }
+}
+:where([data-contrast="high"]) :is(.jd-btn:not(.jd-btn--ghost), .jd-badge, .jd-tag) { border-color: var(--ink-100); }
+.jd-field__input::placeholder { color: var(--ink-60); }
+.jd-field__input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.jd-field__input:focus-visible { outline: var(--rule-bold) solid var(--accent); outline-offset: 2px; }
+.jd-field__input:disabled { color: var(--ink-30); cursor: not-allowed; }
+.jd-field__input[aria-invalid="true"], .jd-field__input.is-invalid { border-color: var(--signal-error); box-shadow: 0 0 0 1px var(--signal-error); }
+.jd-field__hint { font-size: var(--size-small); color: var(--ink-60); }
+.jd-field__hint.is-error, .jd-field__hint--error { color: var(--signal-error); font-weight: var(--weight-medium); }
+textarea.jd-field__input { resize: vertical; min-height: var(--space-12); line-height: var(--lh-body); }
+select.jd-field__input { cursor: pointer; } /* native appearance keeps the platform chevron */
 
 /* ---- CARD -------------------------------------------------------------- */
-.card {
+.jd-card {
+  --jd-well: var(--paper); /* wells inside a card (secondary buttons, neutral badges, tags) fill with substrate */
   background: var(--white);
   border: none;
   border-radius: var(--radius-card);
@@ -106,97 +111,111 @@ select.field__input { cursor: pointer; } /* native appearance keeps the platform
   flex-direction: column;
   gap: var(--gap-normal);
 }
-.card--flat { border: none; padding: 0; border-radius: 0; }
-.card--compact { padding: var(--space-2); }
-.card--field { background: var(--bg2); border: none; }
-.card__eyebrow { color: var(--accent); } /* type comes from t-label */
-.card__title { font-size: var(--size-h4); font-weight: var(--weight-bold); letter-spacing: var(--track-head); }
-.card__body { font-size: var(--size-body); line-height: var(--lh-body); }
-.card__media { aspect-ratio: 3 / 2; background: var(--jd-surface-recessed); border-radius: var(--radius-control); overflow: hidden; }
+.jd-card--flat { border: none; padding: 0; border-radius: 0; }
+.jd-card--compact { padding: var(--space-2); }
+.jd-card--field { background: var(--bg2); border: none; }
+.jd-card__eyebrow { color: var(--accent); } /* type comes from t-label */
+.jd-card__title { font-size: var(--size-h4); font-weight: var(--weight-bold); letter-spacing: var(--track-head); }
+.jd-card__body { font-size: var(--size-body); line-height: var(--lh-body); }
+.jd-card__media { aspect-ratio: 3 / 2; background: var(--jd-surface-recessed); border-radius: var(--radius-control); overflow: hidden; }
 
 /* ---- BADGE / TAG ------------------------------------------------------- */
-.badge {
+/* Fill only, like buttons: a transparent resting border, an ink-100 outline in high-contrast modes.
+   The neutral badge and the tag are wells: surfaceRecessed on the page, substrate inside a card. */
+.jd-badge {
   display: inline-flex; align-items: center; gap: var(--gap-tight);
   font-family: var(--font-sans); font-weight: var(--weight-bold);
   font-size: var(--size-label); letter-spacing: var(--track-body);
-  padding: 4px var(--space-1); border: var(--rule) solid var(--line);
-  background: var(--white); color: var(--black); border-radius: var(--radius-badge); line-height: 1;
+  padding: 4px var(--space-1); border: var(--rule) solid transparent;
+  background: var(--jd-well, var(--jd-surface-recessed)); color: var(--black);
+  border-radius: var(--radius-badge); line-height: 1;
 }
-.badge--solid { background: var(--black); color: var(--paper); }
-.badge--accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-.badge--accent-outline { color: var(--accent-fg); border-color: var(--accent-fg); }
+.jd-badge--solid { background: var(--black); color: var(--paper); }
+.jd-badge--accent { background: var(--accent); color: var(--accent-ink); }
+/* A light tint of the accent (or of --jd-badge-accent) with ink-100 text. Tints belong to light mode,
+   so dark mode falls back to the neutral well. */
+.jd-badge--accent-tint {
+  background: color-mix(in oklch, var(--jd-badge-accent, var(--accent)) 14%, white);
+  color: var(--ink-100);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .jd-badge--accent-tint { background: var(--jd-well, var(--jd-surface-recessed)); }
+}
+[data-theme="dark"] .jd-badge--accent-tint,
+.palette-dark .jd-badge--accent-tint { background: var(--jd-well, var(--jd-surface-recessed)); }
 
-.tag {
+.jd-tag {
   display: inline-flex; align-items: center;
   font-size: var(--size-small); font-weight: var(--weight-medium);
-  padding: 4px var(--space-1); border: var(--rule) solid var(--line);
-  background: var(--white); border-radius: var(--radius-badge); line-height: 1.2;
+  padding: 4px var(--space-1); border: var(--rule) solid transparent;
+  background: var(--jd-well, var(--jd-surface-recessed)); color: var(--black);
+  border-radius: var(--radius-badge); line-height: 1.2;
 }
 
 /* ---- NAVBAR ------------------------------------------------------------ */
-.navbar {
+.jd-navbar {
   display: flex; align-items: center; justify-content: space-between;
   padding: var(--space-2) var(--space-3);
   border-bottom: var(--rule-bold) solid var(--line);
   background: var(--white);
 }
-.navbar__brand { font-weight: var(--weight-bold); font-size: var(--size-h4); letter-spacing: var(--track-head); }
-.navbar__links { display: flex; align-items: center; gap: var(--space-3); list-style: none; margin: 0; padding: 0; }
-.navbar__link {
+.jd-navbar__brand { font-weight: var(--weight-bold); font-size: var(--size-h4); letter-spacing: var(--track-head); }
+.jd-navbar__links { display: flex; align-items: center; gap: var(--space-3); list-style: none; margin: 0; padding: 0; }
+.jd-navbar__link {
   font-size: var(--size-small); font-weight: var(--weight-medium);
   border-bottom: var(--rule-bold) solid transparent;
   padding-bottom: 2px;
   transition: border-color 120ms linear;
 }
-.navbar__link:hover { border-bottom-color: var(--black); }
-.navbar__link[aria-current="page"] { border-bottom-color: var(--accent); }
+.jd-navbar__link:hover { border-bottom-color: var(--black); }
+.jd-navbar__link[aria-current="page"] { border-bottom-color: var(--accent); }
 
 /* ---- FOOTER ------------------------------------------------------------ */
-.footer {
+.jd-footer {
   border-top: var(--rule-bold) solid var(--line);
   padding: var(--space-6) var(--space-3) var(--space-3);
   background: var(--white);
   display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-4);
 }
-.footer__col { display: flex; flex-direction: column; gap: var(--gap-tight); }
-.footer__head { margin: 0 0 var(--space-1); color: var(--black); } /* type comes from t-label */
-.footer__link { font-size: var(--size-small); color: var(--fg2); }
-.footer__link:hover { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
+.jd-footer__col { display: flex; flex-direction: column; gap: var(--gap-tight); }
+.jd-footer__head { margin: 0 0 var(--space-1); color: var(--black); } /* type comes from t-label */
+.jd-footer__link { font-size: var(--size-small); color: var(--fg2); }
+.jd-footer__link:hover { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---- DATA TABLE -------------------------------------------------------- */
-.table { width: 100%; border-collapse: collapse; font-size: var(--size-small); }
-.table th {
+.jd-table { width: 100%; border-collapse: collapse; font-size: var(--size-small); }
+.jd-table th {
   text-align: left; font-weight: var(--weight-bold); font-size: var(--size-label);
   letter-spacing: var(--track-label); text-transform: uppercase;
   padding: var(--space-1) var(--space-2); border-bottom: var(--rule-bold) solid var(--line); color: var(--black);
 }
-.table td { padding: var(--space-2); border-bottom: var(--rule) solid var(--ink-30); color: var(--fg1); }
-.table tbody tr:hover { background: var(--jd-surface-recessed); }
-.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.jd-table td { padding: var(--space-2); border-bottom: var(--rule) solid var(--ink-30); color: var(--fg1); }
+.jd-table tbody tr:hover { background: var(--jd-surface-recessed); }
+.jd-table .num { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* As-written casing for a field label or column header that holds a unit, a mixed-case term,
    or more than two words. */
-.field__label.t-as-written,
-.table th.t-as-written,
-.matrix th.t-as-written { text-transform: none; letter-spacing: var(--track-body); }
+.jd-field__label.t-as-written,
+.jd-table th.t-as-written,
+.jd-matrix th.t-as-written { text-transform: none; letter-spacing: var(--track-body); }
 
 /* ---- LOGO LOCKUP FRAME ------------------------------------------------- */
-.lockup { display: inline-flex; align-items: center; gap: var(--space-2); }
-.lockup--vertical { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
-.lockup--reversed { background: var(--black); color: var(--paper); padding: var(--space-3); }
-.lockup__mark { display: block; flex: none; }
-.lockup__words { display: flex; flex-direction: column; }
-.lockup__name { font-weight: var(--weight-bold); font-size: var(--size-h4); line-height: 1; letter-spacing: var(--track-head); }
-.lockup__tag { color: var(--fg2); margin-top: 4px; } /* type comes from t-label */
-.lockup--reversed .lockup__tag { color: var(--ink-30); }
+.jd-lockup { display: inline-flex; align-items: center; gap: var(--space-2); }
+.jd-lockup--vertical { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+.jd-lockup--reversed { background: var(--black); color: var(--paper); padding: var(--space-3); }
+.jd-lockup__mark { display: block; flex: none; }
+.jd-lockup__words { display: flex; flex-direction: column; }
+.jd-lockup__name { font-weight: var(--weight-bold); font-size: var(--size-h4); line-height: 1; letter-spacing: var(--track-head); }
+.jd-lockup__tag { color: var(--fg2); margin-top: 4px; } /* type comes from t-label */
+.jd-lockup--reversed .jd-lockup__tag { color: var(--ink-30); }
 
 /* ---- DATA MATRIX ------------------------------------------------------- */
-.matrix {
+.jd-matrix {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--size-small);
 }
-.matrix th {
+.jd-matrix th {
   text-align: left;
   font-weight: var(--weight-bold);
   font-size: var(--size-label);
@@ -208,44 +227,44 @@ select.field__input { cursor: pointer; } /* native appearance keeps the platform
   background: var(--white);
   color: var(--black);
 }
-.matrix th:last-child { border-right: none; }
-.matrix td {
+.jd-matrix th:last-child { border-right: none; }
+.jd-matrix td {
   padding: var(--space-1) var(--space-2);
   border-right: var(--rule) solid var(--ink-30);
   border-bottom: var(--rule) solid var(--ink-30);
   color: var(--fg1);
 }
-.matrix td:last-child { border-right: none; }
-.matrix tbody tr:last-child td { border-bottom: none; }
-.matrix tbody tr:hover td { background: var(--jd-surface-recessed); }
-.matrix .num { text-align: right; font-variant-numeric: tabular-nums; }
+.jd-matrix td:last-child { border-right: none; }
+.jd-matrix tbody tr:last-child td { border-bottom: none; }
+.jd-matrix tbody tr:hover td { background: var(--jd-surface-recessed); }
+.jd-matrix .num { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* ---- HIGH CONTRAST RULE SCALING ---------------------------------------- */
 @media (prefers-contrast: more) {
-  .matrix th,
-  .matrix td {
+  .jd-matrix th,
+  .jd-matrix td {
     border-right-width: var(--jd-rule-bold);
     border-bottom-width: var(--jd-rule-bold);
   }
-  .table th,
-  .table td {
+  .jd-table th,
+  .jd-table td {
     border-bottom-width: var(--jd-rule-bold);
   }
-  .field__input {
+  .jd-field__input {
     border-width: var(--jd-rule-bold);
   }
 }
 
-[data-contrast="high"] .matrix th,
-[data-contrast="high"] .matrix td {
+[data-contrast="high"] .jd-matrix th,
+[data-contrast="high"] .jd-matrix td {
   border-right-width: var(--jd-rule-bold);
   border-bottom-width: var(--jd-rule-bold);
 }
-[data-contrast="high"] .table th,
-[data-contrast="high"] .table td {
+[data-contrast="high"] .jd-table th,
+[data-contrast="high"] .jd-table td {
   border-bottom-width: var(--jd-rule-bold);
 }
-[data-contrast="high"] .field__input {
+[data-contrast="high"] .jd-field__input {
   border-width: var(--jd-rule-bold);
 }
 

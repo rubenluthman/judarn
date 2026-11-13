@@ -30,7 +30,7 @@ export function TextField({
   const common = {
     ...rest,
     id: fid,
-    className: cx("field__input", className),
+    className: cx("jd-field__input", className),
     "aria-invalid": invalid || error ? true : undefined,
     "aria-describedby": describedBy,
     disabled,
@@ -41,11 +41,11 @@ export function TextField({
   else control = <input {...common} />;
 
   return (
-    <div className="field">
-      {label ? <label className={cx("field__label", labelCasing === "asWritten" && "t-as-written")} htmlFor={fid}>{label}</label> : null}
+    <div className="jd-field">
+      {label ? <label className={cx("jd-field__label", labelCasing === "asWritten" && "t-as-written")} htmlFor={fid}>{label}</label> : null}
       {control}
-      {hint ? <span className="field__hint" id={hintId}>{hint}</span> : null}
-      {error ? <span className="field__hint is-error" id={errorId}>{error}</span> : null}
+      {hint ? <span className="jd-field__hint" id={hintId}>{hint}</span> : null}
+      {error ? <span className="jd-field__hint is-error" id={errorId}>{error}</span> : null}
     </div>
   );
 }

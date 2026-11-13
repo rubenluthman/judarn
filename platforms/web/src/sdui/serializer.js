@@ -25,8 +25,8 @@ export const VALID_NODE_TYPES = new Set([
   "text",
 ]);
 
-const BUTTON_VARIANTS = ["primary", "outline", "secondary", "ghost", "accent"];
-const BADGE_VARIANTS = ["outline", "solid", "accent", "accent-outline"];
+const BUTTON_VARIANTS = ["primary", "secondary", "ghost", "accent"];
+const BADGE_VARIANTS = ["neutral", "solid", "accent", "accent-tint"];
 const SIZES = ["sm", "md", "lg"];
 const CASINGS = ["uppercase", "asWritten"];
 

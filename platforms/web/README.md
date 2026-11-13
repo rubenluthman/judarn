@@ -21,6 +21,10 @@ export function Status() {
 
 `react` 18 or later is the only peer dependency. The package ships compiled ESM and CommonJS. Other entry points: `@judarn/ui/colors` (CSS custom properties only), `@judarn/ui/theme` and `@judarn/ui/tailwind` (Tailwind v4), and `@judarn/ui/sdui` (server-driven UI).
 
+## Class names
+
+`@judarn/ui/styles` and `@judarn/ui/components.css` style only `jd-` classes (`jd-btn`, `jd-badge`, `jd-tag`, `jd-card`, `jd-field`, `jd-navbar`, `jd-footer`, `jd-table`, `jd-matrix`, `jd-lockup`), so a project's own `.btn` or `.card` stays its own. Buttons, badges, and tags are set apart by fill, with a transparent border that high-contrast modes turn into an outline.
+
 ## Accent colors
 
 A project that sets its own `--jd-accent` also sets `--jd-accent-ink` to `#000000` or `#ffffff`, whichever stays readable on that fill. Accent buttons and badges read the resolved `--accent-ink`. The `--jd-accent*` hooks have no default, so a value set on `:root` carries into nested scopes.

@@ -12,7 +12,7 @@ export function DataMatrix({ columns = [], rows = [], label = "Data Matrix", cla
   return (
     <table
       {...rest}
-      className={cx("matrix", className)}
+      className={cx("jd-matrix", className)}
       role="table"
       aria-label={label}
       aria-colcount={totalColumns}

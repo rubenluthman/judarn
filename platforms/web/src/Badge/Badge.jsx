@@ -82,12 +82,12 @@ export function getContrastingInk(color) {
 /**
  * Badge – small status chip, set as written (a status is a value), with luminance-aware contrasting ink.
  */
-export function Badge({ children, variant = "outline", accentColor, style, className, ...rest }) {
+export function Badge({ children, variant = "neutral", accentColor, style, className, ...rest }) {
   const cls = cx(
-    "badge",
-    variant === "solid" && "badge--solid",
-    variant === "accent" && "badge--accent",
-    variant === "accent-outline" && "badge--accent-outline",
+    "jd-badge",
+    variant === "solid" && "jd-badge--solid",
+    variant === "accent" && "jd-badge--accent",
+    variant === "accent-tint" && "jd-badge--accent-tint",
     className,
   );
 
@@ -95,11 +95,10 @@ export function Badge({ children, variant = "outline", accentColor, style, class
   if (accentColor) {
     if (variant === "accent") {
       inlineStyle.backgroundColor = accentColor;
-      inlineStyle.borderColor = accentColor;
       inlineStyle.color = getContrastingInk(accentColor);
-    } else if (variant === "accent-outline") {
-      inlineStyle.borderColor = accentColor;
-      inlineStyle.color = accentColor;
+    } else if (variant === "accent-tint") {
+      // The stylesheet mixes the tint and drops it in dark mode, so pass the color, not a fill.
+      inlineStyle["--jd-badge-accent"] = accentColor;
     }
   }
 
@@ -114,7 +113,7 @@ export function Badge({ children, variant = "outline", accentColor, style, class
  * Tag – sentence-case keyword chip (looser than Badge).
  */
 export function Tag({ children, className, ...rest }) {
-  return <span {...rest} className={cx("tag", className)}>{children}</span>;
+  return <span {...rest} className={cx("jd-tag", className)}>{children}</span>;
 }
 
 export default Badge;

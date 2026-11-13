@@ -1,9 +1,10 @@
 import { cx } from "../internal/cx.js";
 
 /**
- * Button – Judarn button with flat fill, border, and hover inversion.
- * Flat fill, 1px border with the host control radius (var(--radius-control)). Hover inverts fg/bg.
- * Variants: primary (black), outline, secondary (surfaceRecessed), ghost (underline), accent.
+ * Button – Judarn button set apart by fill alone, with hover inversion.
+ * Flat fill with the host control radius (var(--radius-control)) and a transparent border that
+ * high-contrast modes turn into an ink-100 outline. Hover inverts the fill.
+ * Variants: primary (ink fill), secondary (well fill), ghost (underline), accent.
  */
 export function Button({
   children,
@@ -17,14 +18,13 @@ export function Button({
   ...rest
 }) {
   const cls = cx(
-    "btn",
-    variant === "outline" && "btn--outline",
-    variant === "secondary" && "btn--secondary",
-    variant === "ghost" && "btn--ghost",
-    variant === "accent" && "btn--accent",
-    size === "sm" && "btn--sm",
-    size === "lg" && "btn--lg",
-    block && "btn--block",
+    "jd-btn",
+    variant === "secondary" && "jd-btn--secondary",
+    variant === "ghost" && "jd-btn--ghost",
+    variant === "accent" && "jd-btn--accent",
+    size === "sm" && "jd-btn--sm",
+    size === "lg" && "jd-btn--lg",
+    block && "jd-btn--block",
     className,
   );
 

@@ -57,7 +57,6 @@
                 "type": "string",
                 "enum": [
                   "primary",
-                  "outline",
                   "secondary",
                   "ghost",
                   "accent"
@@ -139,10 +138,10 @@
               "variant": {
                 "type": "string",
                 "enum": [
-                  "outline",
+                  "neutral",
                   "solid",
                   "accent",
-                  "accent-outline"
+                  "accent-tint"
                 ]
               },
               "accentColor": {

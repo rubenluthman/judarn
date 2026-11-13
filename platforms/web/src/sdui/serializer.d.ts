@@ -13,8 +13,8 @@ export type SDUINodeType =
 
 /** Props accepted per node type. Any other prop is rejected by `validateSDUINode`. */
 export interface SDUIPropsByType {
-  button: { variant?: "primary" | "outline" | "secondary" | "ghost" | "accent"; size?: "sm" | "md" | "lg"; block?: boolean; disabled?: boolean; type?: "button" | "submit" | "reset"; token?: string };
-  badge: { variant?: "outline" | "solid" | "accent" | "accent-outline"; accentColor?: string; token?: string };
+  button: { variant?: "primary" | "secondary" | "ghost" | "accent"; size?: "sm" | "md" | "lg"; block?: boolean; disabled?: boolean; type?: "button" | "submit" | "reset"; token?: string };
+  badge: { variant?: "neutral" | "solid" | "accent" | "accent-tint"; accentColor?: string; token?: string };
   tag: { token?: string };
   card: { eyebrow?: string; eyebrowCasing?: "uppercase" | "asWritten"; title?: string; flat?: boolean; compact?: boolean; token?: string };
   "data-matrix": { columns?: SDUIColumn[]; rows?: SDUIRow[]; label?: string; token?: string };

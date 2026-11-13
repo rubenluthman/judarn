@@ -9,7 +9,7 @@ const headerClass = (c) =>
 export function DataTable({ columns = [], rows = [], className, ...rest }) {
   const cols = columns.map((c) => (typeof c === "string" ? { key: c, label: c } : c));
   return (
-    <table {...rest} className={cx("table", className)}>
+    <table {...rest} className={cx("jd-table", className)}>
       <thead>
         <tr>
           {cols.map((c) => (

@@ -5,7 +5,6 @@ public enum JudarnButtonVariant: Sendable {
     case secondary
     case ghost
     case accent
-    case outline
 }
 
 public enum JudarnButtonSize: Sendable {
@@ -15,7 +14,8 @@ public enum JudarnButtonSize: Sendable {
 }
 
 /// SwiftUI ButtonStyle conforming to the Judarn interaction model.
-/// Flat solid fill, continuous squircle corners, color inversion on hover.
+/// Flat solid fill, continuous squircle corners, color inversion on hover. Set apart by fill alone
+/// (DESIGN.md, Surface Hierarchy): no stroke at rest, an `ink100` outline in Increase Contrast.
 public struct JudarnButtonStyle: ButtonStyle {
     public let variant: JudarnButtonVariant
     public let size: JudarnButtonSize
@@ -48,6 +48,8 @@ struct JudarnButtonContent: View {
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.isFocused) private var isFocused
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.judarnOnElevatedSurface) private var isOnElevatedSurface
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
     
     private var activeHover: Bool {
         explicitHovered ?? isHovered
@@ -60,14 +62,10 @@ struct JudarnButtonContent: View {
             accentColor: accentColor,
             isPressed: isPressed,
             isEnabled: isEnabled,
-            isHovered: activeHover
+            isHovered: activeHover,
+            isOnElevatedSurface: isOnElevatedSurface
         )
-        let borderWidth: CGFloat = {
-            switch variant {
-            case .ghost: return 0
-            default: return JudarnSpacing.rule
-            }
-        }()
+        let border = Self.border(variant: variant, increasedContrast: colorSchemeContrast == .increased)
         // Control Corner Curvature: macOS controls use subtle 6pt rounding; iOS controls use 10pt continuous squircles.
         #if os(macOS)
         let cornerRadius = JudarnRadius.subtle
@@ -82,7 +80,7 @@ struct JudarnButtonContent: View {
             .background(colors.background, in: shape)
             .foregroundColor(colors.foreground)
             .overlay(
-                shape.strokeBorder(colors.border, lineWidth: borderWidth)
+                shape.strokeBorder(border.color, lineWidth: border.width)
             )
             .overlay(
                 VStack {
@@ -120,50 +118,43 @@ struct JudarnButtonContent: View {
             .animation(reduceMotion ? nil : .linear(duration: 0.12), value: isFocused)
     }
     
+    /// The button's colors. A secondary or disabled button is a well like a text field: `surfaceRecessed`
+    /// on the substrate, `substrate` on an elevated surface. Hover inverts the fill; press is flat `ink60`.
     static func resolveColors(
         variant: JudarnButtonVariant,
         accentColor: Color,
         isPressed: Bool,
         isEnabled: Bool,
-        isHovered: Bool
-    ) -> (background: Color, foreground: Color, border: Color) {
+        isHovered: Bool,
+        isOnElevatedSurface: Bool = false
+    ) -> (background: Color, foreground: Color) {
+        let well = JudarnTextField.fill(isOnElevatedSurface: isOnElevatedSurface)
         if !isEnabled {
-            return (JudarnColors.surfaceRecessed, JudarnColors.ink30, JudarnColors.ink30)
+            return (well, JudarnColors.ink30)
         }
         
         if isPressed {
-            return (JudarnColors.ink60, JudarnColors.substrate, JudarnColors.ink60)
+            return (JudarnColors.ink60, JudarnColors.substrate)
         }
         
         switch variant {
         case .primary:
-            if isHovered {
-                return (JudarnColors.surfaceElevated, JudarnColors.ink100, JudarnColors.ink100)
-            } else {
-                return (JudarnColors.ink100, JudarnColors.substrate, JudarnColors.ink100)
-            }
-        case .outline:
-            if isHovered {
-                return (JudarnColors.ink100, JudarnColors.substrate, JudarnColors.ink100)
-            } else {
-                return (Color.clear, JudarnColors.ink100, JudarnColors.ink100)
-            }
+            return isHovered ? (JudarnColors.surfaceRecessed, JudarnColors.ink100) : (JudarnColors.ink100, JudarnColors.substrate)
         case .secondary:
-            if isHovered {
-                return (JudarnColors.surfaceElevated, JudarnColors.ink100, JudarnColors.ink60)
-            } else {
-                return (JudarnColors.surfaceRecessed, JudarnColors.ink100, JudarnColors.ink30)
-            }
+            return isHovered ? (JudarnColors.ink100, JudarnColors.substrate) : (well, JudarnColors.ink100)
         case .ghost:
-            return (Color.clear, JudarnColors.ink100, Color.clear)
+            return (Color.clear, JudarnColors.ink100)
         case .accent:
             if isHovered {
-                let accessibleAccent = accentColor.contrastingAccent(against: JudarnColors.surfaceElevated)
-                return (JudarnColors.surfaceElevated, accessibleAccent, accessibleAccent)
-            } else {
-                return (accentColor, accentColor.contrastingInk, accentColor)
+                return (JudarnColors.surfaceRecessed, accentColor.contrastingAccent(against: JudarnColors.surfaceRecessed))
             }
+            return (accentColor, accentColor.contrastingInk)
         }
+    }
+
+    /// No stroke at rest; Increase Contrast adds an `ink100` outline. The ghost button stays text with its hover underline.
+    static func border(variant: JudarnButtonVariant, increasedContrast: Bool) -> (color: Color, width: CGFloat) {
+        variant == .ghost ? (.clear, 0) : judarnControlOutlineStyle(increasedContrast: increasedContrast)
     }
 }
 
@@ -206,7 +197,6 @@ fileprivate extension View {
 
 public extension ButtonStyle where Self == JudarnButtonStyle {
     static var judarnPrimary: JudarnButtonStyle { JudarnButtonStyle(variant: .primary) }
-    static var judarnOutline: JudarnButtonStyle { JudarnButtonStyle(variant: .outline) }
     static var judarnSecondary: JudarnButtonStyle { JudarnButtonStyle(variant: .secondary) }
     static var judarnGhost: JudarnButtonStyle { JudarnButtonStyle(variant: .ghost) }
     static var judarnAccent: JudarnButtonStyle { JudarnButtonStyle(variant: .accent) }

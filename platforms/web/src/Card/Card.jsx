@@ -16,15 +16,15 @@ export function Card({
   className,
   ...rest
 }) {
-  const cls = cx("card", flat && "card--flat", compact && "card--compact", className);
+  const cls = cx("jd-card", flat && "jd-card--flat", compact && "jd-card--compact", className);
   return (
     <div {...rest} className={cls}>
-      {media ? <div className="card__media">{media}</div> : null}
+      {media ? <div className="jd-card__media">{media}</div> : null}
       {eyebrow ? (
-        <span className={cx("card__eyebrow", "t-label", eyebrowCasing === "asWritten" && "t-as-written")}>{eyebrow}</span>
+        <span className={cx("jd-card__eyebrow", "t-label", eyebrowCasing === "asWritten" && "t-as-written")}>{eyebrow}</span>
       ) : null}
-      {title ? <div className="card__title">{title}</div> : null}
-      {children ? <div className="card__body">{children}</div> : null}
+      {title ? <div className="jd-card__title">{title}</div> : null}
+      {children ? <div className="jd-card__body">{children}</div> : null}
       {actions ? <div style={{ display: "flex", gap: "var(--gap-tight)" }}>{actions}</div> : null}
     </div>
   );

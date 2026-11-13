@@ -57,8 +57,8 @@ const tree = serializeComponent('card', { eyebrow: 'System', title: 'Performance
 test('a nested tree hydrates into the real components', () => {
   const html = render(deserializeComponent(tree));
   for (const expected of [
-    'class="card"', 'class="card__eyebrow t-label"', 'class="matrix"', 'aria-label="Latency"',
-    'class="btn btn--accent btn--sm"', 'class="badge badge--accent"', 'color:#ffffff', 'class="field__input"',
+    'class="jd-card"', 'class="jd-card__eyebrow t-label"', 'class="jd-matrix"', 'aria-label="Latency"',
+    'class="jd-btn jd-btn--accent jd-btn--sm"', 'class="jd-badge jd-badge--accent"', 'color:#ffffff', 'class="jd-field__input"',
     'aria-describedby=', '​',
   ]) {
     assert.ok(html.includes(expected), `rendered markup is missing ${JSON.stringify(expected)}\n${html}`);

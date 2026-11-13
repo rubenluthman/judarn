@@ -47,15 +47,15 @@ test('every component renders the markup the stylesheet targets', () => {
     h(ui.Footer, { columns: [{ head: 'Product', links: ['A'] }] }),
   ));
   for (const needle of [
-    'class="navbar"', 'aria-current="page"', 'class="card"', 'class="card__media"', 'class="badge badge--accent"',
-    'class="tag"', 'class="matrix"', 'role="columnheader"', 'aria-colindex', '​', 'class="table"',
-    'class="field__input"', 'class="lockup"', 'class="footer"',
+    'class="jd-navbar"', 'aria-current="page"', 'class="jd-card"', 'class="jd-card__media"', 'class="jd-badge jd-badge--accent"',
+    'class="jd-tag"', 'class="jd-matrix"', 'role="columnheader"', 'aria-colindex', '​', 'class="jd-table"',
+    'class="jd-field__input"', 'class="jd-lockup"', 'class="jd-footer"',
   ]) assert.ok(html.includes(needle), `missing ${JSON.stringify(needle)}`);
 });
 
 test('every class the components emit has a rule in components.css', () => {
   const html = render(h('div', null,
-    h(ui.Button, { variant: 'accent', size: 'lg', block: true }, 'x'), h(ui.Button, { variant: 'outline' }, 'x'),
+    h(ui.Button, { variant: 'accent', size: 'lg', block: true }, 'x'), h(ui.Button, { variant: 'secondary' }, 'x'), h(ui.Badge, { variant: 'accent-tint' }, 'x'),
     h(ui.Card, { eyebrow: 'e', media: h('i'), flat: true, compact: true }, 'x'), h(ui.LogoLockup, { variant: 'reversed', tagline: 't' }),
     h(ui.Footer, { columns: [{ head: 'h', links: ['a'] }] }),
   ));
@@ -68,8 +68,8 @@ test('every class the components emit has a rule in components.css', () => {
 });
 
 test('accent fills take a static ink, never the scheme-following --white', () => {
-  assert.match(rule(components, '.btn--accent'), /color: var\(--accent-ink\)/);
-  assert.match(rule(components, '.badge--accent'), /color: var\(--accent-ink\)/);
+  assert.match(rule(components, '.jd-btn--accent'), /color: var\(--accent-ink\)/);
+  assert.match(rule(components, '.jd-badge--accent'), /color: var\(--accent-ink\)/);
   assert.match(colors, /--accent-ink:\s+var\(--jd-accent-ink, #(ffffff|000000)\);/);
   assert.match(colors, /--accent:\s+var\(--jd-accent, var\(--jd-ink-100\)\);/);
   assert.ok(!/≥ 4\.5:1 clamp|contrast-clamped/.test(colors), 'the false clamp comment must stay removed');
@@ -132,32 +132,65 @@ test('a dark html page keeps its dark accent ink after the design-system bundle 
 });
 
 test('cards and matrices draw no perimeter border', () => {
-  assert.ok(!/border:\s*var\(--rule\)/.test(rule(components, '.card__media')));
-  assert.ok(!/(^|\n)\s*border:/.test(rule(components, '.matrix')));
-  assert.ok(!/\[data-contrast="high"\] \.matrix \{/.test(components));
+  assert.ok(!/border:\s*var\(--rule\)/.test(rule(components, '.jd-card__media')));
+  assert.ok(!/(^|\n)\s*border:/.test(rule(components, '.jd-matrix')));
+  assert.ok(!/\[data-contrast="high"\] \.jd-matrix \{/.test(components));
 });
 
 test('fields keep a visible focus indicator and a native select', () => {
-  assert.match(components, /\.field__input::placeholder \{ color: var\(--ink-60\); \}/, 'placeholder uses secondary ink, not the ink-30 hairline token');
+  assert.match(components, /\.jd-field__input::placeholder \{ color: var\(--ink-60\); \}/, 'placeholder uses secondary ink, not the ink-30 hairline token');
   assert.ok(!/outline:\s*none/.test(components));
-  assert.match(components, /\.field__input:focus-visible \{ outline:/);
-  assert.ok(!/select\.field__input \{[^}]*appearance:\s*none/.test(components));
+  assert.match(components, /\.jd-field__input:focus-visible \{ outline:/);
+  assert.ok(!/select\.jd-field__input \{[^}]*appearance:\s*none/.test(components));
 });
 
 test('fields are wells set apart by fill, outlined only in high contrast', () => {
-  const field = rule(components, '.field__input');
+  const field = rule(components, '.jd-field__input');
   assert.match(field, /background: var\(--jd-surface-recessed\);/, 'a field on the page fills with surfaceRecessed');
   assert.match(field, /border: var\(--rule\) solid transparent;/, 'the resting border is transparent');
-  assert.match(rule(components, '.card .field__input'), /background: var\(--paper\);/, 'a field inside a card fills with substrate');
-  assert.ok(!/border-color:\s*var\(--ink-30\)/.test(rule(components, '.field__input:disabled')), 'a disabled field draws no outline');
-  assert.match(components, /@media \(prefers-contrast: more\) \{\n  :where\(:root:not\(\[data-contrast="normal"\]\)\) \.field__input \{ border-color: var\(--ink-100\); \}/);
-  assert.match(components, /:where\(\[data-contrast="high"\]\) \.field__input \{ border-color: var\(--ink-100\); \}/);
-  assert.match(rule(components, '.field__input:focus'), /border-color: var\(--accent\)/);
-  assert.match(rule(components, '.field__input[aria-invalid="true"], .field__input.is-invalid'), /border-color: var\(--signal-error\)/);
+  assert.match(rule(components, '.jd-card .jd-field__input'), /background: var\(--paper\);/, 'a field inside a card fills with substrate');
+  assert.ok(!/border-color:\s*var\(--ink-30\)/.test(rule(components, '.jd-field__input:disabled')), 'a disabled field draws no outline');
+  assert.match(components, /@media \(prefers-contrast: more\) \{\n  :where\(:root:not\(\[data-contrast="normal"\]\)\) \.jd-field__input \{ border-color: var\(--ink-100\); \}/);
+  assert.match(components, /:where\(\[data-contrast="high"\]\) \.jd-field__input \{ border-color: var\(--ink-100\); \}/);
+  assert.match(rule(components, '.jd-field__input:focus'), /border-color: var\(--accent\)/);
+  assert.match(rule(components, '.jd-field__input[aria-invalid="true"], .jd-field__input.is-invalid'), /border-color: var\(--signal-error\)/);
+});
+
+test('buttons, badges and tags are set apart by fill, outlined only in high contrast', () => {
+  for (const sel of ['.jd-btn', '.jd-badge', '.jd-tag']) {
+    assert.match(rule(components, sel), /border: var\(--rule\) solid transparent;/, `${sel}: the resting border is transparent`);
+  }
+  // Outside the high-contrast rules, no control rule may give its border a color.
+  const bare = components.replace(/\/\*[\s\S]*?\*\//g, '');
+  const highContrast = /prefers-contrast|data-contrast/;
+  for (const m of bare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const sel = m[1].trim();
+    if (!/\.jd-(btn|badge|tag)\b/.test(sel) || highContrast.test(sel)) continue;
+    const ghostHover = /\.jd-btn--ghost:(hover|active)/.test(sel);
+    for (const decl of m[2].matchAll(/(border(?:-[a-z]+)*)\s*:\s*([^;]+);/g)) {
+      if (ghostHover && decl[1] === 'border-bottom-color') continue; // the ghost button's underline
+      assert.ok(/transparent|^none$/.test(decl[2].trim()) || decl[1] === 'border-radius', `${sel} strokes its border: ${decl[0]}`);
+    }
+  }
+  assert.ok(!/--outline\b/.test(bare), 'no outline variants remain');
+  assert.match(components, /:where\(\[data-contrast="high"\]\) :is\(\.jd-btn:not\(\.jd-btn--ghost\), \.jd-badge, \.jd-tag\) \{ border-color: var\(--ink-100\); \}/);
+  assert.match(components, /:where\(:root:not\(\[data-contrast="normal"\]\)\) :is\(\.jd-btn:not\(\.jd-btn--ghost\), \.jd-badge, \.jd-tag\) \{ border-color: var\(--ink-100\); \}/);
+  assert.match(rule(components, '.jd-card'), /--jd-well: var\(--paper\);/, 'wells inside a card fill with substrate');
+  assert.match(rule(components, '.jd-badge--accent-tint'), /color-mix\(in oklch, var\(--jd-badge-accent, var\(--accent\)\) 14%, white\)/);
+  assert.match(components, /\[data-theme="dark"\] \.jd-badge--accent-tint,\n\.palette-dark \.jd-badge--accent-tint \{ background: var\(--jd-well/, 'tints belong to light mode');
+});
+
+test('every component class carries the jd- prefix', () => {
+  const bare = components.replace(/\/\*[\s\S]*?\*\//g, '');
+  const classes = new Set([...bare.matchAll(/\.([a-z][\w-]*)/g)].map((m) => m[1]));
+  const allowed = new Set(['is-error', 'is-invalid', 'num', 't-as-written', 'palette-dark']); // states, utilities, theme scope
+  for (const cls of classes) {
+    assert.ok(cls.startsWith('jd-') || allowed.has(cls), `.${cls} has no jd- prefix`);
+  }
 });
 
 test('uppercase eyebrows route through t-label, not hand-rolled text-transform', () => {
-  for (const sel of ['.card__eyebrow', '.footer__head', '.lockup__tag']) {
+  for (const sel of ['.jd-card__eyebrow', '.jd-footer__head', '.jd-lockup__tag']) {
     assert.ok(!/text-transform/.test(rule(components, sel)), `${sel} must not set text-transform`);
   }
 });

@@ -48,16 +48,24 @@ test('getContrastingInk throws on unsupported formats instead of guessing white'
 });
 
 test('consumer className extends the base classes', () => {
-  assert.match(render(h(Button, { className: 'extra', variant: 'accent' }, 'x')), /class="btn btn--accent extra"/);
-  assert.match(render(h(Card, { className: 'extra', compact: true })), /class="card card--compact extra"/);
-  assert.match(render(h(Badge, { className: 'extra', variant: 'solid' }, 'x')), /class="badge badge--solid extra"/);
-  assert.match(render(h(Tag, { className: 'extra' }, 'x')), /class="tag extra"/);
-  assert.match(render(h(DataMatrix, { className: 'extra', columns: ['a'], rows: [] })), /class="matrix extra"/);
-  assert.match(render(h(DataTable, { className: 'extra', columns: ['a'], rows: [] })), /class="table extra"/);
+  assert.match(render(h(Button, { className: 'extra', variant: 'accent' }, 'x')), /class="jd-btn jd-btn--accent extra"/);
+  assert.match(render(h(Card, { className: 'extra', compact: true })), /class="jd-card jd-card--compact extra"/);
+  assert.match(render(h(Badge, { className: 'extra', variant: 'solid' }, 'x')), /class="jd-badge jd-badge--solid extra"/);
+  assert.match(render(h(Tag, { className: 'extra' }, 'x')), /class="jd-tag extra"/);
+  assert.match(render(h(DataMatrix, { className: 'extra', columns: ['a'], rows: [] })), /class="jd-matrix extra"/);
+  assert.match(render(h(DataTable, { className: 'extra', columns: ['a'], rows: [] })), /class="jd-table extra"/);
 });
 
-test('Button supports the outline variant', () => {
-  assert.match(render(h(Button, { variant: 'outline' }, 'x')), /class="btn btn--outline"/);
+test('Button has no outline variant, and Badge defaults to the neutral fill', () => {
+  assert.match(render(h(Button, { variant: 'outline' }, 'x')), /class="jd-btn"/);
+  assert.match(render(h(Badge, null, 'x')), /class="jd-badge"/);
+});
+
+test('an accent-tint Badge passes its color to the stylesheet, not a fill or stroke', () => {
+  const html = render(h(Badge, { variant: 'accent-tint', accentColor: '#3366ff' }, 'x'));
+  assert.match(html, /class="jd-badge jd-badge--accent-tint"/);
+  assert.match(html, /style="--jd-badge-accent:#3366ff"/);
+  assert.ok(!/border-color|background-color/.test(html), html);
 });
 
 test('TextField ids are unique and hint and error are linked with aria-describedby', () => {
@@ -79,7 +87,7 @@ test('TextField ids are unique and hint and error are linked with aria-described
 
 test('TextField select renders its options', () => {
   const html = render(h(TextField, { as: 'select', label: 'Size' }, h('option', { value: 'a' }, 'A')));
-  assert.match(html, /<select[^>]*class="field__input"[^>]*><option value="a">A<\/option><\/select>/);
+  assert.match(html, /<select[^>]*class="jd-field__input"[^>]*><option value="a">A<\/option><\/select>/);
 });
 
 test('LogoLockup exposes an image role with a name', () => {
@@ -88,16 +96,16 @@ test('LogoLockup exposes an image role with a name', () => {
 });
 
 test('Card eyebrow, footer head and lockup tagline route through t-label with an as-written option', () => {
-  assert.match(render(h(Card, { eyebrow: 'Status' })), /class="card__eyebrow t-label"/);
-  assert.match(render(h(Card, { eyebrow: 'e1RM', eyebrowCasing: 'asWritten' })), /class="card__eyebrow t-label t-as-written"/);
-  assert.match(render(h(Footer, { columns: [{ head: 'Product', links: ['A'] }] })), /<h2 class="footer__head t-label">Product<\/h2>/);
+  assert.match(render(h(Card, { eyebrow: 'Status' })), /class="jd-card__eyebrow t-label"/);
+  assert.match(render(h(Card, { eyebrow: 'e1RM', eyebrowCasing: 'asWritten' })), /class="jd-card__eyebrow t-label t-as-written"/);
+  assert.match(render(h(Footer, { columns: [{ head: 'Product', links: ['A'] }] })), /<h2 class="jd-footer__head t-label">Product<\/h2>/);
   assert.match(render(h(Footer, { headCasing: 'asWritten', columns: [{ head: 'Q&A', links: [] }] })), /footer__head t-label t-as-written/);
-  assert.match(render(h(LogoLockup, { tagline: 'T' })), /class="lockup__tag t-label"/);
+  assert.match(render(h(LogoLockup, { tagline: 'T' })), /class="jd-lockup__tag t-label"/);
   assert.match(render(h(LogoLockup, { tagline: 'T', taglineCasing: 'asWritten' })), /lockup__tag t-label t-as-written/);
 });
 
 test('Navbar marks the current link', () => {
-  assert.match(render(h(Navbar, { links: ['A', 'B'], current: 'B' })), /<a class="navbar__link" href="#" aria-current="page">B<\/a>/);
+  assert.match(render(h(Navbar, { links: ['A', 'B'], current: 'B' })), /<a class="jd-navbar__link" href="#" aria-current="page">B<\/a>/);
 });
 
 test('DataMatrix keeps empty cells on the baseline', () => {

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-13
+
+### Changed
+
+- **Breaking:** every web component class now carries the `jd-` prefix (`.btn` is `.jd-btn`, `.card` is `.jd-card`, `.table` is `.jd-table`, and so on), so `@judarn/ui/styles` no longer styles a project's own classes.
+- **Breaking:** buttons, badges, and tags are set apart by fill, with no outline at rest, on web and Apple. The outline button is gone, the outline badge is now `neutral`, and `accent-outline` is now `accent-tint`. High-contrast modes still add an outline.
+
 ## [0.7.12] - 2026-11-13
 
 ### Added

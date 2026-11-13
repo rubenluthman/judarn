@@ -2,9 +2,9 @@ import * as React from "react";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   children?: React.ReactNode;
-  /** @default "outline" */
-  variant?: "outline" | "solid" | "accent" | "accent-outline";
-  /** Optional custom accent color hex or rgb string. Automatically resolves accessible contrasting text ink. */
+  /** Neutral is a well fill, accent-tint a light tint of the accent (neutral in dark mode). @default "neutral" */
+  variant?: "neutral" | "solid" | "accent" | "accent-tint";
+  /** Optional custom accent color (#hex, rgb() or oklch()). The accent variant fills with it and resolves contrasting ink; accent-tint tints with it. */
   accentColor?: string;
 }
 

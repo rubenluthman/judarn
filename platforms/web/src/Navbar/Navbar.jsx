@@ -5,16 +5,16 @@ import { cx } from "../internal/cx.js";
  */
 export function Navbar({ brand = "JUDARN", links = [], current, actions, className, ...rest }) {
   return (
-    <nav {...rest} className={cx("navbar", className)}>
-      <div className="navbar__brand">{brand}</div>
-      <ul className="navbar__links">
+    <nav {...rest} className={cx("jd-navbar", className)}>
+      <div className="jd-navbar__brand">{brand}</div>
+      <ul className="jd-navbar__links">
         {links.map((l) => {
           const label = typeof l === "string" ? l : l.label;
           const href = typeof l === "string" ? "#" : (l.href || "#");
           return (
             <li key={label}>
               <a
-                className="navbar__link"
+                className="jd-navbar__link"
                 href={href}
                 aria-current={label === current ? "page" : undefined}
               >
