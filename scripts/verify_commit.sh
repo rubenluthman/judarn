@@ -32,7 +32,12 @@ node scripts/verify-adrs.js
 
 echo "3. Apple Native (Swift) Build & Test Suite..."
 swift build
-swift test
+echo "   Running swift test (waits if another project's Apple tests are running)..."
+lockf -k -t 1800 /tmp/apple-tests.lock swift test || {
+  status=$?
+  [ "$status" -eq 75 ] && echo "❌ Another project's Apple tests held the lock for 30 minutes (lock file: /tmp/apple-tests.lock). Tests did not run."
+  exit "$status"
+}
 
 echo "3b. Apple iOS Simulator Test Suite..."
 ./scripts/test-ios.sh
