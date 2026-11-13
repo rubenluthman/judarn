@@ -332,6 +332,19 @@
   letter-spacing: var(--jd-track-body);
   font-feature-settings: normal;
 }
+/* Flow: space between the direct children of a container, from the space tokens. A heading belongs to the text below it. Never combine with gap. */
+.flow {
+  display: flow-root;
+}
+.flow > * + * {
+  margin-block-start: var(--jd-space-2);
+}
+.flow > * + :is(h1, h2, h3, h4, h5, h6, .t-display, .t-h1, .t-h2, .t-h3, .t-h4) {
+  margin-block-start: var(--jd-space-4);
+}
+.flow > :is(h1, h2, h3, h4, h5, h6, .t-display, .t-h1, .t-h2, .t-h3, .t-h4) + * {
+  margin-block-start: var(--jd-space-1);
+}
 .t-editorial-nums {
   font-variant-numeric: oldstyle-nums proportional-nums;
   font-feature-settings: "onum" 1, "pnum" 1;

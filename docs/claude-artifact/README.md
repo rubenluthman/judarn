@@ -59,6 +59,7 @@ Judarn has no default color. Build every surface and all running text from the n
 - Use the 12 styles as they stand: `t-display` for poster scale only, `t-h1` to `t-h4` for headings, `t-body-lg`, `t-body` and `t-small` for text, `t-label` and `t-micro` for labels, `t-data` and `t-mono` for data.
 - Keep running text within `jd-measure-body` (65ch), and text in cards and sidebars within `jd-measure-compact` (45ch).
 - Set the lines of one paragraph or one wrapped label close together, with no visible gap between them. Keep each style's own line height, and when you set a line height yourself, as with the owner's typeface, stay at 1.2 to 1.25 for text. Never open running text to 1.4 or more. Separate paragraphs and blocks with the space scale instead.
+- A heading belongs to the text it introduces. Put less space below a heading than between paragraphs, and at least twice the paragraph space above it. On the web, put `flow` on the container: it spaces direct children `jd-space-2` apart, `jd-space-4` above a heading and `jd-space-1` below one, and top-level sections sit `jd-space-6` apart. Never combine `flow` with `gap` on the same container.
 - Headings (`t-h1` to `t-h4`) use weight 800. `t-display` uses weight 900. Text uses 400. Weight 500 is for emphasis and buttons. With the owner's typeface, use its nearest weights.
 
 ## Space

@@ -60,3 +60,24 @@ test('every role keeps web line-height and Apple leading from its token', () => 
     assert.match(css, new RegExp(`--lh-${k}: ${flat.typography[v].lineHeightRatio};`));
   }
 });
+
+test('.flow spaces children from the space tokens and a heading belongs to what follows', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const { flat } = loadTokens();
+  const css = fs.readFileSync(path.join(__dirname, '../../platforms/web/styles/colors_and_type.css'), 'utf8');
+  const px = (k) => flat.space[k].$value;
+  const root = (k) => css.match(new RegExp(`--jd-space-${k}: ([^;]+);`))[1];
+  const rule = (re) => css.match(re)[1];
+  assert.match(css, /\.flow \{\s*display: flow-root;/);
+  const between = rule(/\.flow > \* \+ \* \{\s*margin-block-start: var\(--jd-space-(\w+)\);/);
+  const above = rule(/\.flow > \* \+ :is\([^)]*\) \{\s*margin-block-start: var\(--jd-space-(\w+)\);/);
+  const below = rule(/\.flow > :is\([^)]*\) \+ \* \{\s*margin-block-start: var\(--jd-space-(\w+)\);/);
+  assert.deepStrictEqual([root(between), root(above), root(below)], [px('2'), px('4'), px('1')]);
+  // the rule is a relationship: below < between, above >= 2 x between
+  assert.ok(root(below) < root(between) || parseInt(root(below)) < parseInt(root(between)));
+  assert.ok(parseInt(root(above)) >= 2 * parseInt(root(between)));
+  // heading below rule comes last, so a heading after a heading sits at the smaller gap
+  assert.ok(css.indexOf('+ * {', css.indexOf('.flow > :is(')) > css.indexOf('.flow > * + :is('));
+  for (const h of ['h1', 'h6', '.t-display', '.t-h4']) assert.ok(css.includes(h));
+});

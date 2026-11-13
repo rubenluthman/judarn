@@ -1444,6 +1444,19 @@ function generateWebCss() {
     `  text-transform: none;`,
     `  letter-spacing: var(--jd-track-body);`,
     `  font-feature-settings: normal;`,
+    `}`,
+    `/* Flow: space between the direct children of a container, from the space tokens. A heading belongs to the text below it. Never combine with gap. */`,
+    `.flow {`,
+    `  display: flow-root;`,
+    `}`,
+    `.flow > * + * {`,
+    `  margin-block-start: var(--jd-space-2);`,
+    `}`,
+    `.flow > * + :is(h1, h2, h3, h4, h5, h6, .t-display, .t-h1, .t-h2, .t-h3, .t-h4) {`,
+    `  margin-block-start: var(--jd-space-4);`,
+    `}`,
+    `.flow > :is(h1, h2, h3, h4, h5, h6, .t-display, .t-h1, .t-h2, .t-h3, .t-h4) + * {`,
+    `  margin-block-start: var(--jd-space-1);`,
     `}`
   ].join('\n');
 
@@ -2016,6 +2029,7 @@ These hold on every host.
    - A small label keeps its role inside a control. A disclosure header that names its section is a section label: it keeps heading semantics and exposes whether it is expanded. An eyebrow or value label inside a control keeps its casing only when the control also shows the title or value it names.
    - Pair positive tracking only with uppercase labels, outside a wordmark. Where a host has no case style, write small labels in sentence case.
    - Wrapped lines in one paragraph or label add no space beyond the role's line height, because the owner reads open leading as gaps inside a paragraph. Space between paragraphs comes from spacing tokens, never from line height. Never set an open line height such as 1.5 on running text.
+   - A heading belongs to the text it introduces. The space below a heading is smaller than the space between paragraphs, and the space above a heading is at least twice the space between paragraphs.
    - Numbers in tables and metrics **must use tabular lining figures**.
 
 5. **Filled Surface Ink**:
@@ -2047,6 +2061,7 @@ Apple and web take their values from \`tokens/judarn-tokens.json\`, with zero dr
   - Use the 12-step scale in section 5, and the system font stack in the tokens.
   - Apple takes leading from the role's \`appleLeading\` through \`Font.leading\`, never \`lineSpacing\`, so text styles and Dynamic Type stay intact. Roles for running text and headings are \`tight\`, and \`label\`, \`micro\`, \`data\`, and \`mono\` are \`standard\`. Tight leading removes 2pt per line break and leaves single-line text unchanged (measured on iOS 27.2 and macOS, 2026-11-09).
   - Apple roles never set a fixed point size. A role names \`appleTextStyleMacOS\` only where its own style would render at the same size on macOS as a smaller role (\`.footnote\`, \`.caption\`, and \`.caption2\` are all 10pt there), so each role keeps its size rank on every Apple host.
+  - Web sets the space around headings with \`.flow\`, a class on the container that spaces its direct children: \`space2\` (${s['2'].$value}) between items, \`space4\` (${s['4'].$value}) above a heading, and \`space1\` (${s['1'].$value}) below a heading, which wins when a heading follows a heading. Headings are \`h1\` to \`h6\` and the \`.t-display\` and \`.t-h1\` to \`.t-h4\` classes. Top-level sections sit \`space6\` (${s['6'].$value}) apart. Never combine \`.flow\` with \`gap\` on the same container, because the two add up.
   - Restrict uppercase transformations to \`label\` and \`micro\`, with tracking of \`+0.06em\` on label and \`+0.08em\` on micro. Both styles take an as-written casing (\`judarnLabel(casing: .asWritten)\`, \`.t-as-written\`) that keeps size and weight with body tracking, for every string the general rule does not let uppercase.
   - Never pass a unit symbol or mixed-case term to the uppercase casing. A header row that mixes them sets each cell on its own.
   - Data matrices use \`tabular-nums\` or \`.monospacedDigit()\`.

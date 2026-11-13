@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.12] - 2026-11-13
+
+### Added
+
+- A general rule for the space around headings: a heading belongs to the text it introduces, with less space below it than between paragraphs and at least twice the paragraph space above it.
+- A `.flow` class in the web package, generated from the space tokens: 16 px between the direct children of a container, 32 px above a heading and 8 px below one. Never combine it with `gap`.
+
 ## [0.7.11] - 2026-11-12
 
 ### Added
