@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.4] - 2026-11-13
+
+### Changed
+
+- Documentation now matches the code: the compiler emits Swift and CSS only, Android is parked, and the Apple component list includes `JudarnBadge`, `JudarnTextField` and `JudarnTextList`.
+
 ## [0.8.2] - 2026-11-13
 
 ### Added

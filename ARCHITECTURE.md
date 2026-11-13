@@ -16,7 +16,7 @@
 
 ### Core topologies & subsystems
 
-- **Canonical Tokens & Compiler Pipeline (`tokens/judarn-tokens.json`, `tokens/judarn.resolver.json`, `scripts/lib/design-tokens.js`, `scripts/compile-tokens.js`)**: Design Tokens Format Module 2025.10 files (`judarn-tokens.json` foundation, `modes/*.tokens.json` colour contexts, `judarn.resolver.json` resolver) specifying color registers (OKLCh dual-tier & 4-quadrant high contrast), spatial scales (8/4 grid), reading measures (`65ch`, `45ch`, `260pt` sidebar), border widths, and corner radii. The compiler translates the schema into Swift, CSS, Kotlin, and emits the `docs/DESIGN.md` specification for AI coding tools. `--check` fails on drift.
+- **Canonical Tokens & Compiler Pipeline (`tokens/judarn-tokens.json`, `tokens/judarn.resolver.json`, `scripts/lib/design-tokens.js`, `scripts/compile-tokens.js`)**: Design Tokens Format Module 2025.10 files (`judarn-tokens.json` foundation, `modes/*.tokens.json` colour contexts, `judarn.resolver.json` resolver) specifying color registers (OKLCh dual-tier & 4-quadrant high contrast), spatial scales (8/4 grid), reading measures (`65ch`, `45ch`, `260pt` sidebar), border widths, and corner radii. The compiler translates the schema into Swift and CSS (including the Tailwind preset), and emits the `docs/DESIGN.md` specification for AI coding tools. `--check` fails on drift.
 - **Judarn Color Dictionary & MCP Server (`tools/wada-explorer/`, `tokens/judarn-tokens.json`)**: Optional add-on, outside Judarn's core identity and contrast guarantees. Curated Japanese color harmonies derived from Sanzo Wada's 1930s dictionary (*Haishoku Sōkan*), defined in OKLCh for digital screens. Includes the 348-combination gallery landing view, live multi-context previewer across slides, specifications, app mockups, and web heroes, and a zero-dependency Model Context Protocol (MCP) server for AI coding assistants.
 - **Project Profiles (`docs/profiles/`)**: One file per project recording only what it changes from Judarn's defaults, with the overrides the owner approved. Profiles depend on Judarn, never the reverse.
 - **Claude Artifact Copy (`docs/claude-artifact/`)**: Source of the `project/README.md` and `project/wada.md` files in Judarn's Claude design system artifact, which Claude reads because it cannot read this repository. Its component guideline pages (`project/components/<Comp>/README.md`) come from `platforms/web/src/<Comp>/README.md`, one beside each web component, checked against the component's variants by `platforms/web/scripts/verify-unit.js`.
@@ -30,7 +30,7 @@
   - Color Tokens & Contrast Engine (`JudarnColors.swift`, `JudarnContrastVerifier.swift`): Dual-tier OKLCh color models, Display P3 gamut support, dynamic light/dark trait adaptation, mathematical WCAG 2.1/2.2 AAA/AA relative luminance verification.
   - Typography (`JudarnTypography.swift`): Pluggable font slots (`JudarnFontConfig`), semantic `Font.TextStyle` mapping with native platform density, tracking calibration, reading measure limits, tabular numeric data formatting.
   - Layout & Radii (`JudarnSpacing.swift`): 8/4 spatial grid, continuous squircle radii (`JudarnRadius`).
-  - Components (`JudarnButton.swift`, `JudarnCard.swift`, `JudarnDataMatrix.swift`): Accessible tabular matrices, HIG touch target compliance, VoiceOver rotor navigation.
+  - Components (`JudarnButton.swift`, `JudarnBadge.swift`, `JudarnCard.swift`, `JudarnTextField.swift`, `JudarnTextList.swift`, `JudarnDataMatrix.swift`): Accessible tabular matrices, HIG touch target compliance, VoiceOver rotor navigation.
   - Test Suite (`Tests/JudarnTests/`): Swift Testing suite (`import Testing`, `@Suite`, `@Test`) covering color conversions, contrast verifier matrix, spatial rhythm, dynamic type, and component layouts.
 - **web (`platforms/web`)**:
   - `@judarn/ui` package with React components compiled by esbuild to ESM and CommonJS in `dist/` ([ADR-0011](docs/adr/0011-web-package-ships-compiled-javascript.md)), CSS custom properties (`styles/colors_and_type.css`), Tailwind CSS v4 `@theme` preset, and a Server-Driven UI (SDUI) serializer that validates an allowlist of props per node type.
@@ -55,7 +55,7 @@ flowchart TD
     end
 
     subgraph Targets["Platform Implementations"]
-        Apple["platforms/apple<br/>Swift Package (iOS 17+, macOS 14+)<br/>JudarnColors, JudarnSpacing, JudarnTypography<br/>JudarnCard, JudarnButton, JudarnDataMatrix"]
+        Apple["platforms/apple<br/>Swift Package (iOS 17+, macOS 14+)<br/>JudarnColors, JudarnSpacing, JudarnTypography<br/>JudarnCard, JudarnButton, JudarnBadge<br/>JudarnTextField, JudarnTextList, JudarnDataMatrix"]
         Web["platforms/web<br/>@judarn/ui (React & CSS)<br/>CSS custom properties, Tailwind v4 @theme, SDUI"]
         AIDoc["docs/DESIGN.md<br/>Generated spec for AI tools"]
     end

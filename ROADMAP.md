@@ -5,8 +5,8 @@
 ## Icebox
 
 ### Form controls and tokens
-- [ ] Define semantic tokens for toggle/switch, segmented control, slider, and text field inputs.
-- [ ] Implement native SwiftUI and web component primitives that meet the 44pt touch floor.
+- [ ] Define semantic tokens for toggle/switch, segmented control, and slider inputs.
+- [ ] Implement native SwiftUI and web component primitives for them that meet the 44pt touch floor.
 - [ ] Formalize surface elevation progression (`substrate`, `surfaceElevated`, `surfaceOverlay`) with native platform materials.
 
 ### Brand and assets
@@ -26,7 +26,6 @@
 - [ ] Container-query-driven spatial rhythm tokens for responsive embeddings.
 
 ### Distribution
-- [ ] Automated npm publishing for `@judarn/ui` with provenance attestations.
 - [ ] Swift Package Index DocC deployment and compatibility badge.
 
 ### Hardening
