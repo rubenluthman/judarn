@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.8] - 2026-11-13
+
+### Changed
+
+- Prose checks use house-style v0.3.4, which flags more promotional and filler wording.
+
 ## [0.8.7] - 2026-11-13
 
 ### Added
