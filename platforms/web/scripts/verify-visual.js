@@ -176,6 +176,11 @@ test('buttons, badges and tags are set apart by fill, outlined only in high cont
   assert.match(components, /:where\(\[data-contrast="high"\]\) :is\(\.jd-btn:not\(\.jd-btn--ghost\), \.jd-badge, \.jd-tag\) \{ border-color: var\(--ink-100\); \}/);
   assert.match(components, /:where\(:root:not\(\[data-contrast="normal"\]\)\) :is\(\.jd-btn:not\(\.jd-btn--ghost\), \.jd-badge, \.jd-tag\) \{ border-color: var\(--ink-100\); \}/);
   assert.match(rule(components, '.jd-card'), /--jd-well: var\(--paper\);/, 'wells inside a card fill with substrate');
+  // High contrast promotes ink-30 to ink-100, so only a dashed outline tells a disabled control apart.
+  const disabled = ':is\\(\\.jd-btn:disabled, \\.jd-btn\\[aria-disabled="true"\\], \\.jd-field__input:disabled\\) \\{ border-style: dashed; \\}';
+  assert.match(components, new RegExp(`@media \\(prefers-contrast: more\\) \\{\\n  :where\\(:root:not\\(\\[data-contrast="normal"\\]\\)\\) ${disabled}`), 'disabled outline is dashed under prefers-contrast');
+  assert.match(components, new RegExp(`\\n:where\\(\\[data-contrast="high"\\]\\) ${disabled}`), 'disabled outline is dashed under data-contrast="high"');
+  assert.ok(!/opacity/.test(rule(components, '.jd-btn:disabled, .jd-btn[aria-disabled="true"]')), 'disabled text never takes opacity');
   assert.match(rule(components, '.jd-badge--accent-tint'), /color-mix\(in oklch, var\(--jd-badge-accent, var\(--accent\)\) 14%, white\)/);
   assert.match(components, /\[data-theme="dark"\] \.jd-badge--accent-tint,\n\.palette-dark \.jd-badge--accent-tint \{ background: var\(--jd-well/, 'tints belong to light mode');
 });

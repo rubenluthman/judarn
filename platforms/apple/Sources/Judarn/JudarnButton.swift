@@ -65,7 +65,7 @@ struct JudarnButtonContent: View {
             isHovered: activeHover,
             isOnElevatedSurface: isOnElevatedSurface
         )
-        let border = Self.border(variant: variant, increasedContrast: colorSchemeContrast == .increased)
+        let border = Self.border(variant: variant, increasedContrast: colorSchemeContrast == .increased, isEnabled: isEnabled)
         // Control Corner Curvature: macOS controls use subtle 6pt rounding; iOS controls use 10pt continuous squircles.
         #if os(macOS)
         let cornerRadius = JudarnRadius.subtle
@@ -80,7 +80,7 @@ struct JudarnButtonContent: View {
             .background(colors.background, in: shape)
             .foregroundColor(colors.foreground)
             .overlay(
-                shape.strokeBorder(border.color, lineWidth: border.width)
+                shape.strokeBorder(border.color, style: StrokeStyle(lineWidth: border.width, dash: border.dash))
             )
             .overlay(
                 VStack {
@@ -153,8 +153,12 @@ struct JudarnButtonContent: View {
     }
 
     /// No stroke at rest; Increase Contrast adds an `ink100` outline. The ghost button stays text with its hover underline.
-    static func border(variant: JudarnButtonVariant, increasedContrast: Bool) -> (color: Color, width: CGFloat) {
-        variant == .ghost ? (.clear, 0) : judarnControlOutlineStyle(increasedContrast: increasedContrast)
+    /// Increase Contrast promotes `ink30` to `ink100`, so a disabled button's outline is dashed to tell it from an enabled one.
+    static func border(variant: JudarnButtonVariant, increasedContrast: Bool, isEnabled: Bool = true) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
+        if variant == .ghost { return (.clear, 0, []) }
+        let outline = judarnControlOutlineStyle(increasedContrast: increasedContrast)
+        let dash: [CGFloat] = isEnabled || outline.width == 0 ? [] : [JudarnSpacing.spaceHalf, JudarnSpacing.spaceHalf]
+        return (outline.color, outline.width, dash)
     }
 }
 

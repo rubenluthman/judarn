@@ -90,6 +90,12 @@
   :where(:root:not([data-contrast="normal"])) :is(.jd-btn:not(.jd-btn--ghost), .jd-badge, .jd-tag) { border-color: var(--ink-100); }
 }
 :where([data-contrast="high"]) :is(.jd-btn:not(.jd-btn--ghost), .jd-badge, .jd-tag) { border-color: var(--ink-100); }
+/* High contrast promotes ink-30 to ink-100, so a disabled control would match its enabled twin.
+   Its outline turns dashed instead; text never takes opacity. */
+@media (prefers-contrast: more) {
+  :where(:root:not([data-contrast="normal"])) :is(.jd-btn:disabled, .jd-btn[aria-disabled="true"], .jd-field__input:disabled) { border-style: dashed; }
+}
+:where([data-contrast="high"]) :is(.jd-btn:disabled, .jd-btn[aria-disabled="true"], .jd-field__input:disabled) { border-style: dashed; }
 .jd-field__input::placeholder { color: var(--ink-60); }
 .jd-field__input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 .jd-field__input:focus-visible { outline: var(--rule-bold) solid var(--accent); outline-offset: 2px; }

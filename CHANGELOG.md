@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.9] - 2026-11-13
+
+### Fixed
+
+- In high contrast, disabled buttons and text fields draw a dashed outline, so they no longer look the same as enabled ones. On Apple this covers buttons.
+
 ## [0.8.8] - 2026-11-13
 
 ### Changed
