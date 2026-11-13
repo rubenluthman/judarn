@@ -239,6 +239,28 @@ select.jd-field__input { cursor: pointer; } /* native appearance keeps the platf
 .jd-matrix tbody tr:hover td { background: var(--jd-surface-recessed); }
 .jd-matrix .num { text-align: right; font-variant-numeric: tabular-nums; }
 
+/* ---- LIST -------------------------------------------------------------- */
+/* Items of text get markers (DESIGN.md, Lists): bullets on ul, numbers on ol, in secondary ink,
+   hanging so wrapped lines align with the text. Items are spaced with margins, not gap,
+   so the list sits inside .flow as one block. The indent fits two-digit numbers on ol.
+   The margin reset has zero specificity, so .flow's space before and after the list still applies. */
+:where(.jd-list) { margin: 0; }
+.jd-list {
+  padding-inline-start: var(--jd-space-3);
+  max-width: var(--jd-measure-body);
+  list-style-type: disc;
+}
+ol.jd-list { list-style-type: decimal; padding-inline-start: var(--jd-space-4); }
+.jd-list > li + li { margin-block-start: var(--jd-space-1); }
+.jd-list > li::marker { color: var(--jd-ink-60); font-variant-numeric: tabular-nums; }
+.jd-card .jd-list { max-width: var(--jd-measure-compact); }
+/* One nested level: hollow bullets, same ink, spacing and indent. */
+.jd-list .jd-list { margin-block-start: var(--jd-space-1); max-width: none; }
+ul.jd-list ul.jd-list { list-style-type: circle; }
+/* Rows of links, data or controls: no markers, no indent, set apart by spacing.
+   Give the element role="list": Safari and VoiceOver drop list semantics without markers. */
+.jd-list.jd-list--plain { list-style: none; padding-inline-start: 0; }
+
 /* ---- HIGH CONTRAST RULE SCALING ---------------------------------------- */
 @media (prefers-contrast: more) {
   .jd-matrix th,

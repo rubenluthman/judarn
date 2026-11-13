@@ -38,6 +38,8 @@ Judarn sets color, spatial rhythm, and typography while respecting native platfo
 - ``JudarnBadge``
 - ``JudarnBadgeVariant``
 - ``JudarnTag``
+- ``JudarnTextList``
+- ``JudarnTextListStyle``
 
 ### Accessibility & contrast engine
 - ``JudarnContrastVerifier``

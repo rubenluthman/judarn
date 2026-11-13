@@ -23,7 +23,7 @@ export function Status() {
 
 ## Class names
 
-`@judarn/ui/styles` and `@judarn/ui/components.css` style only `jd-` classes (`jd-btn`, `jd-badge`, `jd-tag`, `jd-card`, `jd-field`, `jd-navbar`, `jd-footer`, `jd-table`, `jd-matrix`, `jd-lockup`), so a project's own `.btn` or `.card` stays its own. Buttons, badges, and tags are set apart by fill, with a transparent border that high-contrast modes turn into an outline.
+`@judarn/ui/styles` and `@judarn/ui/components.css` style only `jd-` classes (`jd-btn`, `jd-badge`, `jd-tag`, `jd-card`, `jd-field`, `jd-navbar`, `jd-footer`, `jd-table`, `jd-matrix`, `jd-lockup`, `jd-list`), so a project's own `.btn` or `.card` stays its own. Buttons, badges, and tags are set apart by fill, with a transparent border that high-contrast modes turn into an outline. Put `jd-list` on a `ul` or `ol` of text items for bullets or numbers in secondary ink with a hanging indent, and `jd-list jd-list--plain` with `role="list"` on rows of links or data.
 
 ## Accent colors
 

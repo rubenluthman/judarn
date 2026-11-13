@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-11-13
+
+### Added
+
+- List rules in `DESIGN.md`: items of text get bullets, or numbers when order matters, in secondary ink with a hanging indent, 8 px apart, at the reading measure; rows of links, data or controls get no markers; capitals and punctuation for Swedish and English; at most one nested level.
+- `.jd-list` in the web package for `ul` and `ol`, with a `.jd-list--plain` variant for rows. It sits inside `.flow` as one block.
+- `JudarnTextList` on Apple for bulleted or numbered items of text, with a marker column that scales with Dynamic Type.
+
 ## [0.8.0] - 2026-11-13
 
 ### Changed

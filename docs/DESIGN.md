@@ -80,7 +80,18 @@ These hold on every host.
    - A heading belongs to the text it introduces. The space below a heading is smaller than the space between paragraphs, and the space above a heading is at least twice the space between paragraphs.
    - Numbers in tables and metrics **must use tabular lining figures**.
 
-5. **Filled Surface Ink**:
+5. **Lists**:
+   - Items of text – facts, steps, conditions – get markers: bullets, or numbers when the order matters. Rows of links, data, or controls – navigation, a list of books, settings – get none, and are set apart by spacing or fill, never borders. Why: a marker says "read these together as text", while a row's own content already marks where it starts, so a marker there is noise.
+   - Bullets are solid round discs, and numbers are plain figures with a full stop ("1.") in tabular figures, so 9 and 10 line up. Markers take secondary ink (`ink60`), never an accent. Why: the marker is structure, not content, so it steps back, and an accent would read as a link or a status.
+   - Items hang: wrapped lines align with the item's text, not with its marker, so the text keeps one clean left edge.
+   - Items sit `space1` (8px) apart, half the space between paragraphs, so the list reads as one block. The list is one block among the paragraphs around it, with their spacing before and after, and a heading above it follows the heading rule. The indent is `space3` (24px) for bullets and `space4` (32px) for numbers, so two-digit numbers fit.
+   - A list keeps the reading measure of the paragraphs around it: `measureBody` in running text, `measureCompact` in a card or sidebar. Why: a list wider than its paragraphs breaks the column.
+   - A lead-in sentence ends with a colon. Items that finish it start lowercase. Items under a heading, or that stand alone, start with a capital.
+   - Fragments take no punctuation after each item and no "and" or "or" at the end of an item. Full sentences end with a full stop each. Never mix fragments and full sentences in one list.
+   - In Swedish, a list that finishes a lead-in sentence ends with a full stop after its last item (Språkrådet, *Svenska skrivregler*). In English it ends without one.
+   - Nest at most one level, for sub-points that belong to one item. Nested bullets are hollow circles, with the same ink, spacing, and indent. A third level means the content wants headings. Why: deeper nesting stops reading as a list and starts reading as an outline.
+
+6. **Filled Surface Ink**:
    - Resolve ink on a filled surface with `contrastingInk`.
    - Judarn deliberately favors white ink beyond what contrast ratios suggest, because contrast math and the human eye disagree on filled components, and black ink turns saturated and mid-tone fills muddy. White ink falls to 1.91:1 at the crossover, an accepted cost rather than a defect.
    - **Never override the resolved ink or add a local ink helper on ratios alone.** The crossover changes only in Judarn, after the owner reviews rendered examples.
@@ -115,6 +126,9 @@ Apple and web take their values from `tokens/judarn-tokens.json`, with zero drif
   - Restrict uppercase transformations to `label` and `micro`, with tracking of `+0.06em` on label and `+0.08em` on micro. Both styles take an as-written casing (`judarnLabel(casing: .asWritten)`, `.t-as-written`) that keeps size and weight with body tracking, for every string the general rule does not let uppercase.
   - Never pass a unit symbol or mixed-case term to the uppercase casing. A header row that mixes them sets each cell on its own.
   - Data matrices use `tabular-nums` or `.monospacedDigit()`.
+- **Lists**:
+  - Web: `.jd-list` on a `ul` gives bullets and on an `ol` numbers, with the marker in `ink60`, a hanging indent, items `space1` apart, at most `measureBody` wide (`measureCompact` inside `.jd-card`), and one nested level of hollow bullets. It spaces items with margins, never `gap`, so it sits inside `.flow` as one block. `.jd-list.jd-list--plain` is the row variant: no markers, no indent, items still `space1` apart. Give a plain list `role="list"`, because Safari and VoiceOver drop list semantics when the markers go (WebKit bug 170179).
+  - Apple: `JudarnTextList` sets items of text as bullets or numbers, with the marker in `ink60` in a column that scales with Dynamic Type, so wrapped lines hang under the text. It takes one level; nest on web only. Rows use the system's `List` and `Form`, with their own separators and insets, because that geometry belongs to the host. Judarn adds no row component on Apple.
 - **Ink**:
   - `contrastingInk` is `getContrastingInk` on web.
   - `contrastingAccent` (Apple) answers a different question: it clamps an accent color used as a foreground to a ratio against a surface ([ADR-0005](adr/0005-compile-time-contrast-checks-and-gamut-mapping.md)).

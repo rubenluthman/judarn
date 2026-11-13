@@ -362,6 +362,28 @@ struct ComponentTests {
         #expect(one.count == 1 && two.count == 2)
     }
 
+    @Test("Text list: secondary-ink markers, a hanging indent of space3 or space4, items space1 apart")
+    func textList() {
+        #expect(JudarnTextList.marker(at: 0, style: .bulleted) == "•")
+        #expect(JudarnTextList.marker(at: 0, style: .numbered()) == "1.")
+        #expect(JudarnTextList.marker(at: 2, style: .numbered(start: 8)) == "10.")
+        #expect(JudarnTextList.markerColor == JudarnColors.ink60)
+        #expect(JudarnTextList.itemSpacing == JudarnSpacing.space1)
+        #expect(JudarnTextList.bulletColumnWidth + JudarnSpacing.space1 == JudarnSpacing.space3)
+        #expect(JudarnTextList.numberColumnWidth + JudarnSpacing.space1 == JudarnSpacing.space4)
+        #if os(macOS)
+        func height(_ items: [String], _ style: JudarnTextListStyle) -> CGFloat {
+            let host = NSHostingView(rootView: JudarnTextList(items, style: style).frame(width: 300))
+            host.layout()
+            return host.fittingSize.height
+        }
+        let one = height(["One"], .bulleted)
+        #expect(one > 0)
+        #expect(height(["One", "Two"], .bulleted) > one)
+        #expect(height(["One", String(repeating: "wrapped text ", count: 20)], .numbered()) > height(["One", "Two"], .numbered()))
+        #endif
+    }
+
     @Test("Card keeps its eyebrow casing option")
     func cardEyebrowCasing() {
         let upper = JudarnCard(eyebrow: "New", title: "T") { Text("C") }

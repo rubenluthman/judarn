@@ -189,6 +189,31 @@ test('every component class carries the jd- prefix', () => {
   }
 });
 
+test('lists: secondary-ink markers, hanging indent, items space1 apart, reading measure, a plain row variant', () => {
+  const base = rule(components, '.jd-list');
+  assert.match(base, /padding-inline-start: var\(--jd-space-3\);/, 'bullets hang at space3');
+  assert.match(base, /max-width: var\(--jd-measure-body\);/, 'a list keeps the reading measure');
+  assert.match(base, /list-style-type: disc;/);
+  assert.ok(!/margin/.test(base), 'the list margin reset must not outweigh .flow');
+  assert.match(components, /:where\(\.jd-list\) \{ margin: 0; \}/);
+  assert.match(rule(components, 'ol.jd-list'), /list-style-type: decimal; padding-inline-start: var\(--jd-space-4\);/, 'numbers hang at space4');
+  assert.match(rule(components, '.jd-list > li + li'), /margin-block-start: var\(--jd-space-1\);/);
+  const marker = rule(components, '.jd-list > li::marker');
+  assert.match(marker, /color: var\(--jd-ink-60\);/, 'markers take secondary ink, never an accent');
+  assert.match(marker, /font-variant-numeric: tabular-nums;/);
+  assert.match(rule(components, '.jd-card .jd-list'), /max-width: var\(--jd-measure-compact\);/);
+  assert.match(rule(components, '.jd-list .jd-list'), /margin-block-start: var\(--jd-space-1\);/);
+  assert.match(rule(components, 'ul.jd-list ul.jd-list'), /list-style-type: circle;/);
+  assert.match(rule(components, '.jd-list.jd-list--plain'), /list-style: none; padding-inline-start: 0;/);
+  assert.match(colors, /--jd-space-1: 8px;/);
+  // Never gap (it adds to .flow) and never a border between rows.
+  const bare = components.replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const m of bare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    if (!/\.jd-list\b/.test(m[1])) continue;
+    assert.ok(!/\b(gap|border[\w-]*)\s*:/.test(m[2]), `${m[1].trim()} must not set gap or a border`);
+  }
+});
+
 test('uppercase eyebrows route through t-label, not hand-rolled text-transform', () => {
   for (const sel of ['.jd-card__eyebrow', '.jd-footer__head', '.jd-lockup__tag']) {
     assert.ok(!/text-transform/.test(rule(components, sel)), `${sel} must not set text-transform`);
