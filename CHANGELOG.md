@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-11-13
+
+### Added
+
+- A guideline page (`README.md`) beside each web component, checked against its variants by the unit tests. The Claude design system copies these pages from the repository.
+
 ## [0.8.1] - 2026-11-13
 
 ### Added

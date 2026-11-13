@@ -112,6 +112,26 @@ test('DataMatrix keeps empty cells on the baseline', () => {
   assert.ok(render(h(DataMatrix, { columns: ['a'], rows: [{ a: null }] })).includes('​'));
 });
 
+test('every component folder has a guideline README that names each variant', () => {
+  const fs = require('fs');
+  const src = path.resolve(__dirname, '../src');
+  const folders = fs.readdirSync(src, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && d.name !== 'internal' && d.name !== 'sdui')
+    .map((d) => d.name);
+  assert.ok(folders.length > 0);
+  for (const name of folders) {
+    const readmePath = path.join(src, name, 'README.md');
+    assert.ok(fs.existsSync(readmePath), `${name} is missing README.md`);
+    const readme = fs.readFileSync(readmePath, 'utf8');
+    const dts = fs.readFileSync(path.join(src, name, `${name}.d.ts`), 'utf8');
+    for (const m of dts.matchAll(/\bvariant\?:\s*([^;]+);/g)) {
+      for (const v of m[1].matchAll(/"([^"]+)"/g)) {
+        assert.ok(readme.includes(`\`${v[1]}\``), `${name}/README.md does not mention variant \`${v[1]}\``);
+      }
+    }
+  }
+});
+
 if (failures > 0) {
   console.error(`\n✗ Component unit verification failed with ${failures} failure(s).`);
   process.exit(1);
