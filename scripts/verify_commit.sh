@@ -39,8 +39,12 @@ lockf -k -t 1800 /tmp/apple-tests.lock swift test || {
   exit "$status"
 }
 
-echo "3b. Apple iOS Simulator Test Suite..."
-./scripts/test-ios.sh
+echo "3b. Apple iOS Simulator Test Suite (waits if another project's Apple tests are running)..."
+lockf -k -t 1800 /tmp/apple-tests.lock ./scripts/test-ios.sh || {
+  status=$?
+  [ "$status" -eq 75 ] && echo "❌ Another project's Apple tests held the lock for 30 minutes (lock file: /tmp/apple-tests.lock). Tests did not run."
+  exit "$status"
+}
 
 echo "4. Web Platform Verification Suite & Packaging Hygiene..."
 [ -d platforms/web/node_modules/esbuild ] || npm --prefix platforms/web ci --no-audit --no-fund

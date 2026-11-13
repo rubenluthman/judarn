@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.6] - 2026-11-13
+
+### Changed
+
+- The iOS simulator test step of the commit check also waits its turn when another project's Apple tests are running.
+
 ## [0.8.5] - 2026-11-13
 
 ### Changed
