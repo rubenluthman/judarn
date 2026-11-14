@@ -1,5 +1,8 @@
 import Testing
 import SwiftUI
+#if os(macOS)
+import AppKit
+#endif
 @testable import Judarn
 
 @Suite("Judarn Typography")
@@ -229,4 +232,23 @@ struct TypographyTests {
             #expect(style.typographyModifier.leading == .standard)
         }
     }
+
+#if os(macOS)
+    @Test("AppKit fonts match the SwiftUI modifier metrics")
+    func appKitFonts() {
+        for style in JudarnTypographyStyle.allCases {
+            let font = style.nsFont()
+            #expect(font.pointSize == style.typographyModifier.size)
+        }
+        #expect(JudarnTypographyStyle.body.nsFont().pointSize == NSFont.preferredFont(forTextStyle: .body).pointSize)
+        #expect(JudarnTypographyStyle.small.nsFont().pointSize == NSFont.preferredFont(forTextStyle: .callout).pointSize)
+        let weight = { (s: JudarnTypographyStyle) in
+            (s.nsFont().fontDescriptor.object(forKey: .traits) as? [NSFontDescriptor.TraitKey: Any])?[.weight] as? CGFloat ?? 0
+        }
+        #expect(weight(.h1) > weight(.body))
+        #expect(JudarnTypographyStyle.mono.nsFont().isFixedPitch)
+        let unknown = JudarnFontConfig(sans: "NoSuchFontFamilyXYZ")
+        #expect(JudarnTypographyStyle.body.nsFont(config: unknown).pointSize == JudarnTypographyStyle.body.nsFont().pointSize)
+    }
+#endif
 }

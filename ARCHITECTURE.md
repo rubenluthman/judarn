@@ -28,7 +28,7 @@
   - Swift Package Index (SPI) manifest (`.spi.yml`) configuring automated builder and DocC documentation targets.
   - DocC documentation catalog (`platforms/apple/Sources/Judarn/Judarn.docc`) and a manual DocC build workflow (`.github/workflows/documentation.yml`, `workflow_dispatch` only).
   - Color Tokens & Contrast Engine (`JudarnColors.swift`, `JudarnContrastVerifier.swift`): Dual-tier OKLCh color models, Display P3 gamut support, dynamic light/dark trait adaptation, mathematical WCAG 2.1/2.2 AAA/AA relative luminance verification.
-  - Typography (`JudarnTypography.swift`): Pluggable font slots (`JudarnFontConfig`), semantic `Font.TextStyle` mapping with native platform density, tracking calibration, reading measure limits, tabular numeric data formatting.
+  - Typography (`JudarnTypography.swift`): Pluggable font slots (`JudarnFontConfig`), `JudarnTypographyStyle.nsFont` for AppKit labels and fields on macOS, semantic `Font.TextStyle` mapping with native platform density, tracking calibration, reading measure limits, tabular numeric data formatting.
   - Layout & Radii (`JudarnSpacing.swift`): 8/4 spatial grid, continuous squircle radii (`JudarnRadius`).
   - Components (`JudarnButton.swift`, `JudarnBadge.swift`, `JudarnCard.swift`, `JudarnTextField.swift`, `JudarnTextList.swift`, `JudarnDataMatrix.swift`): Accessible tabular matrices, HIG touch target compliance, VoiceOver rotor navigation.
   - Test Suite (`Tests/JudarnTests/`): Swift Testing suite (`import Testing`, `@Suite`, `@Test`) covering color conversions, contrast verifier matrix, spatial rhythm, dynamic type, and component layouts.

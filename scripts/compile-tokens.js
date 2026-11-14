@@ -1330,6 +1330,51 @@ public extension View {
         environment(\\.judarnEditorialNumerals, enabled)
     }
 }
+
+#if os(macOS)
+public extension JudarnTypographyStyle {
+    /// AppKit font for this style, for labels, fields, and attributed strings that SwiftUI modifiers cannot reach.
+    /// It resolves the same text style, weight, slot, and OpenType case forms as the SwiftUI modifier, at the
+    /// current preferred size. Leading and tracking are not part of an \`NSFont\`; apply them separately when an attributed string needs them. Pass a config to use project fonts, as \`judarnFontConfig\` does.
+    @MainActor
+    func nsFont(config: JudarnFontConfig = .default, editorialNumerals: Bool = false) -> NSFont {
+        let modifier = typographyModifier
+        let pointSize = modifier.size
+        let customName: String?
+        switch modifier.slot {
+        case .display: customName = config.display ?? config.sans
+        case .body: customName = config.sans
+        case .data: customName = config.data ?? config.sans
+        case .mono: customName = nil
+        }
+        let weight = platformWeight(modifier.weight)
+        let base: NSFont
+        if let customName, let custom = NSFont(name: customName, size: pointSize) {
+            base = custom
+        } else if modifier.slot == .mono {
+            base = NSFont.monospacedSystemFont(ofSize: pointSize, weight: weight)
+        } else {
+            base = NSFont.systemFont(ofSize: pointSize, weight: weight)
+        }
+        var descriptor = CTFontCopyFontDescriptor(base)
+        if modifier.usesCaseForms {
+            descriptor = CTFontDescriptorCreateCopyWithFeature(
+                descriptor, kCaseSensitiveLayoutType as CFNumber, kCaseSensitiveLayoutOnSelector as CFNumber)
+        }
+        if editorialNumerals {
+            descriptor = CTFontDescriptorCreateCopyWithFeature(
+                descriptor, kNumberCaseType as CFNumber, kLowerCaseNumbersSelector as CFNumber)
+            descriptor = CTFontDescriptorCreateCopyWithFeature(
+                descriptor, kNumberSpacingType as CFNumber, kProportionalNumbersSelector as CFNumber)
+        }
+        if modifier.isMonospacedDigit {
+            descriptor = CTFontDescriptorCreateCopyWithFeature(
+                descriptor, kNumberSpacingType as CFNumber, kMonospacedNumbersSelector as CFNumber)
+        }
+        return CTFontCreateWithFontDescriptor(descriptor, pointSize, nil) as NSFont
+    }
+}
+#endif
 `;
 }
 

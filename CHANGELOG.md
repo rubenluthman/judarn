@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.12] - 2026-11-14
+
+### Added
+
+- On macOS, `JudarnTypographyStyle.nsFont()` returns the AppKit font for each typography style, so labels and fields outside SwiftUI can follow the same scale.
+
 ## [0.8.11] - 2026-11-13
 
 ### Removed
