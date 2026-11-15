@@ -48,6 +48,7 @@ const oneOf = (values) => ({ kind: "enum", values });
 const columns = { kind: "columns" };
 const rows = { kind: "rows" };
 const colorValue = { kind: "color" };
+const options = { kind: "options" };
 
 /**
  * Props allowed per node type, with the value shape of each. This table is the single definition:
@@ -64,7 +65,7 @@ export const SDUI_PROP_ALLOWLIST = {
     label: string, hint: string, error: string, as: oneOf(["input", "textarea", "select"]),
     invalid: boolean, disabled: boolean, labelCasing: oneOf(CASINGS), placeholder: string,
     name: string, type: oneOf(["text", "email", "number", "password", "search", "tel", "url"]),
-    defaultValue: string, token: string,
+    defaultValue: string, options, token: string,
   },
   container: { token: string },
   text: { token: string },
@@ -103,6 +104,17 @@ function validateRows(value, where) {
   }
 }
 
+function validateOptions(value, where) {
+  if (!Array.isArray(value)) fail(`${where} must be an array.`);
+  for (const option of value) {
+    if (!option || typeof option !== "object" || Array.isArray(option)) fail(`${where}: an option must be an object.`);
+    for (const k of Object.keys(option)) {
+      if (k !== "value" && k !== "label") fail(`${where}: unsupported option key "${k}".`);
+    }
+    if (typeof option.value !== "string" || typeof option.label !== "string") fail(`${where}: an option needs "value" and "label" strings.`);
+  }
+}
+
 function validateProp(type, name, spec, value) {
   const where = `SDUI ${type} prop "${name}"`;
   switch (spec.kind) {
@@ -123,6 +135,9 @@ function validateProp(type, name, spec, value) {
       break;
     case "rows":
       validateRows(value, where);
+      break;
+    case "options":
+      validateOptions(value, where);
       break;
     default:
       fail(`${where} has an unknown spec.`);
@@ -213,6 +228,9 @@ export function validateSDUINode(node) {
       }
       validateProp(node.type, name, allowed[name], value);
     }
+    if (node.props.options !== undefined && node.props.as !== "select") {
+      fail('SDUI text-field prop "options" needs "as": "select".');
+    }
   }
 
   if (node.content !== undefined && typeof node.content !== "string") {
@@ -241,6 +259,16 @@ export function serializeComponent(type, props = {}, children = [], content = un
   if (Array.isArray(children) && children.length > 0) node.children = children;
   validateSDUINode(node);
   return node;
+}
+
+// A select takes its choices from `options`; the prop itself never reaches the DOM.
+function textFieldProps({ options: _options, ...props }) {
+  return props;
+}
+
+function textFieldChildren({ as, options }, h) {
+  if (as !== "select" || !options) return [];
+  return options.map((o) => h("option", { key: o.value, value: o.value }, [o.label]));
 }
 
 /**
@@ -284,7 +312,7 @@ export function deserializeComponent(node, customComponents = {}, reactInstance 
     case "data-table":
       return h(components.DataTable, props, []);
     case "text-field":
-      return h(components.TextField, props, []);
+      return h(components.TextField, textFieldProps(props), textFieldChildren(props, h));
     case "container":
       return h("div", props, contentOrChildren);
     case "text":

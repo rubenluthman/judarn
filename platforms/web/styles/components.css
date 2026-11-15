@@ -269,16 +269,14 @@ ul.jd-list ul.jd-list { list-style-type: circle; }
 
 /* ---- HIGH CONTRAST RULE SCALING ---------------------------------------- */
 @media (prefers-contrast: more) {
-  .jd-matrix th,
-  .jd-matrix td {
+  :where(:root:not([data-contrast="normal"])) :is(.jd-matrix th, .jd-matrix td) {
     border-right-width: var(--jd-rule-bold);
     border-bottom-width: var(--jd-rule-bold);
   }
-  .jd-table th,
-  .jd-table td {
+  :where(:root:not([data-contrast="normal"])) :is(.jd-table th, .jd-table td) {
     border-bottom-width: var(--jd-rule-bold);
   }
-  .jd-field__input {
+  :where(:root:not([data-contrast="normal"])) .jd-field__input {
     border-width: var(--jd-rule-bold);
   }
 }

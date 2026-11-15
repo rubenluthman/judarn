@@ -93,6 +93,19 @@ test('prop values are validated per type', () => {
   assert.ok(validateSDUINode({ type: 'container', props: { token: 'touch' } }));
 });
 
+test('a select renders its options and rejects malformed ones', () => {
+  const node = serializeComponent('text-field', { label: 'Size', as: 'select', options: [{ value: 's', label: 'Small' }, { value: 'l', label: 'Large' }] });
+  const html = render(deserializeComponent(node));
+  for (const expected of ['<select', '<option value="s">Small</option>', '<option value="l">Large</option>']) {
+    assert.ok(html.includes(expected), `select markup is missing ${JSON.stringify(expected)}\n${html}`);
+  }
+  assert.ok(!html.includes('options='), 'the options prop must not reach the DOM');
+  rejects({ type: 'text-field', props: { as: 'select', options: [{ value: 's' }] } }, /needs "value" and "label"/);
+  rejects({ type: 'text-field', props: { as: 'select', options: [{ value: 's', label: 'S', onClick: 'x' }] } }, /option key/);
+  rejects({ type: 'text-field', props: { as: 'select', options: 'a,b' } }, /must be an array/);
+  rejects({ type: 'text-field', props: { as: 'input', options: [] } }, /needs "as": "select"/);
+});
+
 test('unknown node types and malformed nodes are rejected', () => {
   rejects({ type: 'floating-action-blob' }, /Unsupported SDUI node type/);
   rejects({ type: 'card', children: 'x' }, /children must be an array/);

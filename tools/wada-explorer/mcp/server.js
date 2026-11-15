@@ -151,21 +151,21 @@ function bisectLightnessForContrast(source, target, minRatio, moveDarker) {
  */
 function calibrateWadaTheme(paletteColors) {
   const sortedByLightness = [...paletteColors].sort((a, b) => b.coords.l - a.coords.l);
-  const lightest = sortedByLightness[0].coords;
   const secondLight = (sortedByLightness[1] || sortedByLightness[0]).coords;
   const accentSource = (sortedByLightness[sortedByLightness.length - 1] || sortedByLightness[0]).coords;
   const accent2Source = (sortedByLightness[Math.min(2, sortedByLightness.length - 1)] || accentSource).coords;
 
-  // Light mode surfaces: neutral values; their contrast against ink100 is fixed by the core tokens.
+  // Surfaces are neutral in both modes (chroma 0); their contrast against ink100 is fixed by the core tokens.
   const neutral = (l) => ({ l, c: 0, h: 0, css: `oklch(${l.toFixed(3)} 0.000 0.0)` });
   const subLight = neutral(1);
   const elvLight = neutral(0.98);
   const recLight = neutral(0.958);
 
   // Dark mode surfaces: L(recessed) < L(substrate) < L(elevated)
-  const recDark = { l: 0.120, c: Math.min(secondLight.c, 0.025), h: secondLight.h, css: `oklch(0.120 ${Math.min(secondLight.c, 0.025).toFixed(3)} ${secondLight.h.toFixed(1)})` };
-  const subDark = { l: 0.180, c: Math.min(secondLight.c, 0.035), h: secondLight.h, css: `oklch(0.180 ${Math.min(secondLight.c, 0.035).toFixed(3)} ${secondLight.h.toFixed(1)})` };
-  const elvDark = { l: 0.240, c: Math.min(lightest.c, 0.045), h: lightest.h, css: `oklch(0.240 ${Math.min(lightest.c, 0.045).toFixed(3)} ${lightest.h.toFixed(1)})` };
+  // Neutral like the light ones, so only the accents take colour.
+  const recDark = neutral(0.120);
+  const subDark = neutral(0.180);
+  const elvDark = neutral(0.240);
 
   // Calibrate accents via 1D lightness bisection for >= 4.5:1 AA against surfaceElevated
   const accentLight = bisectLightnessForContrast(accentSource, elvLight, 4.5, true);
@@ -485,7 +485,7 @@ function handleRequest(req) {
       return reply({
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "judarn-color-dictionary", version: "0.8.14" }
+        serverInfo: { name: "judarn-color-dictionary", version: "0.8.15" }
       });
     case "ping":
       return reply({});

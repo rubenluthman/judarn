@@ -72,5 +72,8 @@ test('export_tokens follows the light polarity', async () => {
   assert.equal(roles.surfaceElevated.light.$value.hex, '#f8f8f8');
   assert.ok(roles.surfaceRecessed.light.$value.components[0] < roles.surfaceElevated.light.$value.components[0]);
   const dark = (k) => roles[k].dark.$value.components[0];
+  for (const k of ['surfaceRecessed', 'substrate', 'surfaceElevated']) {
+    assert.equal(roles[k].dark.$value.components[1], 0, `${k} is neutral in dark mode`);
+  }
   assert.ok(dark('surfaceRecessed') < dark('substrate') && dark('substrate') < dark('surfaceElevated'));
 });

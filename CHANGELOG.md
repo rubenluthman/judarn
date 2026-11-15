@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.15] - 2026-11-15
+
+### Fixed
+
+- The second high-contrast block on web (matrix, table and field border widths) now respects `data-contrast="normal"` like the blocks around it.
+- A server-driven text field with `as: "select"` takes an `options` list of `{ value, label }` strings, so the dropdown is no longer empty.
+- The Wada MCP `export_tokens` tool gives dark-mode surfaces no colour tint, matching light mode; only the accents take colour.
+
 ## [0.8.14] - 2026-11-15
 
 ### Fixed

@@ -19,7 +19,7 @@ export interface SDUIPropsByType {
   card: { eyebrow?: string; eyebrowCasing?: "uppercase" | "asWritten"; title?: string; flat?: boolean; compact?: boolean; token?: string };
   "data-matrix": { columns?: SDUIColumn[]; rows?: SDUIRow[]; label?: string; token?: string };
   "data-table": { columns?: SDUIColumn[]; rows?: SDUIRow[]; token?: string };
-  "text-field": { label?: string; hint?: string; error?: string; as?: "input" | "textarea" | "select"; invalid?: boolean; disabled?: boolean; labelCasing?: "uppercase" | "asWritten"; placeholder?: string; name?: string; type?: "text" | "email" | "number" | "password" | "search" | "tel" | "url"; defaultValue?: string; token?: string };
+  "text-field": { label?: string; hint?: string; error?: string; as?: "input" | "textarea" | "select"; invalid?: boolean; disabled?: boolean; labelCasing?: "uppercase" | "asWritten"; placeholder?: string; name?: string; type?: "text" | "email" | "number" | "password" | "search" | "tel" | "url"; defaultValue?: string; options?: Array<{ value: string; label: string }>; token?: string };
   container: { token?: string };
   text: { token?: string };
 }

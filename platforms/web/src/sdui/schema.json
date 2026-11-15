@@ -588,6 +588,26 @@
               "defaultValue": {
                 "type": "string"
               },
+              "options": {
+                "type": "array",
+                "description": "The choices of a select; only valid with \"as\": \"select\".",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "label"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
               "token": {
                 "type": "string",
                 "enum": [
