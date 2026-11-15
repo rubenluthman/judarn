@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.14] - 2026-11-15
+
+### Fixed
+
+- The Apple button's keyboard focus ring now reaches 3:1 against the surface around it, like the text field's.
+- The Apple text list takes the compact column width inside any card, flat or not, matching web.
+- Increase Contrast outlines on Apple buttons, badges and tags are now 2pt, matching text fields and web.
+- A flat Apple card checks its eyebrow contrast against the page instead of the elevated surface.
+- The contrast audit now also checks `ink60` and `signalError` on every surface and appearance.
+
 ## [0.8.13] - 2026-11-15
 
 ### Changed

@@ -51,6 +51,14 @@ struct JudarnButtonContent: View {
     @Environment(\.judarnOnElevatedSurface) private var isOnElevatedSurface
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
     
+    /// The accent, clamped so the focus ring reaches 3:1 against the surface around the button.
+    private var focusRingColor: Color {
+        accentColor.contrastingAccent(
+            against: JudarnTextField.surroundingSurface(isOnElevatedSurface: isOnElevatedSurface),
+            minRatio: 3.0
+        )
+    }
+
     private var activeHover: Bool {
         explicitHovered ?? isHovered
     }
@@ -96,7 +104,7 @@ struct JudarnButtonContent: View {
             // Keyboard Focus Indicator & Focus Ring Clip Isolation: macOS Full Keyboard Access and keyboard navigation require focus rings to draw outside the control boundary. Never clip the outer button container with .clipShape(); isolate clipping to internal decorative overlays. When focused, provide an accessible outer focus ring conforming to HIG standards.
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius + JudarnSpacing.ruleBold, style: .continuous)
-                    .strokeBorder(accentColor, lineWidth: isFocused ? JudarnSpacing.ruleBold : 0)
+                    .strokeBorder(focusRingColor, lineWidth: isFocused ? JudarnSpacing.ruleBold : 0)
                     .padding(-JudarnSpacing.spaceHalf / 2)
                     .opacity(isFocused ? 1.0 : 0.0)
             )

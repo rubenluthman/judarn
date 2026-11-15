@@ -119,6 +119,18 @@ struct WCAGTests {
         for res in ink100Results {
             #expect(res.normalTextAAA, "ink100 on \(res.backgroundName) in \(res.appearance) failed AAA: \(res.contrastRatio):1")
         }
+
+        // ink60 and signalError: DESIGN.md guarantees >= 4.8:1 and >= 5.0:1, and AAA (7.0:1) under high contrast.
+        let floors: [(name: String, normal: Double)] = [("ink60", 4.8), ("signalError", 5.0)]
+        for floor in floors {
+            let rows = results.filter { $0.foregroundName == floor.name }
+            #expect(rows.count == 12, "\(floor.name) audits 3 surfaces in 4 appearances")
+            for res in rows {
+                let isHigh = res.appearance == .lightHighContrast || res.appearance == .darkHighContrast
+                let required = isHigh ? 7.0 : floor.normal
+                #expect(res.contrastRatio >= required, "\(floor.name) on \(res.backgroundName) in \(res.appearance): \(res.contrastRatio):1 < \(required):1")
+            }
+        }
     }
 
     @Test("Color extension convenience API")

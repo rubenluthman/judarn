@@ -15,6 +15,8 @@ public struct JudarnTextList: View {
     public let items: [String]
     public let style: JudarnTextListStyle
 
+    @Environment(\.judarnInCard) private var isInCard
+
     // The marker column scales with Dynamic Type, so wrapped lines keep hanging under the text.
     // Column plus the space1 gutter equals the indent: space3 for bullets, space4 for numbers.
     @ScaledMetric(relativeTo: .body) private var bulletColumn: CGFloat = JudarnTextList.bulletColumnWidth
@@ -48,7 +50,7 @@ public struct JudarnTextList: View {
                 .accessibilityElement(children: .combine)
             }
         }
-        .frame(maxWidth: JudarnSpacing.measureBody, alignment: .leading)
+        .frame(maxWidth: isInCard ? JudarnSpacing.measureCompact : JudarnSpacing.measureBody, alignment: .leading)
     }
 
     static func marker(at index: Int, style: JudarnTextListStyle) -> String {

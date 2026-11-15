@@ -131,9 +131,9 @@ public struct JudarnTag: View {
     }
 }
 
-/// The outline of a control set apart by fill: none at rest, `ink100` at `rule` width in Increase Contrast.
+/// The outline of a control set apart by fill: none at rest, `ink100` at `ruleBold` width in Increase Contrast.
 func judarnControlOutlineStyle(increasedContrast: Bool) -> (color: Color, width: CGFloat) {
-    increasedContrast ? (JudarnColors.ink100, JudarnSpacing.rule) : (.clear, 0)
+    increasedContrast ? (JudarnColors.ink100, JudarnSpacing.ruleBold) : (.clear, 0)
 }
 
 extension View {

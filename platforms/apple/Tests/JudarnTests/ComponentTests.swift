@@ -50,11 +50,11 @@ struct ComponentTests {
             let rest = JudarnButtonContent.border(variant: variant, increasedContrast: false)
             #expect(rest.width == 0, "\(variant) draws no stroke at rest")
             let contrast = JudarnButtonContent.border(variant: variant, increasedContrast: true)
-            #expect(contrast.color == JudarnColors.ink100 && contrast.width == JudarnSpacing.rule, "\(variant) outline in Increase Contrast")
+            #expect(contrast.color == JudarnColors.ink100 && contrast.width == JudarnSpacing.ruleBold, "\(variant) outline in Increase Contrast")
             #expect(contrast.dash.isEmpty, "\(variant) enabled outline is solid")
             // Increase Contrast promotes ink30 to ink100, so only the dashed outline tells a disabled button apart.
             let disabled = JudarnButtonContent.border(variant: variant, increasedContrast: true, isEnabled: false)
-            #expect(disabled.color == JudarnColors.ink100 && disabled.width == JudarnSpacing.rule, "\(variant) disabled keeps the outline")
+            #expect(disabled.color == JudarnColors.ink100 && disabled.width == JudarnSpacing.ruleBold, "\(variant) disabled keeps the outline")
             #expect(!disabled.dash.isEmpty, "\(variant) disabled outline is dashed")
             #expect(JudarnButtonContent.border(variant: variant, increasedContrast: false, isEnabled: false).width == 0, "\(variant) disabled draws no stroke at rest")
         }

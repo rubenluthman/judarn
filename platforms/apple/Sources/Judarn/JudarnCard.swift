@@ -53,7 +53,7 @@ public struct JudarnCard<Content: View, Media: View, Actions: View>: View {
             if let eyebrow = eyebrow {
                 Text(eyebrow)
                     .judarnLabel(casing: eyebrowCasing)
-                    .foregroundColor(accentColor.contrastingAccent(against: JudarnColors.surfaceElevated))
+                    .foregroundColor(accentColor.contrastingAccent(against: isFlat ? JudarnColors.substrate : JudarnColors.surfaceElevated))
             }
             
             // Title (H4)
@@ -78,6 +78,7 @@ public struct JudarnCard<Content: View, Media: View, Actions: View>: View {
         .padding(isFlat ? 0 : (isCompact || controlSize == .small ? JudarnSpacing.space2 : JudarnSpacing.space3))
         // Text fields inside a card fill with substrate; a flat card has no surface, so its fields stay recessed.
         .environment(\.judarnOnElevatedSurface, !isFlat)
+        .environment(\.judarnInCard, true)
         .background(backgroundView)
         .modifier(CardClip(isFlat: isFlat))
         // Card Container Accessibility Semantics: Group composite content cards with `.accessibilityElement(children: .contain)` and an identifiable container label, preserving focus hierarchy for nested controls.

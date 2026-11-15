@@ -207,4 +207,7 @@ public extension EnvironmentValues {
     /// Whether the views below sit on an elevated surface, so a `JudarnTextField` fills with `substrate`
     /// instead of `surfaceRecessed`. `JudarnCard` sets it; set it on your own elevated containers.
     @Entry var judarnOnElevatedSurface: Bool = false
+    /// Whether the views below sit inside a `JudarnCard`, flat or not, so a `JudarnTextList` takes the compact
+    /// measure like web's `.jd-card .jd-list`. `JudarnCard` sets it.
+    @Entry var judarnInCard: Bool = false
 }
