@@ -14,9 +14,9 @@ Judarn sets colors, spatial cadence, and typography, leaving curves, depth, and 
 Every color token is defined in OKLCh (`oklch(L C H)`) and resolves across standard and high-contrast light and dark schemes:
 - **Substrate / Paper**: `#FFFFFF` (light), `#171717` (dark)
 - **Surface Elevated**: `#F8F8F8` (light), `#222222` (dark)
-- **Primary Ink (`ink100`)**: `#020202` (light), `#F8F8F8` (dark) with a contrast of at least 15:1 (AAA)
-- **Secondary Ink (`ink60`)**: At least 4.8:1 (AA), and AAA under high-contrast modes
-- **Signal Error (`signalError`)**: At least 4.5:1 (AA), and AAA under high-contrast modes
+- **Primary Ink (`ink100`)**: `#020202` (light), `#F8F8F8` (dark) with a contrast of at least 15.0:1 (AAA) on every surface
+- **Secondary Ink (`ink60`)**: At least 4.8:1 (AA) on every surface, and at least 15.0:1 under high-contrast modes, where it takes the primary ink
+- **Signal Error (`signalError`)**: At least 5.0:1 (AA) on every surface, and at least 7.0:1 (AAA) under high-contrast modes
 
 ### 2. 8pt macro grid / 4pt micro subgrid
 - **Micro subgrid** (`4pt`): Typographic leading, hairline offsets, and micro cell insets.
@@ -136,12 +136,13 @@ export function Dashboard() {
 
 ## WCAG accessibility matrix
 
-| Pairing | Normal appearance | High-contrast appearance | Standard |
+Each row is the lowest ratio over light and dark on `substrate`, `surfaceElevated`, and `surfaceRecessed`, as the compile-time gate (48 pairings) measures it. The gate itself enforces 7.0:1 for `ink100`, and 4.5:1 for `ink60` and `signalError` (7.0:1 under high contrast).
+
+| Foreground | Normal appearance | High-contrast appearance | Standard |
 | :--- | :--- | :--- | :--- |
-| `ink100` on `substrate` | at least 16.9:1 | at least 16.9:1 | WCAG 2.2 AAA (7.0:1) |
-| `ink100` on `surfaceElevated` | at least 15.0:1 | at least 15.0:1 | WCAG 2.2 AAA (7.0:1) |
-| `ink60` on `substrate` | at least 5.5:1 | at least 7.0:1 | AA (4.5:1), AAA under high contrast |
-| `signalError` on `substrate` | at least 5.6:1 | at least 7.0:1 | AA (4.5:1), AAA under high contrast |
+| `ink100` | at least 15.0:1 | at least 15.0:1 | WCAG 2.2 AAA (7.0:1) |
+| `ink60` | at least 4.8:1 | at least 15.0:1 | AA (4.5:1), AAA under high contrast |
+| `signalError` | at least 5.0:1 | at least 7.0:1 | AA (4.5:1), AAA under high contrast |
 
 Two accepted trade-offs sit outside this matrix. White ink on a mid-tone fill can fall to 1.91:1 at the crossover, below the 4.5:1 AA floor for small text, because Judarn prefers white ink to what contrast math alone suggests. Paragraph line spacing is tighter than 1.5, so Judarn text does not meet WCAG 2.2 SC 1.4.8, a AAA criterion.
 

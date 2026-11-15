@@ -32,12 +32,12 @@ The type, space, surface, motion and icon rules below are written for the web. O
 
 ## Color in one rule
 
-Judarn has no default color. Build every surface and all running text from the neutrals. Take accent colors from the owner when they give them, through the project's profile or the request. When the owner gives none, choose a Wada combination for the artifact. The one exception to neutral surfaces is a light tint of an accent color on a box or card. Colors that must be told apart differ in lightness, not only hue: compare their lightness or view the work in grayscale, and say so once if two blend. The Wada section says how to choose and check colors.
+Judarn has no default color. Build every surface and all running text from the neutrals. Take accent colors from the owner when they give them, through the project's profile or the request. When the work uses accent color and the owner gives none, choose a Wada combination for that work; work that needs no accent stays neutral. Colors a project already uses count as the owner's, so an existing app never gets Wada accents added on top, and no single combination is ever a default. The one exception to neutral surfaces is a light tint of an accent color on a box or card. Colors that must be told apart differ in lightness, not only hue: compare their lightness or view the work in grayscale, and say so once if two blend. The Wada section says how to choose and check colors.
 
 - Set the page on `jd-substrate`, cards and panels on `jd-surface-elevated`, wells and hover states on `jd-surface-recessed`. A text field inside a card or tint fills with `jd-substrate` instead. In light mode the page is pure white and boxes step down from it. In dark mode `jd-surface-elevated` stays lighter than `jd-substrate`.
 - Set primary text in `jd-ink-100` and secondary text in `jd-ink-60`. Use `jd-ink-30` only for table hairlines and disabled states.
 - Use `jd-signal-error` for errors and validation only.
-- Leave `jd-accent` neutral on a page that does not need a color. A neutral page is a valid result.
+- Leave `jd-accent` neutral on a page that uses no accent color. When the page does use one and the owner gives none, it comes from a Wada combination chosen for that page.
 - Use flat fills only: no gradients or shadows. On the light substrate a box or card may take a light tint of an accent color instead of `jd-surface-elevated`, with no separate request. A deeper highlight tint of the same color may mark a highlighted item or a header row. The Wada section gives both ranges.
 - Replace the substrate with a full harmony theme, or with a project's own page color, only when the owner asks for one.
 
@@ -107,4 +107,4 @@ Judarn has no logo. Set the name in plain type, and never draw, invent or imply 
 
 Web components come from `platforms/web`. SwiftUI code is in the Judarn repository and is not bundled here. `sdui` serializers are not included. No font files ship here.
 
-The Google Docs and Slides files in the repository's `templates/` are a local variant, not Judarn's rules. Their fonts and colors exist because Google Docs needs them chosen beforehand, so never take either from them.
+Everything in the repository's `templates/` is a local variant, not Judarn's rules: the Google Docs and Slides files, the `.docx` and `.pptx` templates, the HTML starters and the implementation prompt. Their fonts and colors exist because the host tool needs them chosen beforehand, so never take either from them.

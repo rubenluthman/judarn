@@ -1,6 +1,6 @@
 # Accent colors and the Wada dictionary
 
-Sanzo Wada's *Haishoku Sōkan* holds 348 color combinations built from 159 colors. In this design system they are a source of accent colors, and the default when the owner gives none. Colors the owner gives, through the project's profile or the request, are equally valid and take precedence. Judarn itself stays neutral: the combinations are not core tokens, and no combination is a default, standard or house palette.
+Sanzo Wada's *Haishoku Sōkan* holds 348 color combinations built from 159 colors. In this design system they are the source of accent colors when work uses accent color and the owner gives none. Work that needs no accent stays neutral. Colors the owner gives, through the project's profile or the request, take precedence, and colors a project already uses count as the owner's, so an existing app never gets Wada accents added on top. Judarn itself stays neutral: the combinations are not core tokens, and no combination is a default, standard or house palette.
 
 ## Owner colors
 
@@ -10,7 +10,7 @@ Sanzo Wada's *Haishoku Sōkan* holds 348 color combinations built from 159 color
 
 ## Choosing a combination
 
-Choose a combination only when the owner gives no colors.
+Choose a combination only when the work uses accent color, the owner gives no colors and the project has none of its own. Choosing one per piece of work is a source rule: no combination is a default palette, and a full harmony theme still needs asking.
 
 1. If the request names a combination, use it, whatever its tier. Report any ratio it misses.
 2. Otherwise read `assets/Wada/wada-accents.json` and choose one for this artifact's subject. Choose afresh each time. Never settle on one combination out of habit.

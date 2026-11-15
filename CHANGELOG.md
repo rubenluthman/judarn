@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.13] - 2026-11-15
+
+### Changed
+
+- Accent color without an owner's choice now comes from a Sanzo Wada combination chosen for the work in every copy of the rules; work with no accent stays neutral, and an existing app's colors are never replaced.
+- The architecture guide points to `docs/DESIGN.md` for design rules and lists where each is implemented.
+- The README contrast figures now match the compiler's checks, and everything in `templates/` is described as a local variant.
+
 ## [0.8.12] - 2026-11-14
 
 ### Added
@@ -35,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
 - Prose checks use house-style v0.3.4, which flags more promotional and filler wording.
 
 ## [0.8.7] - 2026-11-13
@@ -47,17 +56,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
 - The iOS simulator test step of the commit check also waits its turn when another project's Apple tests are running.
 
 ## [0.8.5] - 2026-11-13
 
 ### Changed
 
+
 - The Swift test step of the commit check waits its turn when another project's Apple tests are running.
 
 ## [0.8.4] - 2026-11-13
 
 ### Changed
+
 
 - Documentation now matches the code: the compiler emits Swift and CSS only, Android is parked, and the Apple component list includes `JudarnBadge`, `JudarnTextField` and `JudarnTextList`.
 
@@ -79,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
 - **Breaking:** every web component class now carries the `jd-` prefix (`.btn` is `.jd-btn`, `.card` is `.jd-card`, `.table` is `.jd-table`, and so on), so `@judarn/ui/styles` no longer styles a project's own classes.
 - **Breaking:** buttons, badges, and tags are set apart by fill, with no outline at rest, on web and Apple. The outline button is gone, the outline badge is now `neutral`, and `accent-outline` is now `accent-tint`. High-contrast modes still add an outline.
 
@@ -99,17 +112,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
 - Pinned house-style v0.3.0: Markdown headings now use sentence case, with the generated `docs/DESIGN.md` left as compiled.
 
 ## [0.7.9] - 2026-11-10
 
 ### Changed
 
+
 - Vale now checks only Markdown and Swift, because the repository has no .txt files.
 
 ## [0.7.8] - 2026-11-10
 
 ### Changed
+
 
 - Pin the shared Vale package house-style to v0.2.1 and use its reworded house style paragraph in `docs/house-style.md`. No rules change.
 
@@ -121,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
 - The web and Apple text fields drop their resting outline and fill by context. High-contrast modes (`prefers-contrast: more`, `data-contrast="high"`, Apple's Increase Contrast) add an `ink100` outline. The focus and invalid rings stay, and on Apple the focus ring is clamped to 3:1.
 - `JudarnCard` sets the new `judarnOnElevatedSurface` environment value, so fields inside it fill with `substrate`.
 
@@ -128,17 +145,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
 - Decision records follow the four-heading format (Decision, Why, What we gave up, Revisit if) and are edited in place. Seven records remain; the design rules of the others now live in `docs/DESIGN.md`.
 
 ## [0.7.5] - 2026-11-09
 
 ### Changed
 
+
 - On Apple hosts, tight leading shortens text by 2pt per line break, not per line, and single-line text keeps its height. ADR-0016 corrects the figures in ADR-0012.
 
 ## [0.7.4] - 2026-11-09
 
 ### Changed
+
 
 - Repository checks run on GitHub for every push to `main` that changes code, on current macOS runners and Xcode.
 - A decision record explains why the first npm version, 0.7.1, was published by hand and has no provenance attestation (ADR-0015).
@@ -147,6 +167,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.7.2] - 2026-11-09
 
 ### Changed
+
 
 - `@judarn/ui` releases publish from GitHub Actions through npm trusted publishing, with a provenance attestation that links each version to its source commit.
 
@@ -162,5 +183,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `@judarn/ui` is published to the npm registry ([ADR-0013](docs/adr/0013-apps-consume-judarn-ui-from-the-public-npm-registry.md)).
 
 ### Changed
+
 
 - Apple and web are the compiled hosts. Android is parked outside this repository ([ADR-0001](docs/adr/0001-design-tokens-are-the-single-source-of-truth.md)).

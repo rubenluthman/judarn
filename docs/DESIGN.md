@@ -45,7 +45,7 @@ These hold on every host.
 1. **Color Roles**:
    - Build surfaces and running text from Judarn's neutrals: a substrate, an elevated surface, a recessed surface, and primary and secondary ink.
    - In light mode, the reading substrate is pure white (`#FFFFFF`), while boxes and cards step down to the subtle elevated surface (`#F8F8F8`) or a light tint of an accent color. Replace the substrate only when the owner asks.
-   - Take accent colors from the owner when they give them, through the project's profile or the request. Otherwise the Sanzo Wada dictionary is a source of suggestions (section 7), and a neutral result is valid.
+   - Take accent colors from the owner when they give them, through the project's profile or the request. When work uses accent color and the owner gives none, take it from a Sanzo Wada combination chosen for that work (section 7). Work that needs no accent stays neutral. Colors a project already uses count as the owner's, so an existing app never gets Wada accents added on top. No single combination is ever a default.
    - Measure every accent color, the owner's or the dictionary's, against the same ratios per use, and report any shortfall to the owner.
    - Colors that must be told apart, such as an accent against its tint, two accents side by side, or a fill against its surround, differ in lightness and not only in hue. Check by comparing their OKLCh `L` or by viewing the work in grayscale. When two such colors blend, say so once, in the disclosure line, and use the owner's colors anyway.
    - Keep the signal color for errors and validation.
@@ -121,6 +121,9 @@ Apple and web take their values from `tokens/judarn-tokens.json`, with zero drif
   - The focus ring takes the accent and the invalid ring `signalError`. Apple clamps the focus ring to 3:1 with `contrastingAccent`; on web a project that sets `--jd-accent` measures it.
 - **Type**:
   - Use the 12-step scale in section 5, and the system font stack in the tokens.
+  - Figures are proportional and lining by default. Old-style figures (`onum`) are opt-in, for editorial prose only.
+  - Set `font-optical-sizing: auto` so variable fonts pick their optical size, and `font-variant-ligatures: none` on monospace.
+  - Uppercase labels take the OpenType case-sensitive forms (`"case" 1`).
   - Apple takes leading from the role's `appleLeading` through `Font.leading`, never `lineSpacing`, so text styles and Dynamic Type stay intact. Roles for running text and headings are `tight`, and `label`, `micro`, `data`, and `mono` are `standard`. Tight leading removes 2pt per line break and leaves single-line text unchanged (measured on iOS 27.2 and macOS, 2026-11-09).
   - Apple roles never set a fixed point size. A role names `appleTextStyleMacOS` only where its own style would render at the same size on macOS as a smaller role (`.footnote`, `.caption`, and `.caption2` are all 10pt there), so each role keeps its size rank on every Apple host.
   - Web sets the space around headings with `.flow`, a class on the container that spaces its direct children: `space2` (16px) between items, `space4` (32px) above a heading, and `space1` (8px) below a heading, which wins when a heading follows a heading. Headings are `h1` to `h6` and the `.t-display` and `.t-h1` to `.t-h4` classes. Top-level sections sit `space6` (48px) apart. Never combine `.flow` with `gap` on the same container, because the two add up.
@@ -206,7 +209,7 @@ A local variant keeps its own values, because the tool needs choices made up fro
 
 Optional Sanzo Wada color harmonies: an opt-in add-on, not part of Judarn's core identity. Core contrast guarantees cover only Judarn's own surfaces. See [ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md).
 
-- The dictionary suggests accent colors when the owner gives none. Colors the owner gives take precedence and are equally valid.
+- When work uses accent color and the owner gives none, take it from a Sanzo Wada combination chosen for that work. Work that needs no accent stays neutral. Colors the owner gives take precedence, and colors a project already uses count as the owner's, so an existing app never gets Wada accents added on top. No single combination is ever a default.
 - Light tints of accent colors, the owner's or the dictionary's (for example, `L ≈ 0.968 – 0.980` at the color's hue or mixing `10% – 18%` of the color with white in OKLCh), are welcome in general work as box and card fills on the white light-mode substrate. The deeper highlight tint in section 2 (`L ≈ 0.90 – 0.95`) follows the same rule, with at most two tint steps per color.
 - Use a full harmony theme (replacing the substrate) only when a project or its owner asks for one ([ADR-0007](adr/0007-sanzo-wada-dictionary-explorer-and-mcp-server.md)).
 - Core inks are not guaranteed on a harmony's surfaces. Resolve foregrounds with `contrastingInk` (`getContrastingInk` on web) or `contrastingAccent` (Apple), then verify the resulting ratio per use, because the compile-time checks do not cover harmony contrast.
