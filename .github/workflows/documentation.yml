@@ -17,20 +17,20 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 15
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Select Xcode Version
         run: |
           XCODE_APP=""
-          for v in 16.2 16.1 16.0; do
+          for v in 26.6 26.5; do
             if [ -d "/Applications/Xcode_${v}.app" ]; then XCODE_APP="/Applications/Xcode_${v}.app"; break; fi
           done
           if [ -z "$XCODE_APP" ]; then
-            echo "::error::No Xcode 16.x found on this runner" >&2
+            echo "::error::No Xcode 26.6 or 26.5 found on this runner" >&2
             ls /Applications | grep -i xcode >&2 || true
             exit 1
           fi
@@ -46,10 +46,10 @@ jobs:
             --hosting-base-path judarn
 
       - name: Upload GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./docs-out
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

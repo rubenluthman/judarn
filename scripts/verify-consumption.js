@@ -165,13 +165,17 @@ if (/\.overlay\(RoundedRectangle|\.border\(/.test(appleCard)) {
 }
 const webCardCssPath = path.join(rootDir, 'platforms/web/styles/components.css');
 const webCardCss = fs.readFileSync(webCardCssPath, 'utf8');
-const cardBlockMatch = webCardCss.match(/\.card\s*\{[^}]+\}/);
-if (cardBlockMatch) {
+const cardBlockMatch = webCardCss.match(/\.jd-card\s*\{[^}]+\}/);
+if (!cardBlockMatch) {
+  console.error('✗ Invariant violation: no .jd-card block found in platforms/web/styles/components.css, so the card border rule cannot be checked.');
+  process.exit(1);
+}
+{
   const borderMatch = cardBlockMatch[0].match(/border(?:-color|-width|-style)?\s*:\s*([^;]+);/);
   if (borderMatch) {
     const val = borderMatch[1].trim();
     if (val !== 'none' && val !== '0' && val !== 'transparent') {
-      console.error('✗ Invariant violation: Perimeter stroke border found in .card CSS (violates the card border rule in docs/DESIGN.md).');
+      console.error('✗ Invariant violation: Perimeter stroke border found in .jd-card CSS (violates the card border rule in docs/DESIGN.md).');
       process.exit(1);
     }
   }

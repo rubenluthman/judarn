@@ -7,7 +7,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const tokens = require(path.resolve(__dirname, '../../../scripts/lib/design-tokens.js')).loadFlatOrThrow();
+const designTokens = require(path.resolve(__dirname, '../../../scripts/lib/design-tokens.js'));
+const tokens = designTokens.loadFlatOrThrow();
 
 function parseOklchCoords(str) {
   const m = str.match(/oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\)/);
@@ -37,107 +38,6 @@ function contrastRatio(l1, l2) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-/**
- * Converts OKLCh coordinates (L, C, H) to Display P3 wide gamut with CSS Color 4 perceptual chroma bisection.
- */
-function oklchToDisplayP3(l, c, h) {
-  if (l <= 0) return [0, 0, 0];
-  if (l >= 1) return [1, 1, 1];
-
-  const hRad = (h * Math.PI) / 180.0;
-  const cosH = Math.cos(hRad);
-  const sinH = Math.sin(hRad);
-
-  const toLinearSrgb = (chroma) => {
-    const a = chroma * cosH;
-    const b = chroma * sinH;
-    const l_lms = l + 0.3963377774 * a + 0.2158037573 * b;
-    const m_lms = l - 0.1055613458 * a - 0.0638541728 * b;
-    const s_lms = l - 0.0894841775 * a - 1.2914855480 * b;
-    const l_ = l_lms * l_lms * l_lms;
-    const m_ = m_lms * m_lms * m_lms;
-    const s_ = s_lms * s_lms * s_lms;
-    return [
-      +4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_,
-      -1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_,
-      -0.0041960863 * l_ - 0.7034186147 * m_ + 1.7076147010 * s_
-    ];
-  };
-
-  const inSrgbGamut = (rgb) => {
-    const eps = 1e-6;
-    return (
-      rgb[0] >= -eps && rgb[0] <= 1 + eps &&
-      rgb[1] >= -eps && rgb[1] <= 1 + eps &&
-      rgb[2] >= -eps && rgb[2] <= 1 + eps
-    );
-  };
-
-  let mappedC = Math.max(0, c);
-  if (!inSrgbGamut(toLinearSrgb(mappedC))) {
-    let low = 0;
-    let high = mappedC;
-    for (let i = 0; i < 24; i++) {
-      const mid = 0.5 * (low + high);
-      if (inSrgbGamut(toLinearSrgb(mid))) {
-        low = mid;
-      } else {
-        high = mid;
-      }
-    }
-    mappedC = low;
-  }
-
-  const a = mappedC * cosH;
-  const b = mappedC * sinH;
-
-  const l_lms = l + 0.3963377774 * a + 0.2158037573 * b;
-  const m_lms = l - 0.1055613458 * a - 0.0638541728 * b;
-  const s_lms = l - 0.0894841775 * a - 1.2914855480 * b;
-
-  const l_ = l_lms * l_lms * l_lms;
-  const m_ = m_lms * m_lms * m_lms;
-  const s_ = s_lms * s_lms * s_lms;
-
-  const rLinear = +3.1281105291 * l_ - 2.2570750184 * m_ + 0.1293047884 * s_;
-  const gLinear = -1.0911281610 * l_ + 2.4132667618 * m_ - 0.3221681709 * s_;
-  const bLinear = -0.0260136497 * l_ - 0.5080276490 * m_ + 1.5333166822 * s_;
-
-  const gamma = (val) => (val <= 0.0031308 ? 12.92 * val : 1.055 * Math.pow(Math.max(0, val), 1.0 / 2.4) - 0.055);
-
-  const r = Math.max(0.0, Math.min(1.0, gamma(rLinear)));
-  const g = Math.max(0.0, Math.min(1.0, gamma(gLinear)));
-  const bl = Math.max(0.0, Math.min(1.0, gamma(bLinear)));
-
-  return [r, g, bl];
-}
-
-/**
- * Resolves Display P3 components to standard sRGB space (matching AppKit / UIKit color space conversion).
- */
-function p3ToSrgb(rP3, gP3, bP3) {
-  const rLin = linearize(rP3);
-  const gLin = linearize(gP3);
-  const bLin = linearize(bP3);
-
-  const rSRGB = 1.22494 * rLin - 0.22494 * gLin + 0.0 * bLin;
-  const gSRGB = -0.04206 * rLin + 1.04206 * gLin - 0.0 * bLin;
-  const bSRGB = -0.01964 * rLin - 0.07865 * gLin + 1.09829 * bLin;
-
-  const gamma = (val) => (val <= 0.0031308 ? 12.92 * val : 1.055 * Math.pow(Math.max(0, val), 1.0 / 2.4) - 0.055);
-
-  return [
-    Math.max(0.0, Math.min(1.0, gamma(rSRGB))),
-    Math.max(0.0, Math.min(1.0, gamma(gSRGB))),
-    Math.max(0.0, Math.min(1.0, gamma(bSRGB)))
-  ];
-}
-
-function oklchToResolvedSrgb(l, c, h) {
-  const [rP3, gP3, bP3] = oklchToDisplayP3(l, c, h);
-  return p3ToSrgb(rP3, gP3, bP3);
-}
-
 function resolveTokenCoords(tokenName, appearance) {
   const entry = tokens.color[tokenName];
   if (!entry) throw new Error(`Unknown color token: ${tokenName}`);
@@ -148,8 +48,9 @@ function resolveTokenCoords(tokenName, appearance) {
 
 function getLuminance(tokenName, appearance) {
   const coords = resolveTokenCoords(tokenName, appearance);
-  const [r, g, b] = oklchToResolvedSrgb(coords[0], coords[1], coords[2]);
-  return relativeLuminance(r, g, b);
+  // The shared maths (ADR-0005): gamut-mapped linear sRGB, so luminance needs no gamma round trip.
+  const { r, g, b } = designTokens.oklchToLinearSrgb(coords[0], coords[1], coords[2]);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
 function auditCoreMatrix() {
@@ -249,9 +150,6 @@ module.exports = {
   linearize,
   relativeLuminance,
   contrastRatio,
-  oklchToDisplayP3,
-  p3ToSrgb,
-  oklchToResolvedSrgb,
   auditCoreMatrix,
   verifyContrast
 };

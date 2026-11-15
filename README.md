@@ -100,7 +100,7 @@ struct MetricCard: View {
     var body: some View {
         JudarnCard(eyebrow: "Revenue", title: "$124,500") {
             Text("Q3 Target Achieved")
-                .font(JudarnTypography.small)
+                .judarnSmall()
                 .foregroundStyle(JudarnColors.ink60)
         }
     }

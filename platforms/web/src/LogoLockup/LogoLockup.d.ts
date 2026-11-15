@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export interface LogoLockupProps {
+export interface LogoLockupProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
   /** Wordmark text (heavy sans). @default "JUDARN" */
   name?: string;
   /** Optional descriptor under/after the name. */

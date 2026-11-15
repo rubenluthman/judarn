@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.16] - 2026-11-15
+
+### Fixed
+
+- `LogoLockup` accepts `className` and forwards other attributes, and `TextFieldProps` narrows by `as` (input, textarea or select).
+- The card border check now looks at `.jd-card` and fails when the block is missing, instead of silently matching nothing.
+- The web contrast check uses the shared colour maths from the token library; its reported ratios are unchanged.
+- The README Apple example uses `.judarnSmall()`, which compiles.
+- The documentation workflow runs on the same runner, Xcode versions and action versions as CI.
+
 ## [0.8.15] - 2026-11-15
 
 ### Fixed

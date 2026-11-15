@@ -90,6 +90,14 @@ test('TextField select renders its options', () => {
   assert.match(html, /<select[^>]*class="jd-field__input"[^>]*><option value="a">A<\/option><\/select>/);
 });
 
+test('LogoLockup merges className and forwards other attributes', () => {
+  const html = render(h(LogoLockup, { name: 'Acme', className: 'x', id: 'brand', 'data-k': '1' }));
+  assert.match(html, /class="jd-lockup x"/);
+  assert.match(html, /id="brand"/);
+  assert.match(html, /data-k="1"/);
+  assert.match(render(h(LogoLockup, { name: 'Acme', variant: 'icon', className: 'x' })), /class="jd-lockup__mark x"/);
+});
+
 test('LogoLockup exposes an image role with a name', () => {
   assert.match(render(h(LogoLockup, { name: 'Acme', tagline: 'Tools' })), /role="img" aria-label="Acme – Tools"/);
   assert.match(render(h(LogoLockup, { name: 'Acme', variant: 'icon' })), /role="img" aria-label="Acme"/);

@@ -1,3 +1,5 @@
+import { cx } from "../internal/cx.js";
+
 /**
  * LogoLockup – the canonical logo frame. A logo in this system is always
  * a geometric MARK (built from rect / ellipse / polygon primitives) paired
@@ -25,22 +27,25 @@ export function LogoLockup({
   variant = "horizontal",
   markSize,
   taglineCasing = "uppercase",
+  className,
+  ...rest
 }) {
   const isIcon = variant === "icon";
-  const cls = [
+  const cls = cx(
     "jd-lockup",
     variant === "vertical" && "jd-lockup--vertical",
     variant === "reversed" && "jd-lockup--reversed",
-  ].filter(Boolean).join(" ");
+    className,
+  );
 
   const theMark = mark || <PlaceholderMark size={markSize || (variant === "vertical" ? 64 : 48)} />;
 
   if (isIcon) {
-    return <span className="jd-lockup__mark" role="img" aria-label={name}>{mark || <PlaceholderMark size={markSize || 64} />}</span>;
+    return <span {...rest} className={cx("jd-lockup__mark", className)} role="img" aria-label={name}>{mark || <PlaceholderMark size={markSize || 64} />}</span>;
   }
 
   return (
-    <div className={cls} role="img" aria-label={tagline ? `${name} – ${tagline}` : name}>
+    <div {...rest} className={cls} role="img" aria-label={tagline ? `${name} – ${tagline}` : name}>
       <span className="jd-lockup__mark">{theMark}</span>
       <span className="jd-lockup__words">
         <span className="jd-lockup__name">{name}</span>
