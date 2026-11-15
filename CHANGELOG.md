@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.18] - 2026-11-15
+
+### Changed
+
+- The npm publish workflow uses the same checkout and Node setup action versions as CI.
+
 ## [0.8.17] - 2026-11-15
 
 ### Changed
