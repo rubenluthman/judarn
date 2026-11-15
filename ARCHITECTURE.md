@@ -88,6 +88,7 @@ flowchart TD
 3. **Platform Invariants**: The rules themselves live in [`docs/DESIGN.md`](docs/DESIGN.md), the only copy of the contract (ADR-0001). This list says where each one is implemented.
    - **Shape**: corner radii are `JudarnRadius` on Apple (`card`, `control`, `subtle`, with continuous corners) and `--jd-radius-card`, `--jd-radius-control`, `--jd-radius-badge`, `--jd-radius-subtle` in CSS. Values come from the tokens.
    - **Surfaces, fields, buttons**: `judarnOnElevatedSurface` (set by `JudarnCard`) switches wells to the card fill on Apple. On web, `--jd-well` inside `.jd-card` does the same.
+   - **Lists in cards**: `judarnInCard` (set by every `JudarnCard`, flat or not) gives `JudarnTextList` the compact measure on Apple, like `.jd-card .jd-list` on web.
    - **Web class names**: every component class in `platforms/web/styles/components.css` carries the `jd-` prefix (`jd-btn`, `jd-badge`, `jd-tag`, `jd-card`, `jd-field`, `jd-navbar`, `jd-footer`, `jd-table`, `jd-matrix`, `jd-lockup`, `jd-list`).
    - **Lists**: `jd-list` and `jd-list--plain` on web, `JudarnTextList` on Apple.
    - **Text casing**: `JudarnTextCasing.asWritten` on Apple and `.t-as-written` on web. The component options `casing` and `labelCasing` carry it into matrices, tables, and fields.

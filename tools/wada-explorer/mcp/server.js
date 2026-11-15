@@ -151,7 +151,6 @@ function bisectLightnessForContrast(source, target, minRatio, moveDarker) {
  */
 function calibrateWadaTheme(paletteColors) {
   const sortedByLightness = [...paletteColors].sort((a, b) => b.coords.l - a.coords.l);
-  const secondLight = (sortedByLightness[1] || sortedByLightness[0]).coords;
   const accentSource = (sortedByLightness[sortedByLightness.length - 1] || sortedByLightness[0]).coords;
   const accent2Source = (sortedByLightness[Math.min(2, sortedByLightness.length - 1)] || accentSource).coords;
 
@@ -485,7 +484,7 @@ function handleRequest(req) {
       return reply({
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "judarn-color-dictionary", version: "0.8.16" }
+        serverInfo: { name: "judarn-color-dictionary", version: "0.8.17" }
       });
     case "ping":
       return reply({});

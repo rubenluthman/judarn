@@ -7,15 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.17] - 2026-11-15
+
+### Changed
+
+- The architecture notes name `judarnInCard`, the Apple setting that narrows lists inside cards.
+
 ## [0.8.16] - 2026-11-15
 
 ### Fixed
 
 - `LogoLockup` accepts `className` and forwards other attributes, and `TextFieldProps` narrows by `as` (input, textarea or select).
-- The card border check now looks at `.jd-card` and fails when the block is missing, instead of silently matching nothing.
-- The web contrast check uses the shared colour maths from the token library; its reported ratios are unchanged.
 - The README Apple example uses `.judarnSmall()`, which compiles.
-- The documentation workflow runs on the same runner, Xcode versions and action versions as CI.
+- The card border and web contrast checks now test the current class names and shared colour maths.
 
 ## [0.8.15] - 2026-11-15
 
@@ -29,11 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- The Apple button's keyboard focus ring now reaches 3:1 against the surface around it, like the text field's.
+- The Apple button's focus ring and a flat card's eyebrow now reach their contrast minimum against the surface they actually sit on.
 - The Apple text list takes the compact column width inside any card, flat or not, matching web.
 - Increase Contrast outlines on Apple buttons, badges and tags are now 2pt, matching text fields and web.
-- A flat Apple card checks its eyebrow contrast against the page instead of the elevated surface.
-- The contrast audit now also checks `ink60` and `signalError` on every surface and appearance.
 
 ## [0.8.13] - 2026-11-15
 
