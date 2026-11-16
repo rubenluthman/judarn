@@ -18,7 +18,7 @@
 - **Monorepo Pre-Commit Suite**: `./scripts/verify_commit.sh` (requires `vale`: `brew install vale`; the house-style package is fetched on first run)
 
 ## Project invariants
-1. Follow Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, etc.).
+1. Follow Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, etc.). Release commits keep the subject at 72 characters or fewer (the commit-msg hook rejects longer ones), and the tag is created and pushed only after the commit succeeds, chained with `&&` on the same line.
 2. Swift 6 strict concurrency (`@MainActor`, `@Sendable`).
 3. Maintain at most four root documentation files besides `AGENTS.md` (`README.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CHANGELOG.md`, `AGENTS.md`) plus `LICENSE`.
 4. Co-evolve documentation and code atomically in the same commit.
@@ -33,3 +33,4 @@
 13. **General Rules and Local Variants**: Judarn guides anything visual or designed, through general rules plus rules per host. Never list the platforms it covers. Everything in `templates/` (the Google Docs and Slides files, `.docx` and `.pptx` templates, HTML starters, and the implementation prompt) is a local variant: its fonts, colors, and scale are choices the host tool forces, so never report them as violations, rebuild them from the tokens, or derive a general rule from them.
 14. **Agent-Neutral Core**: Judarn is shared between AI agents. General rules, tokens, and compiled host rules name no agent. Instructions for one AI are allowed only for what other agents cannot reach, and are labelled as that AI's. Claude's artifact copy of the rules lives in `docs/claude-artifact/`; edit it there, never only in the artifact.
 15. **Owner Defaults**: Judarn's rules are the owner's defaults. Outside this repository the owner's request and the project's profile (`docs/profiles/`) win, an override changes only what it names, and an agent discloses each departure once and never argues. Inside this repository every rule binds Judarn's own output.
+16. **No logo**: Judarn has no logo. Never add a logo or logo-like graphic without asking the owner.

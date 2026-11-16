@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.20] - 2026-11-16
+
+### Changed
+
+- Agent guide: release commits keep the subject within 72 characters and chain the tag to the commit, and Judarn has no logo.
+
 ## [0.8.19] - 2026-11-16
 
 ### Added
