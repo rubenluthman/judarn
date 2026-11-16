@@ -7,3 +7,4 @@ DerivedData/
 node_modules/
 dist/
 *.log
+docs/private/
