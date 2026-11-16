@@ -18,9 +18,9 @@ function oklchToLinearSrgb(l, c, h, clip) {
 }
 
 /** CSS Color 4 gamut mapping: reduce chroma at constant lightness and hue until the colour fits sRGB. */
-function oklchToLuminance(l, c, h) {
-  if (l <= 0) return 0;
-  if (l >= 1) return 1;
+function oklchToLinearRgb(l, c, h) {
+  if (l <= 0) return [0, 0, 0];
+  if (l >= 1) return [1, 1, 1];
   const inGamut = (rgb) => rgb.every((v) => v >= -1e-6 && v <= 1 + 1e-6);
   let rgb = oklchToLinearSrgb(l, c, h, false);
   if (!inGamut(rgb)) {
@@ -33,32 +33,39 @@ function oklchToLuminance(l, c, h) {
     }
     rgb = oklchToLinearSrgb(l, low, h, false);
   }
-  const [r, g, b] = rgb.map((v) => Math.min(1, Math.max(0, v)));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return rgb.map((v) => Math.min(1, Math.max(0, v)));
 }
 
-function parseLuminance(input) {
+const luminanceOf = ([r, g, b]) => 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b);
+const encode = (c) => (c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+
+/** Parses #hex, rgb() or oklch() to gamma-encoded sRGB channels in 0..1, or null. */
+function parseSrgb(input) {
+  if (typeof input !== "string") return null;
   const value = input.trim().toLowerCase();
   if (value.startsWith("#")) {
     const hex = value.slice(1);
     if (!/^([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/.test(hex)) return null;
     const full = hex.length <= 4 ? [...hex].map((ch) => ch + ch).join("") : hex;
-    const [r, g, b] = [0, 2, 4].map((i) => linearize(parseInt(full.slice(i, i + 2), 16) / 255));
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
   }
   if (value.startsWith("rgb")) {
     const nums = value.replace(/\/.*$/, "").match(/\d+(\.\d+)?/g);
     if (!nums || nums.length < 3) return null;
-    const [r, g, b] = nums.slice(0, 3).map((n) => linearize(parseFloat(n) / 255));
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return nums.slice(0, 3).map((n) => Math.min(1, Math.max(0, parseFloat(n) / 255)));
   }
   if (value.startsWith("oklch(")) {
     const m = value.match(/^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/[^)]*)?\)$/);
     if (!m) return null;
     const l = parseFloat(m[1]) / (m[2] ? 100 : 1);
-    return oklchToLuminance(l, parseFloat(m[3]), parseFloat(m[4]));
+    return oklchToLinearRgb(l, parseFloat(m[3]), parseFloat(m[4])).map(encode);
   }
   return null;
+}
+
+function parseLuminance(input) {
+  const rgb = parseSrgb(input);
+  return rgb ? luminanceOf(rgb) : null;
 }
 
 /**
@@ -77,6 +84,49 @@ export function getContrastingInk(color) {
   }
   const perceptualCrossover = 0.50; // perceptual polarity crossover, as in docs/DESIGN.md
   return lum > perceptualCrossover ? "#000000" : "#ffffff";
+}
+
+// WCAG crossover, where black and white reach equal contrast: sqrt(1.05 * 0.05) - 0.05 (ADR-0005).
+// Non-Negotiable Invariant: getContrastingAccent clamps by this crossover, never the perceptual one.
+const WCAG_CROSSOVER = Math.sqrt(1.05 * 0.05) - 0.05;
+
+const toHex = (rgb) => "#" + rgb.map((c) => Math.round(c * 255).toString(16).padStart(2, "0")).join("");
+
+/**
+ * Clamps an accent used as a foreground (text, icon, link) to a contrast ratio against its surface.
+ * Same algorithm as Apple's `contrastingAccent`: an accent that already reaches `minRatio` comes back
+ * unchanged; otherwise it is mixed toward black (light surface) or white (dark surface) in sRGB,
+ * by the smallest amount that reaches the ratio. Call it once per colour scheme, with that scheme's surface.
+ * Reachability peaks at about 4.58:1 on surfaces near the WCAG crossover, so a higher `minRatio` can
+ * resolve to the strongest reachable ink instead.
+ * @param {string} accent - Hex, rgb() or oklch() foreground.
+ * @param {string} surface - Hex, rgb() or oklch() surface it sits on.
+ * @param {number} [minRatio=4.5] - Target WCAG contrast ratio.
+ * @returns {string} The accent as given, or a "#rrggbb" clamp of it.
+ * @throws {TypeError} For any format that cannot be resolved without a DOM.
+ */
+export function getContrastingAccent(accent, surface, minRatio = 4.5) {
+  const fg = parseSrgb(accent);
+  const bg = parseSrgb(surface);
+  if (!fg || !bg) {
+    throw new TypeError(`getContrastingAccent: unsupported colour "${String(fg ? surface : accent)}". Use #hex, rgb() or oklch().`);
+  }
+  const yBg = luminanceOf(bg);
+  const ratioOf = (rgb) => {
+    const y = luminanceOf(rgb);
+    return (Math.max(y, yBg) + 0.05) / (Math.min(y, yBg) + 0.05);
+  };
+  if (ratioOf(fg) >= minRatio) return accent;
+  const darker = yBg > WCAG_CROSSOVER;
+  const mix = (t) => fg.map((c) => (darker ? c * (1 - t) : c + (1 - c) * t));
+  let low = 0;
+  let high = 1;
+  for (let i = 0; i < 20; i++) {
+    const mid = 0.5 * (low + high);
+    if (ratioOf(mix(mid)) >= minRatio) high = mid;
+    else low = mid;
+  }
+  return toHex(mix(high));
 }
 
 /**

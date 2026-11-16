@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.19] - 2026-11-16
+
+### Added
+
+- Web: `getContrastingAccent(accent, surface, minRatio)` clamps an accent used as text to a contrast ratio, matching Apple's `contrastingAccent`.
+- `.jd-table` keeps its first column fixed when a wrapper scrolls sideways, and `.num` and `<time>` cells never wrap.
+
 ## [0.8.18] - 2026-11-15
 
 ### Changed

@@ -2117,6 +2117,7 @@ Apple and web take their values from \`tokens/judarn-tokens.json\`, with zero dr
   - Buttons, badges, and tags follow the same rule: a transparent resting border on web, no stroke on Apple, and an \`ink100\` outline in the same high-contrast modes. The ghost button stays text with its hover underline. A disabled control dashes that outline: \`border-style: dashed\` on web buttons and fields, a dashed stroke on Apple buttons and fields.
   - Web component classes carry the \`jd-\` prefix (\`.jd-btn\`, \`.jd-card\`, \`.jd-table\`), so a project's own class names never pick up Judarn's styles.
   - The focus ring takes the accent and the invalid ring \`signalError\`. Apple clamps the focus ring to 3:1 with \`contrastingAccent\`; on web a project that sets \`--jd-accent\` measures it.
+  - \`.jd-table\` keeps its first column fixed (\`position: sticky; left: 0\`) when a wrapper scrolls it sideways. The cell fills with \`--jd-table-fill\`, which follows the row (substrate, \`surfaceElevated\` inside a card, \`surfaceRecessed\` on hover), so scrolled content never shows through. Figure cells (\`.num\` and \`<time>\`) never wrap, so a date does not split at a hyphen.
 - **Type**:
   - Use the 12-step scale in section 5, and the system font stack in the tokens.
   - Figures are proportional and lining by default. Old-style figures (\`onum\`) are opt-in, for editorial prose only.
@@ -2133,7 +2134,7 @@ Apple and web take their values from \`tokens/judarn-tokens.json\`, with zero dr
   - Apple: \`JudarnTextList\` sets items of text as bullets or numbers, with the marker in \`ink60\` in a column that scales with Dynamic Type, so wrapped lines hang under the text. It takes one level; nest on web only. Rows use the system's \`List\` and \`Form\`, with their own separators and insets, because that geometry belongs to the host. Judarn adds no row component on Apple.
 - **Ink**:
   - \`contrastingInk\` is \`getContrastingInk\` on web.
-  - \`contrastingAccent\` (Apple) answers a different question: it clamps an accent color used as a foreground to a ratio against a surface ([ADR-0005](adr/0005-compile-time-contrast-checks-and-gamut-mapping.md)).
+  - \`contrastingAccent\` answers a different question: it clamps an accent color used as a foreground (text, a link, an icon) to a ratio against a surface, 4.5:1 by default ([ADR-0005](adr/0005-compile-time-contrast-checks-and-gamut-mapping.md)). An accent that already reaches the ratio is returned unchanged. Otherwise it is mixed toward black on a light surface or toward white on a dark one, by the smallest amount that reaches it. It is \`getContrastingAccent(accent, surface, minRatio)\` on web, which has no color scheme to read, so call it once per scheme with that scheme's surface and never hand-mix an accent with ink.
 - **Touch**: Keep touch targets at or above \`spaceTouch\`.
 - **Rendered AI artifacts**: An artifact follows the rules of the host it depicts or ships to, not the container it is delivered in. A page, deck, or dashboard rendered in a browser follows the web rules, a mockup of an app screen follows that app's host, and a poster or invitation follows print.
 

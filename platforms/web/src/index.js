@@ -1,4 +1,4 @@
-export { default as Badge, Tag, getContrastingInk } from './Badge/Badge.jsx';
+export { default as Badge, Tag, getContrastingInk, getContrastingAccent } from './Badge/Badge.jsx';
 export { default as Button } from './Button/Button.jsx';
 export { default as Card } from './Card/Card.jsx';
 export { default as DataMatrix } from './DataMatrix/DataMatrix.jsx';

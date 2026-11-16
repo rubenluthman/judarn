@@ -196,8 +196,15 @@ select.jd-field__input { cursor: pointer; } /* native appearance keeps the platf
   padding: var(--space-1) var(--space-2); border-bottom: var(--rule-bold) solid var(--line); color: var(--black);
 }
 .jd-table td { padding: var(--space-2); border-bottom: var(--rule) solid var(--ink-30); color: var(--fg1); }
-.jd-table tbody tr:hover { background: var(--jd-surface-recessed); }
+.jd-table tbody tr:hover { background: var(--jd-surface-recessed); --jd-table-fill: var(--jd-surface-recessed); }
 .jd-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+/* Figures never wrap: "2026-10-08" must not split at a hyphen. */
+.jd-table .num, .jd-table time { white-space: nowrap; }
+/* In a sideways-scrolling wrapper the first column stays put. Its fill follows the row fill
+   (--jd-table-fill: substrate, elevated inside a card, recessed on hover) so scrolled content never shows through. */
+.jd-table { --jd-table-fill: var(--paper); }
+.jd-card .jd-table { --jd-table-fill: var(--white); }
+.jd-table :is(th, td):first-child { position: sticky; left: 0; background: var(--jd-table-fill); }
 
 /* As-written casing for a field label or column header that holds a unit, a mixed-case term,
    or more than two words. */

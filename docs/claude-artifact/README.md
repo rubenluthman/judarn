@@ -82,6 +82,7 @@ Judarn has no default color. Build every surface and all running text from the n
 ## Filled surfaces
 
 Resolve ink on any filled surface with `getContrastingInk` (`contrastingInk` on Apple). It returns black or white.
+Clamp an accent used as text with `getContrastingAccent(accent, surface)` (`contrastingAccent` on Apple), once per color scheme with that scheme's surface. Never hand-mix an accent with ink.
 
 Judarn deliberately favors white ink beyond what contrast ratios suggest, because contrast math and the human eye disagree on filled components, and black ink turns saturated and mid-tone fills muddy. White ink falls to 1.91:1 at the crossover, and that is an accepted cost. Never replace the resolved ink on ratios alone. Report a low ratio to the owner instead.
 
