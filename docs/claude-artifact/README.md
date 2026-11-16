@@ -28,7 +28,7 @@ The rest follows the host the artifact depicts or ships to, not the artifact typ
 | Logo | The project's identity | The owner's mark as supplied | Judarn sets no mark geometry |
 | Whiteboard | Canvas | Color roles, fill contrast, casing | Type-scale precision, touch targets |
 
-The type, space, surface, motion and icon rules below are written for the web. On another host, keep the general rules and adapt the rest as the table says. Connectors and arrows on a whiteboard or diagram are not card outlines.
+The type, space, surface, motion and icon rules below are written for the web. On another host, keep the general rules and adapt the rest as the table says. Connectors and arrows on a whiteboard or diagram are not card outlines. For any visual or HTML artifact created solely for the owner (pages, dashboards, decks, widgets, and local documents) with no other named typeface, put `"Offentlig Sans"` ahead of the system sans-serif fallback (`"Offentlig Sans", var(--font-sans)` on the web), except in native OS screen mockups (which keep the depicted host's own face) and tools that cannot load local fonts (such as Google Docs).
 
 ## Color in one rule
 
@@ -55,7 +55,8 @@ Judarn has no default color. Build every surface and all running text from the n
 ## Type
 
 - Use the typefaces the owner or the project's profile names, loaded from Google Fonts on the web, and pair them as the owner pairs them.
-- Otherwise set all text in `--font-sans`, the host's system face, and code in `--font-mono`. Load no web fonts and pair no typefaces. On a host with no system face, such as print, choose a typeface for the work.
+- Otherwise, for any visual or HTML artifact created solely for the owner (pages, dashboards, decks, widgets, and local documents), set text in `"Offentlig Sans"` ahead of `--font-sans` (`"Offentlig Sans", var(--font-sans)`), and code in `--font-mono`. Rely on locally installed fonts on the owner's Mac with clean fallback in sandboxed browsers, and never load `"Offentlig Sans"` from external URLs or Google Fonts. Native OS screen mockups keep the depicted host's own face, and tools that cannot load local fonts (such as Google Docs) keep their own font choices.
+- For shared or public web work with no named typeface, set all text in `--font-sans`, the host's system face, and code in `--font-mono`. Load no web fonts and pair no typefaces. On a host with no system face, such as print, choose a typeface for the work.
 - Use the 12 styles as they stand: `t-display` for poster scale only, `t-h1` to `t-h4` for headings, `t-body-lg`, `t-body` and `t-small` for text, `t-label` and `t-micro` for labels, `t-data` and `t-mono` for data.
 - Keep running text within `jd-measure-body` (65ch), and text in cards and sidebars within `jd-measure-compact` (45ch).
 - Set the lines of one paragraph or one wrapped label close together, with no visible gap between them. Keep each style's own line height, and when you set a line height yourself, as with the owner's typeface, stay at 1.2 to 1.25 for text. Never open running text to 1.4 or more. Separate paragraphs and blocks with the space scale instead.

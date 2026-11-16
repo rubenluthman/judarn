@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.21] - 2026-11-16
+
+### Changed
+
+- Rendered AI artifact rules (`docs/DESIGN.md`, `docs/claude-artifact/README.md`): owner-only visual and HTML artifacts use `"Offentlig Sans"` ahead of the system sans-serif fallback without external font loads, except for native OS mockups and tools that cannot load local fonts.
+
 ## [0.8.20] - 2026-11-16
 
 ### Changed
