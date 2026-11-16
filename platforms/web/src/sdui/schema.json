@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JudarnSDUINode",
-  "description": "Declarative Server-Driven UI node schema for Judarn design foundation. Props are allowlisted per node type; any other prop is rejected. Mirrors SDUI_PROP_ALLOWLIST in serializer.js.",
+  "description": "Declarative Server-Driven UI node schema for Judarn design system. Props are allowlisted per node type; any other prop is rejected. Mirrors SDUI_PROP_ALLOWLIST in serializer.js.",
   "type": "object",
   "required": [
     "type"

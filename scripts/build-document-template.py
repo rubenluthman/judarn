@@ -4,7 +4,7 @@ scripts/build-document-template.py
 
 Generates the canonical Judarn Document Template (.docx) from scratch
 with fully compliant OpenXML styles, margins, fonts, and comprehensive
-examples of every text style in the Judarn design foundation.
+examples of every text style in the Judarn design system.
 
 Guarantees:
 - Pure Black (#000000) for Headings and Normal text (zero blue themeColor).
@@ -113,7 +113,7 @@ def create_judarn_template(output_path):
 
     # 3. Subtitle / Byline (inherits Subtitle style)
     p_sub = doc.add_paragraph(style='Subtitle')
-    p_sub.add_run("Judarn Design Foundation · Typography Specification")
+    p_sub.add_run("Judarn Design System · Typography Specification")
 
     # 4. Heading 1 (inherits Heading 1 style)
     p_h1 = doc.add_paragraph(style='Heading 1')

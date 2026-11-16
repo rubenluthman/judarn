@@ -37,7 +37,7 @@
 7. **Dense Tabular Data Matrix (Light)**: Full-width 5-column package matrix, uppercase bold header with 1 px top rule and 2 px bottom rule, IBM Plex Mono tabular numbers, and right-aligned Wada status pills (Available green `#137333`, Parked grey `#55585B`).
 8. **Figures Grid (Dark)**: 4-card metric grid with massive 38 pt IBM Plex Mono digits in `#a5c8d1`, tracked uppercase labels, and context details.
 9. **Technical Architecture & Code Block (Light)**: 2-column layout pairing architectural constraints with an IBM Plex Mono code block featuring a `#12354e` indicator rule and `#F8F8F8` background.
-10. **Two-Way Trade-off Comparison (Light)**: 2 contrasting substrate cards: "Conventional UI Libraries" vs "Judarn Design Foundation", comparing paradigms without perimeter strokes.
+10. **Two-Way Trade-off Comparison (Light)**: 2 contrasting substrate cards: "Conventional UI Libraries" vs "Judarn Design System", comparing paradigms without perimeter strokes.
 
 ---
 

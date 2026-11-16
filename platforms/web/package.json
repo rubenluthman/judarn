@@ -1,7 +1,7 @@
 {
   "name": "@judarn/ui",
-  "version": "0.8.22",
-  "description": "Judarn design foundation tokens and React components for the web",
+  "version": "0.8.23",
+  "description": "Judarn design system tokens and React components for the web",
   "author": "Ruben Luthman",
   "license": "MIT",
   "repository": {

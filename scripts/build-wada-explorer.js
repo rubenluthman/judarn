@@ -1286,7 +1286,7 @@ const html = `<!DOCTYPE html>
 
   <!-- Confident Hero Section (Single canonical title) -->
   <div class="hero-section">
-    <div class="hero-eyebrow small-caps">Judarn Design Foundation</div>
+    <div class="hero-eyebrow small-caps">Judarn Design System</div>
     <h1 class="hero-title">Judarn Color Dictionary</h1>
     <p class="hero-subtitle">
       348 Japanese color harmonies by Sanzo Wada, calibrated in OKLCh for modern screens.
@@ -1476,7 +1476,7 @@ const html = `<!DOCTYPE html>
               </div>
               <div class="app-badge mono-nums" id="appBadge2">Host</div>
             </div>
-            <button class="app-btn" id="appBtn">Explore Judarn Foundation</button>
+            <button class="app-btn" id="appBtn">Explore Judarn Design System</button>
           </div>
         </div>
       </div>

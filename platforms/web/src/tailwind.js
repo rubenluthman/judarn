@@ -1,5 +1,5 @@
 /**
- * Judarn Design Foundation – Tailwind CSS Plugin & Preset
+ * Judarn Design System – Tailwind CSS Plugin & Preset
  * Generated from tokens/judarn-tokens.json  –  do not edit directly.
  */
 module.exports = function judarnTailwindPlugin({ addBase, theme }) {

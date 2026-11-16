@@ -1,6 +1,6 @@
 # ``Judarn``
 
-Unified cross-platform design foundation for Apple Native platforms (iOS 17+ and macOS 14+) implementing calibrated dual-tier OKLCh color mathematics, spatial geometry, and accessible tabular matrices.
+Unified cross-platform design system for Apple Native platforms (iOS 17+ and macOS 14+) implementing calibrated dual-tier OKLCh color mathematics, spatial geometry, and accessible tabular matrices.
 
 ## Overview
 

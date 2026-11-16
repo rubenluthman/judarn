@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.23] - 2026-11-16
+
+### Changed
+
+- Standardize terminology across packages, templates, tools, and `AGENTS.md` on "Judarn Design System", reserving "foundation" for the base token and primitive layer.
+
 ## [0.8.22] - 2026-11-16
 
 ### Changed

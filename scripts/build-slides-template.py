@@ -708,7 +708,7 @@ def build_presentation(output_path):
     tf10_r.margin_left = tf10_r.margin_top = tf10_r.margin_right = tf10_r.margin_bottom = 0
 
     p10_rh = tf10_r.paragraphs[0]
-    p10_rh.text = "Judarn Design Foundation"
+    p10_rh.text = "Judarn Design System"
     p10_rh.font.name = FONT_SERIF
     p10_rh.font.size = Pt(18)
     p10_rh.font.bold = True
