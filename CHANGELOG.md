@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.24] - 2026-11-17
+
+### Fixed
+
+- The token compiler now fails the build when the web `WCAG_CROSSOVER` in `Badge.jsx` drifts from the compiler's WCAG crossover, as ADR-0005 requires.
+
 ## [0.8.23] - 2026-11-16
 
 ### Changed

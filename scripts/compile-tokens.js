@@ -293,6 +293,13 @@ function runCompilerProofGate() {
     process.exit(1);
   }
 
+  // The web keeps a copy of the WCAG crossover for getContrastingAccent (ADR-0005); fail if it drifts.
+  const webWcag = badgeSource.match(/WCAG_CROSSOVER = Math\.sqrt\(([\d.]+) \* ([\d.]+)\) - ([\d.]+);/);
+  if (!webWcag || Math.abs(Math.sqrt(Number(webWcag[1]) * Number(webWcag[2])) - Number(webWcag[3]) - WCAG_LUMINANCE_CROSSOVER) > 1e-12) {
+    console.error(`✗ Web WCAG_CROSSOVER must equal Math.sqrt(1.05 * 0.05) - 0.05 (${WCAG_LUMINANCE_CROSSOVER})`);
+    process.exit(1);
+  }
+
   const benchmarkSwatches = [
     { name: 'Wada Red Orange', hex: '#dd4027', expected: 'white' },
     { name: 'Wada Cerulean', hex: '#0093a5', expected: 'white' },
