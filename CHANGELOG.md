@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.29] - 2026-11-19
+
+### Fixed
+
+- The full commit check script passes in linked git worktrees whose hooks path is a full path (commit-checks 0.2.7).
+
 ## [0.8.28] - 2026-11-19
 
 ### Fixed
