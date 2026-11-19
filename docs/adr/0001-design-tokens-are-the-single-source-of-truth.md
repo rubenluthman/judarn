@@ -15,13 +15,13 @@ The token files (`tokens/judarn-tokens.json`, `tokens/modes/`, `tokens/judarn.re
 
 ## Why
 
-Apple and web use different syntax, colour models, and units, so hand-edited values drift apart and break contrast parity. One source with a compiler keeps the hosts identical and lets a script prove it. A custom compiler stays because Style Dictionary's 2025.10 support was incomplete when checked on 2026-11-06, and it would still have left the contrast checks, gamut mapping, and Swift emitters custom. Android was parked because no Kotlin in the repository was ever compiled, its publishing target is retired, and its generator had already drifted. Its code lives in the owner's offline bundle of the earlier history ([ADR-0014](0014-public-repository-starts-from-a-fresh-history.md)).
+Apple and web use different syntax, colour models, and units, so hand-edited values drift apart and break contrast parity. One source with a compiler keeps the hosts identical and lets a script prove it. A custom compiler stays because Style Dictionary's 2025.10 support was incomplete when checked on 2026-11-06, and it would still have left the contrast checks, gamut mapping, and Swift emitters custom. Android was parked because no Kotlin in the repository was ever compiled, its publishing target is retired, and its generator had already drifted. Its code lives in the private pre-release history ([ADR-0014](0014-public-repository-starts-from-a-fresh-history.md)).
 
 ## What we gave up
 
 - **A third-party transform layer.** The loader, validator, and emitters are Judarn code to maintain.
 - **Px values for relative units.** `-0.02em` as px would be correct at one font size only.
-- **Android as a consumer.** No Android app uses Judarn today. Returning means restoring the emitter from the bundle and making it compile.
+- **Android as a consumer.** No Android app uses Judarn today. Returning means restoring the emitter from the private history and making it compile.
 - **A root `DESIGN.md`.** A tool that looks for one will not find it. Agent configurations that hard-code the old path must name `docs/DESIGN.md`, including the shared agent skill ([ADR-0008](0008-agent-skill-lives-outside-the-repository.md)).
 
 ## Revisit if

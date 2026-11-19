@@ -41,7 +41,7 @@ Judarn never fights platform curves or physics:
 - **Presentation & Document Starters**: Local variants of Judarn for Google Docs, Slides, Word, and PowerPoint ([`templates/`](templates/docs/README.md)). Formats with pre-selected IBM Plex typography and Wada harmonies for document and deck authoring:
   - `templates/slides/`: 16:9 presentation slide templates covering dark focus headline and light technical data archetypes.
   - `templates/docs/`: Vertical letter specification template for group projects and architecture decisions, copy-pasteable into Google Docs and calibrated for PDF export.
-- **Documentation & Native Support**: DocC documentation catalog for Apple platforms, and npm package distribution for web applications. Android is parked and lives in the owner's offline Git bundle of the pre-release history ([ADR-0001](docs/adr/0001-design-tokens-are-the-single-source-of-truth.md)).
+- **Documentation & Native Support**: DocC documentation catalog for Apple platforms, and npm package distribution for web applications. Android is parked outside this repository's public history ([ADR-0001](docs/adr/0001-design-tokens-are-the-single-source-of-truth.md)).
 
 ---
 

@@ -34,4 +34,4 @@
 - [ ] API surface stability freeze and migration contract validation.
 
 ### Android (parked)
-- [ ] Bring Android back from the owner's offline Git bundle of the pre-release history, where the Compose components and the Kotlin emitter live. It needs a new ADR that restores the emitter, compiles and tests the output in `verify_commit.sh`, and fixes the weight mapping that maps 800 to `FontWeight.Bold` (ADR-0001).
+- [ ] Bring Android back from the private pre-release history, where the Compose components and the Kotlin emitter live. It needs a new ADR that restores the emitter, compiles and tests the output in `verify_commit.sh`, and fixes the weight mapping that maps 800 to `FontWeight.Bold` (ADR-0001).
