@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.26] - 2026-11-19
+
+### Changed
+
+- Commits, pushes and GitHub Actions now run the shared secret, home-path, email and private-name checks, and the hook runs on push.
+
 ## [0.8.25] - 2026-11-19
 
 ### Changed

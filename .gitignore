@@ -8,3 +8,14 @@ node_modules/
 dist/
 *.log
 docs/private/
+
+# Secret files (commit-checks baseline)
+.env
+.env.*
+.dev.vars*
+*.p8
+*.p12
+*.key
+*.pem
+*.mobileprovision
+id_*

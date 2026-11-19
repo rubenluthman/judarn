@@ -73,13 +73,16 @@ echo "✓ Commit-msg hook strictly validated."
 echo "8. Relative Markdown Link Integrity..."
 python3 scripts/check-markdown-links.py
 
-echo "8b. Private Path Scan..."
-# Home paths and file URLs tie a tracked file to one machine.
-if git grep -nI -e '/Users/' -e '~/Developer' -e '~/\.gemini' -e '~/\.claude' -e 'file:///' -- . ':!scripts/verify_commit.sh'; then
+echo "8b. Machine-specific paths..."
+# Home paths are caught by the shared commit checks (8c). This covers tool folders and file URLs.
+if git grep -nI -e '~/\.gemini' -e '~/\.claude' -e 'file:///' -- . ':!scripts/verify_commit.sh'; then
   echo "❌ tracked files contain private paths" >&2
   exit 1
 fi
 echo "✓ No private paths in tracked files."
+
+echo "8c. Shared commit checks (secrets, home paths, emails, private names, secret files, hooks)..."
+scripts/commit-checks verify
 
 echo "9. House Style (Vale)..."
 # Wording and punctuation rules come from the shared house-style package, never an inline list.

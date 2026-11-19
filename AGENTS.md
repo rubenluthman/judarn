@@ -15,7 +15,7 @@
 - **ADR Governance**: `node scripts/verify-adrs.js` (or `--staged`, `--range <base>..<head>`)
 - **ADR Governance Tests**: `node --test scripts/verify-adrs.test.js`
 - **Hook Test**: `.githooks/commit-msg <msg-file>`
-- **Monorepo Pre-Commit Suite**: `./scripts/verify_commit.sh` (requires `vale`: `brew install vale`; the house-style package is fetched on first run)
+- **Monorepo Pre-Commit Suite**: `./scripts/verify_commit.sh` (requires `vale` and `gitleaks`: `brew install vale gitleaks`; the house-style package is fetched on first run). Run `scripts/install-hooks.sh` once after cloning. Generic commit checks (secrets, home paths, emails, private names) come from the shared commit-checks package at the release pinned in `.commit-checks.json`; `commit-checks.yml` runs them on GitHub
 
 ## Project invariants
 1. Follow Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, etc.). Release commits keep the subject at 72 characters or fewer (the commit-msg hook rejects longer ones), and the tag is created and pushed only after the commit succeeds, chained with `&&` on the same line.

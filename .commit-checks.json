@@ -1,0 +1,19 @@
+{
+  "version": "v0.1.0",
+  "commit": "130a34b183c73762cb44933fc47c579f2cbca8fd",
+  "source": "https://github.com/rubenluthman/commit-checks.git",
+  "visibility": "public",
+  "email_allow": [],
+  "allow": [
+    {
+      "rule": "emails",
+      "path": "platforms/web/src/TextField/TextField.card.html",
+      "reason": "placeholder address in a sample form field, on a Swedish example domain"
+    },
+    {
+      "rule": "emails",
+      "path": "scripts/verify-adrs.test.js",
+      "reason": "test git identity on the reserved .invalid domain"
+    }
+  ]
+}

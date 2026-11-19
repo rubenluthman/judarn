@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+root_cc=$(git rev-parse --show-toplevel) || exit 1
+"$root_cc/scripts/commit-checks" pre-commit || exit 1
 # Fast checks only. Swift and web tests stay in ./scripts/verify_commit.sh.
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
