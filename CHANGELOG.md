@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.32] - 2026-11-20
+
+### Added
+
+- `node scripts/consumers.js` reports, for each app that loads Judarn, which version it holds and whether updating to a newer tag changes anything it loads, with old and new token values on an optional review page.
+
 ## [0.8.31] - 2026-11-20
 
 ### Changed

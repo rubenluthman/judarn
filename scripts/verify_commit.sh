@@ -23,6 +23,9 @@ node scripts/build-wada-explorer.js --check
 echo "1c. Wada MCP Server Stdio Tests..."
 node --test tools/wada-explorer/mcp/server.test.js > /dev/null
 
+echo "1d. Consumer Status Tests..."
+node --test scripts/consumers.test.js > /dev/null
+
 echo "2. Cross-Platform Token Version Synchronization Check..."
 node scripts/sync-version.js --check
 

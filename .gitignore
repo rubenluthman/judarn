@@ -19,3 +19,4 @@ docs/private/
 *.pem
 *.mobileprovision
 id_*
+build/

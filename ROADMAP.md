@@ -2,6 +2,8 @@
 
 ## Active
 
+- [ ] Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
+
 ## Icebox
 
 ### Form controls and tokens
