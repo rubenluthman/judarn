@@ -27,7 +27,7 @@ echo "2. Cross-Platform Token Version Synchronization Check..."
 node scripts/sync-version.js --check
 
 echo "3. Apple Native (Swift) Build & Test Suite..."
-swift build
+heavy swift build
 echo "   Running swift test (queues behind other heavy jobs if heavy-run is installed)..."
 heavy swift test
 
