@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.28] - 2026-11-19
+
+### Fixed
+
+- Commits made from a linked git worktree now pass the shared commit checks (commit-checks 0.2.6).
+
 ## [0.8.27] - 2026-11-19
 
 ### Changed
