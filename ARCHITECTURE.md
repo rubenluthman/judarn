@@ -39,7 +39,7 @@
 - **Cross-Platform Tooling (`scripts/`)**:
   - Cross-platform token version synchronization CLI (`scripts/sync-version.js`) enforcing version alignment across package manifests and documentation.
   - External consumption contract test engine (`scripts/verify-consumption.js`) verifying package export maps, symbol manifests, and distribution readiness.
-  - ADR governance gate (`scripts/verify-adrs.js`) enforcing the four-heading record format and index parity, run by the `pre-commit` hook and `scripts/verify_commit.sh`.
+  - Shared commit checks (`scripts/commit-checks`, the pinned commit-checks package) enforcing the four-heading decision-record format and index parity, link integrity, the release-tag guard, house style, and the secret, path and email scans, run by the hooks, `scripts/verify_commit.sh` and CI.
 
 ## Architecture flow diagram
 

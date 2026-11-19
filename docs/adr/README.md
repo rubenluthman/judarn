@@ -1,6 +1,6 @@
 # Decision records
 
-A record has the line `Status: Active | Retired · Date` and the headings Decision, Why, What we gave up, and Revisit if. It is edited in place, and `scripts/verify-adrs.js` checks the format. A record exists only when an AI undoing the decision would lose data, cost money, break something people rely on, or throw away more than a day of work. Design rules live in [`docs/DESIGN.md`](../DESIGN.md). Numbers of deleted records are not reused.
+A record has the line `Status: Active | Retired · Date` and the headings Decision, Why, What we gave up, and Revisit if. It is edited in place, and the shared commit checks verify the format. A record exists only when an AI undoing the decision would lose data, cost money, break something people rely on, or throw away more than a day of work. Design rules live in [`docs/DESIGN.md`](../DESIGN.md). Numbers of deleted records are not reused.
 
 | ADR | Title | Status |
 | :--- | :--- | :--- |

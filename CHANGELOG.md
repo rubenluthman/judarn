@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.27] - 2026-11-19
+
+### Changed
+
+- Decision-record, link, release-tag and house-style checks, and the commit message check, now come from the shared commit-checks package; the copies in this repository are removed.
+
 ## [0.8.26] - 2026-11-19
 
 ### Changed

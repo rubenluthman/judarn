@@ -28,17 +28,6 @@ jobs:
         with:
           node-version: "24.x"
 
-      - name: Verify ADR Governance
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: |
-          node --test scripts/verify-adrs.test.js
-          if [ -n "$BASE_SHA" ]; then
-            node scripts/verify-adrs.js --range "$BASE_SHA..$GITHUB_SHA"
-          else
-            node scripts/verify-adrs.js
-          fi
-
       - name: Verify Design Token Parity
         run: node scripts/compile-tokens.js --check
 

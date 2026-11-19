@@ -23,13 +23,6 @@ node --test tools/wada-explorer/mcp/server.test.js > /dev/null
 echo "2. Cross-Platform Token Version Synchronization Check..."
 node scripts/sync-version.js --check
 
-echo "2b. Release Tag Collision Guard..."
-bash scripts/check-release-tag.sh
-
-echo "2c. ADR Governance..."
-node --test scripts/verify-adrs.test.js > /dev/null
-node scripts/verify-adrs.js
-
 echo "3. Apple Native (Swift) Build & Test Suite..."
 swift build
 echo "   Running swift test (waits if another project's Apple tests are running)..."
@@ -70,9 +63,6 @@ fi
 rm -f "$TMP_MSG_VALID" "$TMP_MSG_INVALID"
 echo "✓ Commit-msg hook strictly validated."
 
-echo "8. Relative Markdown Link Integrity..."
-python3 scripts/check-markdown-links.py
-
 echo "8b. Machine-specific paths..."
 # Home paths are caught by the shared commit checks (8c). This covers tool folders and file URLs.
 if git grep -nI -e '~/\.gemini' -e '~/\.claude' -e 'file:///' -- . ':!scripts/verify_commit.sh'; then
@@ -81,29 +71,8 @@ if git grep -nI -e '~/\.gemini' -e '~/\.claude' -e 'file:///' -- . ':!scripts/ve
 fi
 echo "✓ No private paths in tracked files."
 
-echo "8c. Shared commit checks (secrets, home paths, emails, private names, secret files, hooks)..."
+echo "8c. Shared commit checks (secrets, paths, emails, links, decision records, version guard, house style, hooks)..."
 scripts/commit-checks verify
-
-echo "9. House Style (Vale)..."
-# Wording and punctuation rules come from the shared house-style package, never an inline list.
-if ! command -v vale >/dev/null 2>&1; then
-  echo "❌ vale is not installed: brew install vale" >&2
-  exit 1
-fi
-# Resync whenever the pinned release changes, so a version bump never runs stale cached rules.
-pin="$(grep '^Packages' .vale.ini)"
-if [ "$(cat .vale/styles/HouseStyle/.pin 2>/dev/null)" != "$pin" ]; then
-  vale sync >/dev/null || { echo "❌ vale sync failed: the house-style package needs network access once per pinned release" >&2; exit 1; }
-  printf '%s\n' "$pin" > .vale/styles/HouseStyle/.pin
-fi
-prose_files=()
-while IFS= read -r file; do
-  [ -f "$file" ] && prose_files+=("$file")
-done < <(git ls-files --cached --others --exclude-standard -- '*.md' '*.swift' || true)
-if [ "${#prose_files[@]}" -gt 0 ]; then
-  vale --output=line "${prose_files[@]}" >&2 || { echo "❌ house style check failed" >&2; exit 1; }
-fi
-echo "✓ House style check passed."
 
 echo "======================================================="
 echo "✓ All Monorepo Verification Checks Passed Successfully!"
