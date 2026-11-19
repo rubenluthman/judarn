@@ -8,6 +8,9 @@ echo "======================================================="
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
+# A machine-wide lock for memory-heavy jobs, if `heavy-run` is installed; otherwise run directly (CI, other computers).
+heavy() { if command -v heavy-run >/dev/null 2>&1; then heavy-run "$@"; else "$@"; fi; }
+
 echo "1. Design Token Drift & Schema Parity Check..."
 node scripts/compile-tokens.js --check
 
@@ -25,19 +28,11 @@ node scripts/sync-version.js --check
 
 echo "3. Apple Native (Swift) Build & Test Suite..."
 swift build
-echo "   Running swift test (waits if another project's Apple tests are running)..."
-lockf -k -t 1800 /tmp/apple-tests.lock swift test || {
-  status=$?
-  [ "$status" -eq 75 ] && echo "❌ Another project's Apple tests held the lock for 30 minutes (lock file: /tmp/apple-tests.lock). Tests did not run."
-  exit "$status"
-}
+echo "   Running swift test (queues behind other heavy jobs if heavy-run is installed)..."
+heavy swift test
 
-echo "3b. Apple iOS Simulator Test Suite (waits if another project's Apple tests are running)..."
-lockf -k -t 1800 /tmp/apple-tests.lock ./scripts/test-ios.sh || {
-  status=$?
-  [ "$status" -eq 75 ] && echo "❌ Another project's Apple tests held the lock for 30 minutes (lock file: /tmp/apple-tests.lock). Tests did not run."
-  exit "$status"
-}
+echo "3b. Apple iOS Simulator Test Suite (queues behind other heavy jobs if heavy-run is installed)..."
+heavy ./scripts/test-ios.sh
 
 echo "4. Web Platform Verification Suite & Packaging Hygiene..."
 [ -d platforms/web/node_modules/esbuild ] || npm --prefix platforms/web ci --no-audit --no-fund
