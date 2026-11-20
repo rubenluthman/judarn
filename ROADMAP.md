@@ -16,7 +16,6 @@
 - [ ] Formalize surface elevation progression (`substrate`, `surfaceElevated`, `surfaceOverlay`) with native platform materials.
 
 ### Brand and assets
-- [ ] Design the official Judarn mark and emblem.
 - [ ] Generate vector SVG and multi-resolution PNG assets for SPI, documentation, and package manifests.
 
 ### Platforms
