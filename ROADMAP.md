@@ -15,9 +15,6 @@
 - [ ] Implement native SwiftUI and web component primitives for them that meet the 44pt touch floor.
 - [ ] Formalize surface elevation progression (`substrate`, `surfaceElevated`, `surfaceOverlay`) with native platform materials.
 
-### Brand and assets
-- [ ] Generate vector SVG and multi-resolution PNG assets for SPI, documentation, and package manifests.
-
 ### Platforms
 - [ ] Localize the Apple components' built-in strings (text-field accessibility values and hints).
 - [ ] Audit watchOS and tvOS availability and manifest support in `Package.swift`.
