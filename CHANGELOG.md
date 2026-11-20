@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.38] - 2026-11-20
+
+### Changed
+- The roadmap now plans a comparison of Offentlig Sans in the projects that use Judarn, not a switch of the default font.
+
 ## [0.8.37] - 2026-11-20
 
 ### Changed

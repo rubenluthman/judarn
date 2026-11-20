@@ -2,7 +2,7 @@
 
 ## Active
 
-- [ ] Next plan – Offentlig Sans as Judarn's default typeface: put `"Offentlig Sans"` first in the `font.sans` token, ship the web font with its OFL licence in the npm package (fetched from a pinned Offentlig release, as `pages.yml` does), and bundle it for Apple hosts. Every consumer's text changes, so the plan shows each host before and after and goes out through the consumer status gate.
+- [ ] Decide whether Offentlig Sans should become the `font.sans` default. Today Judarn uses it only in its own presentation (such as the Wada explorer) and in artifacts. Compare the projects that use Judarn, set in their current font and in Offentlig Sans, before any token change.
 - [ ] Wada explorer phone layout: the explorer has no phone rules, so at 375 px the page is about 470 px wide and the top tabs and size filters run off the screen.
 - [ ] Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
 
