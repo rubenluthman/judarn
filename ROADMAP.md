@@ -6,6 +6,10 @@
 
 ## Icebox
 
+### Consumer status
+- [ ] Count edits to component `README.md` files under `platforms/web/src` as none, not visible: they do not ship as interface.
+- [ ] Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
+
 ### Form controls and tokens
 - [ ] Define semantic tokens for toggle/switch, segmented control, and slider inputs.
 - [ ] Implement native SwiftUI and web component primitives for them that meet the 44pt touch floor.

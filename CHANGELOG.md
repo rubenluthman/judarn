@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.33] - 2026-11-20
+
+### Changed
+
+- The roadmap lists two small fixes for the consumer status command.
+
 ## [0.8.32] - 2026-11-20
 
 ### Added
