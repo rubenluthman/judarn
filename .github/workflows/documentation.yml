@@ -1,22 +1,17 @@
-name: Deploy DocC Documentation
+name: Build DocC documentation
 
 on:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: macos-26
     timeout-minutes: 15
     steps:
@@ -44,12 +39,3 @@ jobs:
             --output-path ./docs-out \
             --transform-for-static-hosting \
             --hosting-base-path judarn
-
-      - name: Upload GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: ./docs-out
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5

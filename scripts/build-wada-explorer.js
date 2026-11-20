@@ -25,9 +25,17 @@ const html = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Judarn Color Dictionary</title>
 <style>
+  @font-face {
+    font-family: "Offentlig Sans";
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+    src: local("Offentlig Sans"), url("fonts/OffentligSans-wght.woff2") format("woff2");
+  }
   :root {
-    /* San Francisco Native Typography Stack */
-    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro", "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    /* Offentlig Sans first; the system stack is the fallback and the native mockup face */
+    --font-system: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+    --font-sans: "Offentlig Sans", -apple-system, BlinkMacSystemFont, "SF Pro", "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
     --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     
     /* Judarn Canonical Dynamic OKLCh Neutrals */
@@ -79,9 +87,9 @@ const html = `<!DOCTYPE html>
     font-feature-settings: "tnum" 1, "zero" 1;
   }
   .small-caps {
-    font-variant-caps: all-small-caps;
-    font-feature-settings: "smcp" 1, "c2sc" 1;
-    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-feature-settings: "case" 1;
     font-weight: 700;
   }
 
@@ -698,6 +706,7 @@ const html = `<!DOCTYPE html>
 
   /* Stage 3: Native App Interface */
   .app-stage {
+    font-family: var(--font-system);
     min-height: 290px;
     width: 100%;
     border-radius: 12px;

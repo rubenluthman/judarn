@@ -6,6 +6,8 @@ A personal design system: general rules for everything I make, plus specific rul
 
 Judarn sets colors, spatial cadence, and typography, leaving curves, depth, and touch mechanics to each host. [`docs/DESIGN.md`](docs/DESIGN.md) holds the rules, and compiled packages cover Apple and web. Android is parked.
 
+The Wada color explorer is online at https://rubenluthman.github.io/judarn/.
+
 ---
 
 ## Design rules

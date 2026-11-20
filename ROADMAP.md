@@ -6,6 +6,9 @@
 
 ## Icebox
 
+### Wada explorer
+- [ ] Bring the explorer's labels in line with Judarn's uppercase-label rule: uppercase only for labels of at most two words with no digit or mixed-case term; set others as written, for example "2 colors", "Saved Favorites 0", "CIE L*a*b*", "OKLCh (Judarn Native)", "Judarn Design System".
+
 ### Consumer status
 - [ ] Count edits to component `README.md` files under `platforms/web/src` as none, not visible: they do not ship as interface.
 - [ ] Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
