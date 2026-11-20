@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.37] - 2026-11-20
+
+### Changed
+- The roadmap plans Offentlig Sans as Judarn's default typeface and a phone layout for the Wada explorer.
+
 ## [0.8.36] - 2026-11-20
 
 ### Added
