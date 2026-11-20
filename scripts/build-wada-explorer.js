@@ -1249,6 +1249,128 @@ const html = `<!DOCTYPE html>
     font-weight: 600;
     text-underline-offset: 2px;
   }
+
+  /* Phone layout: below 640px only; the desktop layout above it is untouched.
+     16px gutter (space2), 44px touch targets (spaceTouch), one column, no sideways scroll.
+     Grid and flex children get min-width 0 so long text can never widen the page. */
+  @media (max-width: 640px) {
+    html { scrollbar-gutter: auto; }
+    body { padding-bottom: var(--space-4); overflow-x: hidden; }
+
+    header { position: static; }
+    .header-inner {
+      height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-2);
+    }
+    .main-container { padding: 0 var(--space-2); }
+
+    .view-switch-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .view-switch-nav .pill-tab {
+      justify-content: center;
+      text-align: center;
+      min-height: 44px;
+      padding: 6px 4px;
+      line-height: 1.25;
+    }
+    .view-switch-nav .pill-tab svg { display: none; }
+
+    .header-actions,
+    .header-actions > div { width: 100%; }
+    .header-actions > div { flex-wrap: wrap; }
+    .header-actions .btn { flex: 1 1 0; min-width: max-content; justify-content: center; }
+    .btn { min-height: 44px; }
+
+    .hero-section { margin: var(--space-3) auto; }
+    .hero-provenance { flex-wrap: wrap; justify-content: center; gap: var(--space-half) var(--space-2); }
+
+    .filter-bar,
+    .color-filter-bar,
+    .color-filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+      padding: var(--space-2);
+      gap: var(--space-2);
+    }
+    .color-filter-controls { padding: 0; }
+    .filter-group { min-width: 0; max-width: none !important; flex: none !important; width: 100%; }
+    .filter-group .pill-tabs { flex: 1; }
+    .pill-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .pill-tabs .pill-tab { min-height: 44px; padding: 4px 2px; line-height: 1.25; }
+    .search-box { min-width: 0; max-width: none; width: 100%; }
+    .search-box input { height: 44px; font-size: 16px; }
+    .search-clear-btn { width: 44px; height: 44px; right: 0; font-size: 20px; }
+    select { height: 44px; min-width: 0; font-size: 16px; }
+    .filter-group select { flex: 1; }
+    .color-count-badge { align-self: flex-start; }
+
+    .combinations-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+    .comb-card-fav-btn { width: 44px; height: 44px; top: 14px; right: 14px; opacity: 1; }
+    .favorites-strip { padding: var(--space-2); }
+    .fav-item { min-height: 44px; }
+    .fav-header .btn { padding: 4px 12px !important; font-size: 13px !important; }
+
+    .palette-bar { padding: var(--space-2); gap: var(--space-2); }
+    .palette-bar .filter-group { flex-wrap: wrap; }
+    .palette-bar .filter-group select { order: -1; flex: 1 0 100%; }
+    .palette-bar .filter-group .btn { flex: 1; }
+    .swatches-strip { gap: var(--space-1); }
+    .swatch-card { min-height: 44px; }
+
+    .contexts-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+    .context-frame { padding: var(--space-2); min-width: 0; }
+    .context-header { flex-direction: column; align-items: flex-start; gap: var(--space-half); }
+    .context-role-badge { max-width: 100%; overflow-wrap: anywhere; }
+
+    /* Slide scales with its own width, so it keeps 16:9 and nothing runs out of the frame */
+    .slide-stage { container-type: inline-size; padding: 4.5cqw; }
+    .slide-category { font-size: 3.4cqw; }
+    .slide-counter { font-size: 3.4cqw; }
+    .slide-headline { font-size: 4.5cqw; max-width: 100%; }
+    .slide-stat-num { font-size: 9cqw; }
+    .slide-stat-lbl { font-size: 3cqw; }
+    .slide-tag { font-size: 3cqw; padding: 1.5cqw 3.5cqw; }
+
+    .doc-stage { padding: var(--space-2); min-height: 0; }
+    .doc-table { table-layout: fixed; font-size: 11px; }
+    .doc-table th,
+    .doc-table td { padding: 6px 4px; overflow-wrap: anywhere; }
+    .doc-table th { font-size: 9px; }
+
+    /* Native mockup keeps the system font; only its frame stacks */
+    .app-stage { flex-direction: column; padding: var(--space-2); }
+    .app-sidebar { width: auto; flex-direction: row; flex-wrap: wrap; }
+    .app-card { gap: var(--space-1); }
+    .app-btn { min-height: 44px; }
+    .app-card > div:first-child { min-width: 0; }
+
+    .web-stage { padding: var(--space-2); }
+    .web-nav { flex-wrap: wrap; gap: var(--space-half) var(--space-2); }
+    .web-hero p { max-width: 100%; }
+    .web-footer { flex-wrap: wrap; }
+
+    .export-section { padding: var(--space-2); }
+    .export-header { flex-wrap: wrap; gap: var(--space-1); }
+
+    .colors-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-1); }
+    .color-card { padding: var(--space-1); }
+
+    .modal-backdrop { padding: var(--space-1); }
+    .modal-dialog { padding: var(--space-2); max-height: calc(100dvh - 16px); }
+    .modal-close-btn { width: 44px; height: 44px; }
+    .modal-hero { gap: var(--space-2); margin-bottom: var(--space-2); }
+    .modal-swatch { width: 88px; height: 88px; }
+    .modal-hero-details { min-width: 0; flex-basis: 160px; }
+    .modal-title { font-size: 22px; overflow-wrap: anywhere; }
+    .color-values-grid,
+    .modal-combinations-grid { grid-template-columns: minmax(0, 1fr); }
+    .value-copy-btn { min-width: 44px; min-height: 44px; }
+
+    .toast { max-width: calc(100vw - 32px); bottom: var(--space-2); text-align: center; }
+    footer.attribution { flex-direction: column; align-items: flex-start; margin-top: var(--space-4); }
+  }
 </style>
 </head>
 <body>

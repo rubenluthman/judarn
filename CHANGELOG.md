@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.39] - 2026-11-20
+
+### Changed
+- The Wada explorer has a phone layout: below 640 px it fits the screen with a 16 px gutter, 44 px touch targets, one-column grids and a slide that scales down. The desktop layout is unchanged.
+
 ## [0.8.38] - 2026-11-20
 
 ### Changed
