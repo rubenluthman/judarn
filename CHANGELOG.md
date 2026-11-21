@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.40] - 2026-11-21
+
+### Fixed
+- Publishing the Wada explorer no longer fails when GitHub is slow to register the uploaded site: building and publishing now run as two jobs.
+
 ## [0.8.39] - 2026-11-20
 
 ### Changed
