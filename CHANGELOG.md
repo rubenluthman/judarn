@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.41] - 2026-11-22
+
+### Changed
+- The Wada explorer is set in Offentlig Sans 0.7.0: round dots by default, a round ring on Å and Ů, and deeper notches in the heavy weights.
+
 ## [0.8.40] - 2026-11-21
 
 ### Fixed

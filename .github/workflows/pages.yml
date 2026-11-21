@@ -20,8 +20,8 @@ concurrency:
 
 env:
   # Pinned Offentlig release; a bump is these two lines.
-  OFFENTLIG_VERSION: "0.6.0"
-  OFFENTLIG_SHA256: "d2078e585b1f79a47a81cb4c249b560abf2762eb0020d03fd67634e7a787f50c"
+  OFFENTLIG_VERSION: "0.7.0"
+  OFFENTLIG_SHA256: "0f7821c2b06b230a4466362b03b82e8bf9cf6da188c1b4c83f733b29c2e7499a"
 
 # Build and deploy are separate jobs: a deploy in the same job as the upload
 # can ask for the artifact before GitHub has registered it ("No artifacts
