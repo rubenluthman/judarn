@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.42] - 2026-11-22
+
+### Changed
+- General rules now ask for less text and tighter spacing in dense views: say each thing once, and keep rows and controls close.
+
 ## [0.8.41] - 2026-11-22
 
 ### Changed

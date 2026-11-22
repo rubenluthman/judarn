@@ -484,7 +484,7 @@ function handleRequest(req) {
       return reply({
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "judarn-color-dictionary", version: "0.8.41" }
+        serverInfo: { name: "judarn-color-dictionary", version: "0.8.42" }
       });
     case "ping":
       return reply({});

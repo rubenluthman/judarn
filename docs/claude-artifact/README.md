@@ -44,6 +44,7 @@ Judarn has no default color. Build every surface and all running text from the n
 ## Content
 
 - Write factually and plainly. No marketing language.
+- Say each thing once, in the shortest form that works. Where a chart or layout already shows the point, add no sentence that repeats it. Label chart marks only where the data needs a label.
 - Use sentence case or title case for headings, titles and the names of buttons and other controls. Never force uppercase on them. A wordmark is not a title.
 - A wordmark is a product's name set as its mark, in one dedicated component or image that the project's profile names. It is not a heading. Its case, weight, size, and tracking are the owner's design. Its source string and accessible name are the name as written, and any uppercase comes from the host's case style. Everywhere else – headings, running text, labels, widgets, notifications – the name is written as a word.
 - A small label keeps its role inside a control. A disclosure header that names its section is a section label: wrap its button in a heading and set `aria-expanded`. An eyebrow or value label inside a control keeps its casing only when the control also shows the title or value it names.
@@ -69,6 +70,7 @@ Judarn has no default color. Build every surface and all running text from the n
 - Lay everything on the 8px grid: `jd-space-1` to `jd-space-16`. Use `jd-space-half` (4px) only for micro offsets.
 - Keep touch targets at `jd-space-touch` or larger: 44px on web and Apple.
 - Pad cards with `jd-space-3`, or `jd-space-2` in dense panes and sidebars.
+- In dense views (lists, tables, dashboards, settings), set rows and controls `jd-space-1` to `jd-space-2` apart. Use `jd-space-4` and larger only between sections.
 
 ## Surfaces and shape
 

@@ -67,6 +67,7 @@ These hold on every host.
 3. **Rhythm**:
    - Space things on an 8-unit grid, with a 4-unit subgrid for fine offsets.
    - Keep running text near 65 characters per line, and text in narrow columns near 45.
+   - In dense views (lists, tables, dashboards, settings), set rows and controls `space1` to `space2` apart, and use `space4` and larger only between sections.
 
 4. **Typography**:
    - Use the typefaces the owner or the project's profile names. Otherwise use the host's own typeface when it has one, and where it has none, choose one for the work.
@@ -79,6 +80,7 @@ These hold on every host.
    - Pair positive tracking only with uppercase labels, outside a wordmark. Where a host has no case style, write small labels in sentence case.
    - Wrapped lines in one paragraph or label add no space beyond the role's line height, because the owner reads open leading as gaps inside a paragraph. Space between paragraphs comes from spacing tokens, never from line height. Never set an open line height such as 1.5 on running text.
    - A heading belongs to the text it introduces. The space below a heading is smaller than the space between paragraphs, and the space above a heading is at least twice the space between paragraphs.
+   - Say each thing once, in the shortest form that works. Where a chart or layout already shows the point, add no sentence that repeats it, and label chart marks only where the data needs a label.
    - Numbers in tables and metrics **must use tabular lining figures**.
 
 5. **Lists**:
