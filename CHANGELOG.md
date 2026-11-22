@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.45] - 2026-11-22
+
+### Changed
+
+- The agent guide no longer repeats the shared decision-record rule; it keeps only that `docs/DESIGN.md` is generated from `scripts/compile-tokens.js`.
+
 ## [0.8.44] - 2026-11-22
 
 ### Added

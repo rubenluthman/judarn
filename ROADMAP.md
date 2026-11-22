@@ -14,6 +14,10 @@
 - [ ] Count edits to component `README.md` files under `platforms/web/src` as none, not visible: they do not ship as interface.
 - [ ] Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
 
+### Text fields
+- [ ] Check on an iOS simulator with a hardware keyboard (Tab between fields) whether iOS draws its own focus ring under Full Keyboard Access, now that `judarnFieldWell()` draws none on iOS.
+- [ ] Add a shared search-field style: two apps that use Judarn hand-build capsule search wells.
+
 ### Form controls and tokens
 - [ ] Define semantic tokens for toggle/switch, segmented control, and slider inputs.
 - [ ] Implement native SwiftUI and web component primitives for them that meet the 44pt touch floor.
