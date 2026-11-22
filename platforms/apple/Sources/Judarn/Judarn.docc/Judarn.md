@@ -35,6 +35,7 @@ Judarn sets color, spatial rhythm, and typography while respecting native platfo
 - ``JudarnMatrixColumn``
 - ``JudarnMatrixRow``
 - ``JudarnTextField``
+- ``JudarnFieldWell``
 - ``JudarnBadge``
 - ``JudarnBadgeVariant``
 - ``JudarnTag``

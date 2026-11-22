@@ -31,7 +31,7 @@
   - Color Tokens & Contrast Engine (`JudarnColors.swift`, `JudarnContrastVerifier.swift`): Dual-tier OKLCh color models, Display P3 gamut support, dynamic light/dark trait adaptation, mathematical WCAG 2.1/2.2 AAA/AA relative luminance verification.
   - Typography (`JudarnTypography.swift`): Pluggable font slots (`JudarnFontConfig`), `JudarnTypographyStyle.nsFont` for AppKit labels and fields on macOS, semantic `Font.TextStyle` mapping with native platform density, tracking calibration, reading measure limits, tabular numeric data formatting.
   - Layout & Radii (`JudarnSpacing.swift`): 8/4 spatial grid, continuous squircle radii (`JudarnRadius`).
-  - Components (`JudarnButton.swift`, `JudarnBadge.swift`, `JudarnCard.swift`, `JudarnTextField.swift`, `JudarnTextList.swift`, `JudarnDataMatrix.swift`): Accessible tabular matrices, HIG touch target compliance, VoiceOver rotor navigation.
+  - Components (`JudarnButton.swift`, `JudarnBadge.swift`, `JudarnCard.swift`, `JudarnTextField.swift`, `JudarnFieldWell.swift`, `JudarnTextList.swift`, `JudarnDataMatrix.swift`): Accessible tabular matrices, HIG touch target compliance, VoiceOver rotor navigation.
   - Test Suite (`Tests/JudarnTests/`): Swift Testing suite (`import Testing`, `@Suite`, `@Test`) covering color conversions, contrast verifier matrix, spatial rhythm, dynamic type, and component layouts.
 - **web (`platforms/web`)**:
   - `@judarn/ui` package with React components compiled by esbuild to ESM and CommonJS in `dist/` ([ADR-0011](docs/adr/0011-web-package-ships-compiled-javascript.md)), CSS custom properties (`styles/colors_and_type.css`), Tailwind CSS v4 `@theme` preset, and a Server-Driven UI (SDUI) serializer that validates an allowlist of props per node type.
@@ -57,7 +57,7 @@ flowchart TD
     end
 
     subgraph Targets["Platform Implementations"]
-        Apple["platforms/apple<br/>Swift Package (iOS 17+, macOS 14+)<br/>JudarnColors, JudarnSpacing, JudarnTypography<br/>JudarnCard, JudarnButton, JudarnBadge<br/>JudarnTextField, JudarnTextList, JudarnDataMatrix"]
+        Apple["platforms/apple<br/>Swift Package (iOS 17+, macOS 14+)<br/>JudarnColors, JudarnSpacing, JudarnTypography<br/>JudarnCard, JudarnButton, JudarnBadge<br/>JudarnTextField, JudarnFieldWell, JudarnTextList, JudarnDataMatrix"]
         Web["platforms/web<br/>@judarn/ui (React & CSS)<br/>CSS custom properties, Tailwind v4 @theme, SDUI"]
         AIDoc["docs/DESIGN.md<br/>Generated spec for AI tools"]
     end
@@ -102,7 +102,7 @@ flowchart TD
    - Grepping `grep -rn "Apple HIG Alignment" platforms/apple/` surfaces all platform-dependent assumptions:
      - **System Typography**: Semantic text style mapping (`Font.TextStyle`) and AppKit (`NSFont`)/UIKit (`UIFont`) preferred point size bridges. A role takes a macOS style (`appleTextStyleMacOS`) only where its own style would match a smaller role's size on macOS.
      - **Button Density**: Desktop push button height (20–22pt `.sm`, 28pt `.md`) vs iOS 44pt touch floors (`spaceTouch`).
-     - **Control Metrics**: Desktop text field 24pt height and 6pt subtle corner radius vs iOS 44pt height and 10pt squircles.
+     - **Control Metrics**: Desktop text field 24pt height, 8pt side padding and 6pt subtle corner radius vs iOS 44pt height, 16pt side padding and 10pt squircles. `judarnFieldWell()` holds these for every field.
      - **Grid Density**: Desktop tabular cell insets (8pt) vs touch cell insets (16pt).
      - **Tag Hierarchy**: Auxiliary keyword tags (`micro`, `.caption2`: 11pt iOS, 10pt macOS) rank strictly below status badges (`label`: `.footnote` 13pt on iOS, `.subheadline` 11pt on macOS).
 

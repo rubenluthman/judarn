@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.44] - 2026-11-22
+
+### Added
+- `judarnFieldWell()` for Apple: the text-field look as a view modifier that `TextField`, `SecureField` and `TextEditor` can all use. `JudarnTextField` is built on it.
+
+### Changed
+- The Apple text field is quieter: one 2 pt focus ring outside the field on macOS, no Judarn ring on iOS (the caret and keyboard show focus), and 8 pt side padding on macOS.
+
 ## [0.8.43] - 2026-11-22
 
 ### Changed

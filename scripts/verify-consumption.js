@@ -115,6 +115,7 @@ const expectedAppleSources = [
   'JudarnCard.swift',
   'JudarnDataMatrix.swift',
   'JudarnTextField.swift',
+  'JudarnFieldWell.swift',
   'JudarnBadge.swift',
   'JudarnContrastVerifier.swift'
 ];

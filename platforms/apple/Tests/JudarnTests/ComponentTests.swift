@@ -269,7 +269,7 @@ struct ComponentTests {
         #expect(JudarnTextField.textColor(isEnabled: true) == nil)
         #expect(JudarnTextField.textColor(isEnabled: false) == JudarnColors.ink30)
         func border(increased: Bool, enabled: Bool) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
-            JudarnTextField.border(isFocused: false, isInvalid: false, increasedContrast: increased, focusColor: .red, isEnabled: enabled)
+            JudarnTextField.border(isInvalid: false, increasedContrast: increased, isEnabled: enabled)
         }
         #expect(border(increased: true, enabled: true).dash.isEmpty, "an enabled outline is solid")
         // Increase Contrast promotes ink30 to ink100, so only the dashed outline tells a disabled field apart.
@@ -279,10 +279,10 @@ struct ComponentTests {
         #expect(border(increased: false, enabled: false).width == 0, "a disabled field draws no outline at rest")
     }
 
-    @Test("Text field draws no outline at rest, an ink100 outline in Increase Contrast, and keeps focus and error rings")
+    @Test("Text field draws no outline at rest, an ink100 outline in Increase Contrast, and keeps the error ring (focus never sets it)")
     func textFieldBorder() {
-        func border(focused: Bool = false, invalid: Bool = false, increased: Bool = false, enabled: Bool = true) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
-            JudarnTextField.border(isFocused: focused, isInvalid: invalid, increasedContrast: increased, focusColor: .red, isEnabled: enabled)
+        func border(invalid: Bool = false, increased: Bool = false, enabled: Bool = true) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
+            JudarnTextField.border(isInvalid: invalid, increasedContrast: increased, isEnabled: enabled)
         }
         let rest = border()
         #expect(rest.color == .clear)
@@ -292,13 +292,53 @@ struct ComponentTests {
         #expect(increased.color == JudarnColors.ink100)
         #expect(increased.width == JudarnSpacing.ruleBold)
 
-        let focused = border(focused: true, increased: true)
-        #expect(focused.color == .red)
-        #expect(focused.width == JudarnSpacing.ruleBold)
-
-        let invalid = border(focused: true, invalid: true)
+        let invalid = border(invalid: true)
         #expect(invalid.color == JudarnColors.signalError)
         #expect(invalid.width == JudarnSpacing.ruleBold)
+    }
+
+    @Test("The field well and JudarnTextField give the same fill, border and radius for the same inputs")
+    func fieldWellMatchesTextField() {
+        for elevated in [false, true] {
+            #expect(JudarnFieldWell.fill(isOnElevatedSurface: elevated) == JudarnTextField.fill(isOnElevatedSurface: elevated))
+            #expect(JudarnFieldWell.surroundingSurface(isOnElevatedSurface: elevated) == JudarnTextField.surroundingSurface(isOnElevatedSurface: elevated))
+        }
+        for invalid in [false, true] {
+            for increased in [false, true] {
+                for enabled in [false, true] {
+                    let well = JudarnFieldWell.border(isInvalid: invalid, increasedContrast: increased, isEnabled: enabled)
+                    let field = JudarnTextField.border(isInvalid: invalid, increasedContrast: increased, isEnabled: enabled)
+                    #expect(well.color == field.color && well.width == field.width && well.dash == field.dash)
+                }
+            }
+        }
+        #expect(JudarnFieldWell.cornerRadius == JudarnTextField.cornerRadius)
+        #expect(JudarnFieldWell.textColor(isEnabled: false) == JudarnTextField.textColor(isEnabled: false))
+        #if os(macOS)
+        #expect(JudarnFieldWell.cornerRadius == JudarnRadius.subtle)
+        #expect(JudarnFieldWell.showsFocusRing)
+        #else
+        #expect(JudarnFieldWell.cornerRadius == JudarnRadius.control)
+        #expect(!JudarnFieldWell.showsFocusRing, "the host's caret and keyboard show focus off the Mac")
+        #endif
+    }
+
+    @Test("The field well modifier builds on every field kind, with its own focus and with an outside binding")
+    func fieldWellBuilds() {
+        struct Host: View {
+            @State var text = ""
+            @FocusState var focused: Bool
+            var body: some View {
+                VStack {
+                    TextField("Name", text: $text).judarnFieldWell()
+                    SecureField("Secret", text: $text).judarnFieldWell(isInvalid: true)
+                    TextEditor(text: $text).judarnFieldWell(isMultiline: true)
+                    TextField("Outside", text: $text).judarnFieldWell(isInvalid: true, focused: $focused)
+                }
+            }
+        }
+        _ = Host().body
+        _ = Host()
     }
 
     @Test("Text fields lay out inside standard, flat and glass cards")
