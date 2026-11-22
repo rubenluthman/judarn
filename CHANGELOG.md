@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.43] - 2026-11-22
+
+### Changed
+- The README now says where the name Judarn comes from.
+
 ## [0.8.42] - 2026-11-22
 
 ### Changed

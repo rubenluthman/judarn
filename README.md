@@ -4,6 +4,8 @@
 
 A personal design system: general rules for everything I make, plus specific rules for each platform.
 
+Judarn is named after a small lake in the Judarskogen nature reserve in western Stockholm; the name comes from the Swedish verb *ljuda*, 'to sound'.
+
 Judarn sets colors, spatial cadence, and typography, leaving curves, depth, and touch mechanics to each host. [`docs/DESIGN.md`](docs/DESIGN.md) holds the rules, and compiled packages cover Apple and web. Android is parked.
 
 The Wada color explorer is online at https://rubenluthman.github.io/judarn/.
