@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.46] - 2026-11-23
+
+### Changed
+
+- A focused text field shows one line in one color: while its focus ring shows, the ring replaces the edge, in the accent, or in the error color when the field is invalid. This holds on the Mac and on the web; an unfocused invalid field keeps its error edge, and iOS is unchanged.
+
 ## [0.8.45] - 2026-11-22
 
 ### Changed

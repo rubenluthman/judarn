@@ -5,8 +5,9 @@ import SwiftUI
 ///
 /// The well is set apart by fill alone: `surfaceRecessed`, or `substrate` when `judarnOnElevatedSurface` is set.
 /// It draws no outline at rest. An invalid field gets a 2 pt `signalError` ring on its edge, and Increase Contrast
-/// adds an `ink100` outline (dashed when the field is disabled). On macOS the focused field gets one 2 pt accent
-/// ring, 2 pt outside the field. Other platforms draw no ring: the host's caret and keyboard show focus.
+/// adds an `ink100` outline (dashed when the field is disabled). On macOS the focused field gets one 2 pt ring,
+/// 2 pt outside the field: accent, or `signalError` when invalid. While the ring shows it is the field's only line,
+/// so the edge outline is dropped. Other platforms draw no ring: the host's caret and keyboard show focus.
 ///
 /// The modifier sets no font and no label; the caller keeps those.
 public struct JudarnFieldWell: ViewModifier {
@@ -47,7 +48,13 @@ public struct JudarnFieldWell: ViewModifier {
 
     private func well(_ content: Content, isFocused: Bool) -> some View {
         let radius = Self.cornerRadius
-        let border = Self.border(isInvalid: isInvalid, increasedContrast: colorSchemeContrast == .increased, isEnabled: isEnabled)
+        let ringShows = Self.showsFocusRing && isFocused
+        let border = Self.edge(
+            isFocused: isFocused,
+            isInvalid: isInvalid,
+            increasedContrast: colorSchemeContrast == .increased,
+            isEnabled: isEnabled
+        )
         return Group {
             if isMultiline {
                 content
@@ -83,12 +90,15 @@ public struct JudarnFieldWell: ViewModifier {
             RoundedRectangle(cornerRadius: radius, style: .continuous)
                 .strokeBorder(border.color, style: StrokeStyle(lineWidth: border.width, dash: border.dash))
         )
-        // Outer Keyboard Focus Ring: macOS only, one 2pt accent ring 2pt outside the field. Never clip the field perimeter with .clipShape(); draw the ring with negative padding. Other hosts draw their own focus cue (caret, keyboard).
+        // Outer Keyboard Focus Ring: macOS only, one 2pt ring 2pt outside the field, accent (clamped to 3:1) or `signalError` when invalid. While it shows it is the field's only line: the edge outline is dropped (see `edge`). Never clip the field perimeter with .clipShape(); draw the ring with negative padding. Other hosts draw their own focus cue (caret, keyboard).
         .overlay(
             RoundedRectangle(cornerRadius: radius + 2 * JudarnSpacing.ruleBold, style: .continuous)
-                .strokeBorder(focusRingColor, lineWidth: Self.showsFocusRing && isFocused ? JudarnSpacing.ruleBold : 0)
+                .strokeBorder(
+                    Self.ringIsError(isInvalid: isInvalid) ? JudarnColors.signalError : focusRingColor,
+                    lineWidth: ringShows ? JudarnSpacing.ruleBold : 0
+                )
                 .padding(-2 * JudarnSpacing.ruleBold)
-                .opacity(Self.showsFocusRing && isFocused ? 1 : 0)
+                .opacity(ringShows ? 1 : 0)
         )
         // Reduce Motion Accessibility Trait: Skip transitions when Reduce Motion is active.
         .animation(reduceMotion ? nil : .linear(duration: 0.12), value: isFocused)
@@ -127,6 +137,26 @@ public struct JudarnFieldWell: ViewModifier {
             return (JudarnColors.ink100, JudarnSpacing.ruleBold, dash)
         }
         return (.clear, 0, [])
+    }
+
+    /// The edge outline the field draws. While the focus ring shows it is the field's only line, so the edge is
+    /// clear; otherwise the edge follows `border`.
+    static func edge(
+        isFocused: Bool,
+        isInvalid: Bool,
+        increasedContrast: Bool,
+        isEnabled: Bool = true,
+        showsRing: Bool = showsFocusRing
+    ) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
+        if showsRing && isFocused {
+            return (.clear, 0, [])
+        }
+        return border(isInvalid: isInvalid, increasedContrast: increasedContrast, isEnabled: isEnabled)
+    }
+
+    /// Whether the focus ring is `signalError` (an invalid field) rather than the accent.
+    static func ringIsError(isInvalid: Bool) -> Bool {
+        isInvalid
     }
 
     /// 6 pt on macOS, 10 pt elsewhere, both continuous.

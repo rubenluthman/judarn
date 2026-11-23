@@ -4,7 +4,7 @@ import { cx } from "../internal/cx.js";
 /**
  * TextField – labelled input / textarea / select.
  * A well set apart by fill alone: surfaceRecessed on the page, substrate inside a card, no outline at rest.
- * High-contrast modes add an ink-100 outline; focus draws an --accent ring and invalid a signal-error ring.
+ * High-contrast modes add an ink-100 outline; focus draws one --accent ring (signal-error when invalid) in place of the edge, and an unfocused invalid field keeps a signal-error edge.
  * Uses the host control radius (var(--radius-control)).
  * Ids come from `React.useId()` unless `id` is given; hint and error are linked with `aria-describedby`.
  */

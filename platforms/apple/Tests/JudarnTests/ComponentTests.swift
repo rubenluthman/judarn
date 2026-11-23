@@ -297,6 +297,28 @@ struct ComponentTests {
         #expect(invalid.width == JudarnSpacing.ruleBold)
     }
 
+    @Test("While the focus ring shows it is the field's only line; otherwise the edge stays")
+    func fieldWellOneLine() {
+        func edge(focused: Bool, invalid: Bool = false, increased: Bool = false, ring: Bool) -> (color: Color, width: CGFloat, dash: [CGFloat]) {
+            JudarnFieldWell.edge(isFocused: focused, isInvalid: invalid, increasedContrast: increased, isEnabled: true, showsRing: ring)
+        }
+        // Mac: a ring shows, so a focused field draws no edge.
+        #expect(edge(focused: true, ring: true).width == 0, "focused valid: no edge")
+        #expect(edge(focused: true, invalid: true, ring: true).width == 0, "focused invalid: no edge")
+        #expect(edge(focused: true, increased: true, ring: true).width == 0, "focused under Increase Contrast: no edge")
+        #expect(JudarnFieldWell.ringIsError(isInvalid: true) && !JudarnFieldWell.ringIsError(isInvalid: false))
+        // Unfocused keeps today's edge.
+        let unfocused = edge(focused: false, invalid: true, ring: true)
+        #expect(unfocused.color == JudarnColors.signalError && unfocused.width == JudarnSpacing.ruleBold)
+        #expect(edge(focused: false, increased: true, ring: true).color == JudarnColors.ink100)
+        // iOS draws no ring, so a focused invalid field keeps its red edge.
+        let ios = edge(focused: true, invalid: true, ring: false)
+        #expect(ios.color == JudarnColors.signalError && ios.width == JudarnSpacing.ruleBold)
+        // The default follows the platform.
+        let platform = JudarnFieldWell.edge(isFocused: true, isInvalid: true, increasedContrast: false)
+        #expect((platform.width == 0) == JudarnFieldWell.showsFocusRing)
+    }
+
     @Test("The field well and JudarnTextField give the same fill, border and radius for the same inputs")
     func fieldWellMatchesTextField() {
         for elevated in [false, true] {

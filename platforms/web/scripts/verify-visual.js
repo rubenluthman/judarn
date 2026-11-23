@@ -140,7 +140,7 @@ test('cards and matrices draw no perimeter border', () => {
 test('fields keep a visible focus indicator and a native select', () => {
   assert.match(components, /\.jd-field__input::placeholder \{ color: var\(--ink-60\); \}/, 'placeholder uses secondary ink, not the ink-30 hairline token');
   assert.ok(!/outline:\s*none/.test(components));
-  assert.match(components, /\.jd-field__input:focus-visible \{ outline:/);
+  assert.match(components, /\.jd-field__input:focus, \.jd-field__input:focus-visible \{[^}]*outline: var\(--rule-bold\) solid var\(--accent\)/);
   assert.ok(!/select\.jd-field__input \{[^}]*appearance:\s*none/.test(components));
 });
 
@@ -152,7 +152,13 @@ test('fields are wells set apart by fill, outlined only in high contrast', () =>
   assert.ok(!/border-color:\s*var\(--ink-30\)/.test(rule(components, '.jd-field__input:disabled')), 'a disabled field draws no outline');
   assert.match(components, /@media \(prefers-contrast: more\) \{\n  :where\(:root:not\(\[data-contrast="normal"\]\)\) \.jd-field__input \{ border-color: var\(--ink-100\); \}/);
   assert.match(components, /:where\(\[data-contrast="high"\]\) \.jd-field__input \{ border-color: var\(--ink-100\); \}/);
-  assert.match(rule(components, '.jd-field__input:focus'), /border-color: var\(--accent\)/);
+  // One line, one color: the focus ring replaces the edge, in signal-error when the field is invalid.
+  const focused = rule(components, '.jd-field__input:focus, .jd-field__input:focus-visible');
+  assert.match(focused, /border-color: transparent/);
+  assert.match(focused, /box-shadow: none/);
+  const focusedInvalid = rule(components, '.jd-field__input[aria-invalid="true"]:focus, .jd-field__input.is-invalid:focus');
+  assert.match(focusedInvalid, /border-color: transparent/);
+  assert.match(focusedInvalid, /outline-color: var\(--signal-error\)/);
   assert.match(rule(components, '.jd-field__input[aria-invalid="true"], .jd-field__input.is-invalid'), /border-color: var\(--signal-error\)/);
 });
 
