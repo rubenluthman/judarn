@@ -1,50 +1,30 @@
 #!/usr/bin/env bash
 # Runs the Judarn test suite on an iOS simulator so the UIKit branches execute (`swift test` is macOS only).
-# Boots the first available iPhone, waits for readiness, and kills a hung run after a watchdog timeout.
-# Shuts the simulator down afterwards if this script booted it; one that was already running stays up.
+# With `sim-run` on PATH (the owner's machine) it picks the device, waits for boot, stops a stalled run and shuts
+# the simulator down on every exit path. Without it (CI, contributors) it runs plain `xcodebuild` on the iPhone 17
+# simulator, with no stall check and no cleanup.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-TIMEOUT_SECONDS="${JUDARN_IOS_TEST_TIMEOUT:-900}"
-# Prefer an already booted iPhone, then "iPhone 17", then any iPhone: a simulator that never booted can stall for minutes on its first data migration.
-DEVICES="$(xcrun simctl list devices available | grep 'iPhone' || true)"
-UDID_PATTERN='[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}'
-UDID="$( { printf '%s\n' "$DEVICES" | grep -m1 '(Booted)'; printf '%s\n' "$DEVICES" | grep -m1 'iPhone 17 ('; printf '%s\n' "$DEVICES" | head -n1; } | grep -m1 -oE "$UDID_PATTERN" || true)"
-if [ -z "$UDID" ]; then
-  echo "❌ No available iPhone simulator found" >&2
-  exit 1
-fi
-
-# A booted simulator keeps using memory after the run, so shut down the one this script started, on every exit path.
-DEVICE_LINE="$(printf '%s\n' "$DEVICES" | grep -m1 "$UDID" || true)"
-if [[ "$DEVICE_LINE" != *"(Booted)"* ]]; then
-  trap 'xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true' EXIT
-fi
-xcrun simctl boot "$UDID" 2>/dev/null || true
-timeout_boot=180
-perl -e 'alarm shift; exec @ARGV' "$timeout_boot" xcrun simctl bootstatus "$UDID" -b > /dev/null
+# Longest silence measured after the tests end was 179 s (100 s with -collect-test-diagnostics never); the limit leaves headroom.
+STALL_SECONDS="${JUDARN_IOS_TEST_STALL:-300}"
+XCODEBUILD_FLAGS=(-scheme Judarn -skipPackagePluginValidation -collect-test-diagnostics never)
 
 LOG="$(mktemp)"
 set +e
-# Own process group so the watchdog can terminate xcodebuild and its children together.
-set -m
-xcodebuild test -scheme Judarn -destination "platform=iOS Simulator,id=$UDID" \
-  -skipPackagePluginValidation > "$LOG" 2>&1 &
-PID=$!
-# The watchdog runs in its own group and detaches stdout/stderr, so a leftover `sleep` can never hold a pipe open.
-( sleep "$TIMEOUT_SECONDS"; kill -TERM -- "-$PID" 2>/dev/null; sleep 5; kill -KILL -- "-$PID" 2>/dev/null ) >/dev/null 2>&1 &
-WATCHDOG=$!
-disown "$WATCHDOG" 2>/dev/null || true
-wait "$PID"
+if command -v sim-run >/dev/null 2>&1; then
+  sim-run test --stall "$STALL_SECONDS" --max 900 -- xcodebuild test "${XCODEBUILD_FLAGS[@]}" > "$LOG" 2>&1
+else
+  echo "sim-run not found: running xcodebuild without a stall check or simulator cleanup."
+  xcodebuild test "${XCODEBUILD_FLAGS[@]}" -destination 'platform=iOS Simulator,name=iPhone 17' \
+    -parallel-testing-enabled NO > "$LOG" 2>&1
+fi
 STATUS=$?
-# Kill the whole watchdog group: killing only the subshell orphans its `sleep`.
-kill -- "-$WATCHDOG" 2>/dev/null || kill "$WATCHDOG" 2>/dev/null
-set +m
 set -e
 
-grep -E 'error:|warning:|recorded an issue|Test run with|\*\* TEST' "$LOG" | sort -u || true
+grep -E 'error:|warning:|recorded an issue|Test run with|\*\* TEST|sim-run:' "$LOG" | sort -u || true
 if [ "$STATUS" -ne 0 ]; then
   echo "❌ iOS simulator tests failed or timed out (status $STATUS). Log: $LOG" >&2
   exit 1

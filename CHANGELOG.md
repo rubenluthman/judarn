@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.49] - 2026-11-23
+
+### Changed
+
+- `scripts/test-ios.sh` runs through `sim-run` when it is installed, which stops a stalled run and shuts down a simulator it booted, Ctrl+C included; without it, the script falls back to plain `xcodebuild`.
+
 ## [0.8.48] - 2026-11-23
 
 ### Fixed
