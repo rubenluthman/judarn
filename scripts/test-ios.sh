@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Runs the Judarn test suite on an iOS simulator so the UIKit branches execute (`swift test` is macOS only).
 # Boots the first available iPhone, waits for readiness, and kills a hung run after a watchdog timeout.
+# Shuts the simulator down afterwards if this script booted it; one that was already running stays up.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -16,6 +17,11 @@ if [ -z "$UDID" ]; then
   exit 1
 fi
 
+# A booted simulator keeps using memory after the run, so shut down the one this script started, on every exit path.
+DEVICE_LINE="$(printf '%s\n' "$DEVICES" | grep -m1 "$UDID" || true)"
+if [[ "$DEVICE_LINE" != *"(Booted)"* ]]; then
+  trap 'xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true' EXIT
+fi
 xcrun simctl boot "$UDID" 2>/dev/null || true
 timeout_boot=180
 perl -e 'alarm shift; exec @ARGV' "$timeout_boot" xcrun simctl bootstatus "$UDID" -b > /dev/null
