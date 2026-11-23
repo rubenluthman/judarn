@@ -9,7 +9,6 @@
 ## Icebox
 
 - Bring the explorer's labels in line with Judarn's uppercase-label rule: uppercase only for labels of at most two words with no digit or mixed-case term; set others as written, for example "2 colors", "Saved Favorites 0", "CIE L*a*b*", "OKLCh (Judarn Native)", "Judarn Design System".
-- Count edits to component `README.md` files under `platforms/web/src` as none, not visible: they do not ship as interface.
 - Check on an iOS simulator with a hardware keyboard (Tab between fields) whether iOS draws its own focus ring under Full Keyboard Access, now that `judarnFieldWell()` draws none on iOS.
 - Add a shared search-field style: two apps that use Judarn hand-build capsule search wells.
 - Define semantic tokens for toggle/switch, segmented control, and slider inputs.
