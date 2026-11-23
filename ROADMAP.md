@@ -2,46 +2,29 @@
 
 ## Active
 
-- [ ] Decide whether Offentlig Sans should become the `font.sans` default. Today Judarn uses it only in its own presentation (such as the Wada explorer) and in artifacts. Compare the projects that use Judarn, set in their current font and in Offentlig Sans, before any token change.
-- [ ] Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
+- Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
+- Decide whether Offentlig Sans should become the `font.sans` default. Today Judarn uses it only in its own presentation (such as the Wada explorer) and in artifacts. Compare the projects that use Judarn, set in their current font and in Offentlig Sans, before any token change.
+- Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
 
 ## Icebox
 
-### Wada explorer
-- [ ] Bring the explorer's labels in line with Judarn's uppercase-label rule: uppercase only for labels of at most two words with no digit or mixed-case term; set others as written, for example "2 colors", "Saved Favorites 0", "CIE L*a*b*", "OKLCh (Judarn Native)", "Judarn Design System".
-
-### Consumer status
-- [ ] Count edits to component `README.md` files under `platforms/web/src` as none, not visible: they do not ship as interface.
-- [ ] Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
-
-### Text fields
-- [ ] Check on an iOS simulator with a hardware keyboard (Tab between fields) whether iOS draws its own focus ring under Full Keyboard Access, now that `judarnFieldWell()` draws none on iOS.
-- [ ] Add a shared search-field style: two apps that use Judarn hand-build capsule search wells.
-
-### Form controls and tokens
-- [ ] Define semantic tokens for toggle/switch, segmented control, and slider inputs.
-- [ ] Implement native SwiftUI and web component primitives for them that meet the 44pt touch floor.
-- [ ] Formalize surface elevation progression (`substrate`, `surfaceElevated`, `surfaceOverlay`) with native platform materials.
-
-### Platforms
-- [ ] Localize the Apple components' built-in strings (text-field accessibility values and hints).
-- [ ] Audit watchOS and tvOS availability and manifest support in `Package.swift`.
-- [ ] Calibrate compact watch density and tvOS 10-foot typography.
-- [ ] Linux Swift toolchain support and headless verification.
-- [ ] Windows App SDK / WinUI token generator.
-- [ ] Figma Token Bridge / Tokens Studio bidirectional sync.
-
-### Typography and layout
-- [ ] Fluid typography scaling across Apple (Dynamic Type bridges), and web (`clamp()` scales).
-- [ ] Container-query-driven spatial rhythm tokens for responsive embeddings.
-
-### Distribution
-- [ ] Swift Package Index DocC deployment and compatibility badge.
-
-### Hardening
-- [ ] Consumption audit across real downstream applications.
-- [ ] Benchmark runtime OKLCh color conversions and contrast audits.
-- [ ] API surface stability freeze and migration contract validation.
-
-### Android (parked)
-- [ ] Bring Android back from the private pre-release history, where the Compose components and the Kotlin emitter live. It needs a new ADR that restores the emitter, compiles and tests the output in `verify_commit.sh`, and fixes the weight mapping that maps 800 to `FontWeight.Bold` (ADR-0001).
+- Bring the explorer's labels in line with Judarn's uppercase-label rule: uppercase only for labels of at most two words with no digit or mixed-case term; set others as written, for example "2 colors", "Saved Favorites 0", "CIE L*a*b*", "OKLCh (Judarn Native)", "Judarn Design System".
+- Count edits to component `README.md` files under `platforms/web/src` as none, not visible: they do not ship as interface.
+- Check on an iOS simulator with a hardware keyboard (Tab between fields) whether iOS draws its own focus ring under Full Keyboard Access, now that `judarnFieldWell()` draws none on iOS.
+- Add a shared search-field style: two apps that use Judarn hand-build capsule search wells.
+- Define semantic tokens for toggle/switch, segmented control, and slider inputs.
+- Implement native SwiftUI and web component primitives for them that meet the 44pt touch floor.
+- Formalize surface elevation progression (`substrate`, `surfaceElevated`, `surfaceOverlay`) with native platform materials.
+- Localize the Apple components' built-in strings (text-field accessibility values and hints).
+- Audit watchOS and tvOS availability and manifest support in `Package.swift`.
+- Calibrate compact watch density and tvOS 10-foot typography.
+- Linux Swift toolchain support and headless verification.
+- Windows App SDK / WinUI token generator.
+- Figma Token Bridge / Tokens Studio bidirectional sync.
+- Fluid typography scaling across Apple (Dynamic Type bridges), and web (`clamp()` scales).
+- Container-query-driven spatial rhythm tokens for responsive embeddings.
+- Swift Package Index DocC deployment and compatibility badge.
+- Consumption audit across real downstream applications.
+- Benchmark runtime OKLCh color conversions and contrast audits.
+- API surface stability freeze and migration contract validation.
+- Bring Android back from the private pre-release history, where the Compose components and the Kotlin emitter live. It needs a new ADR that restores the emitter, compiles and tests the output in `verify_commit.sh`, and fixes the weight mapping that maps 800 to `FontWeight.Bold` (ADR-0001).
