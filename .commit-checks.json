@@ -18,7 +18,15 @@
     },
     "changelog": "CHANGELOG.md",
     "code": [
-      "*"
+      "platforms/*",
+      "tokens/*",
+      "templates/*",
+      "tools/*",
+      "docs/DESIGN.md",
+      "docs/claude-artifact/*",
+      "docs/profiles/*",
+      "Package.swift",
+      "Package.resolved"
     ]
   },
   "subject_max": 72,
