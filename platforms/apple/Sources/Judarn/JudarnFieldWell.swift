@@ -13,7 +13,17 @@ import SwiftUI
 public struct JudarnFieldWell: ViewModifier {
     private let isMultiline: Bool
     private let isInvalid: Bool
-    private let externalFocus: FocusState<Bool>.Binding?
+    private let focus: Focus
+
+    /// Where the well's focus state comes from.
+    private enum Focus {
+        /// The well tracks focus itself.
+        case own
+        /// The well follows and attaches the caller's `Bool` binding.
+        case binding(FocusState<Bool>.Binding)
+        /// The caller attaches its own `.focused` and passes whether this field has focus.
+        case external(Bool)
+    }
 
     @FocusState private var ownFocus: Bool
     @Environment(\.judarnAccent) private var accentColor
@@ -26,23 +36,32 @@ public struct JudarnFieldWell: ViewModifier {
     public init(isMultiline: Bool = false, isInvalid: Bool = false) {
         self.isMultiline = isMultiline
         self.isInvalid = isInvalid
-        self.externalFocus = nil
+        self.focus = .own
     }
 
     /// Creates a well that follows the caller's focus binding, so a view never carries two `.focused` bindings.
     public init(isMultiline: Bool = false, isInvalid: Bool = false, focused: FocusState<Bool>.Binding) {
         self.isMultiline = isMultiline
         self.isInvalid = isInvalid
-        self.externalFocus = focused
+        self.focus = .binding(focused)
+    }
+
+    /// Creates a well that attaches no focus binding and takes the focus state as a value; the caller
+    /// attaches `.focused` itself. Backs the multi-field `judarnFieldWell(focused:equals:)`.
+    init(isMultiline: Bool, isInvalid: Bool, isFocused: Bool) {
+        self.isMultiline = isMultiline
+        self.isInvalid = isInvalid
+        self.focus = .external(isFocused)
     }
 
     public func body(content: Content) -> some View {
-        let isFocused = externalFocus?.wrappedValue ?? ownFocus
-        let styled = well(content, isFocused: isFocused)
-        if let externalFocus {
-            styled.focused(externalFocus)
-        } else {
-            styled.focused($ownFocus)
+        switch focus {
+        case .own:
+            well(content, isFocused: ownFocus).focused($ownFocus)
+        case .binding(let binding):
+            well(content, isFocused: binding.wrappedValue).focused(binding)
+        case .external(let isFocused):
+            well(content, isFocused: isFocused)
         }
     }
 
@@ -197,5 +216,18 @@ public extension View {
     /// so it never carries two `.focused` bindings.
     func judarnFieldWell(isMultiline: Bool = false, isInvalid: Bool = false, focused: FocusState<Bool>.Binding) -> some View {
         modifier(JudarnFieldWell(isMultiline: isMultiline, isInvalid: isInvalid, focused: focused))
+    }
+
+    /// The same look for a form that tracks which field has focus with one value, such as an enum:
+    /// `.judarnFieldWell(focused: $field, equals: .email)` in place of `.focused($field, equals: .email)`.
+    /// The field has focus while the binding equals `value`, and it carries only this one `.focused` binding.
+    func judarnFieldWell<Value: Hashable>(
+        isMultiline: Bool = false,
+        isInvalid: Bool = false,
+        focused: FocusState<Value>.Binding,
+        equals value: Value
+    ) -> some View {
+        modifier(JudarnFieldWell(isMultiline: isMultiline, isInvalid: isInvalid, isFocused: focused.wrappedValue == value))
+            .focused(focused, equals: value)
     }
 }

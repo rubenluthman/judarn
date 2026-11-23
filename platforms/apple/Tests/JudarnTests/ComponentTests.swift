@@ -345,17 +345,21 @@ struct ComponentTests {
         #endif
     }
 
-    @Test("The field well modifier builds on every field kind, with its own focus and with an outside binding")
+    @Test("The field well modifier builds on every field kind, with its own focus, a Bool binding and an enum binding")
     func fieldWellBuilds() {
+        enum Field: Hashable { case email, password }
         struct Host: View {
             @State var text = ""
             @FocusState var focused: Bool
+            @FocusState var field: Field?
             var body: some View {
                 VStack {
                     TextField("Name", text: $text).judarnFieldWell()
                     SecureField("Secret", text: $text).judarnFieldWell(isInvalid: true)
                     TextEditor(text: $text).judarnFieldWell(isMultiline: true)
                     TextField("Outside", text: $text).judarnFieldWell(isInvalid: true, focused: $focused)
+                    TextField("Email", text: $text).judarnFieldWell(focused: $field, equals: .email)
+                    SecureField("Password", text: $text).judarnFieldWell(isInvalid: true, focused: $field, equals: .password)
                 }
             }
         }

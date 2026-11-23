@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.47] - 2026-11-23
+
+### Added
+
+- `judarnFieldWell(focused:equals:)` takes a form's shared focus value, such as an enum, so a field in a form with several fields carries one focus binding.
+
+### Fixed
+
+- The rules for Claude artifacts now carry the text-field focus rules: at most one line on a focused field, and no focus ring where the host shows focus itself.
+
 ## [0.8.46] - 2026-11-23
 
 ### Changed
