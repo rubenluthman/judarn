@@ -4,7 +4,6 @@
 
 - Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
 - Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
-- Draw a Judarn focus ring around the whole `judarnFieldWell()` on iOS. With a hardware keyboard and Full Keyboard Access, iOS already draws its own blue ring, but only around the text line inside the well, and it follows the system accent.
 
 ## Icebox
 
