@@ -47,7 +47,7 @@ Add to `claude_desktop_config.json`:
 - `export_tokens`: Export any combination as Design Tokens Format Module 2025.10 JSON, CSS variables, or Tailwind CSS theme.
 
 ## Usage
-Open the explorer at https://rubenluthman.github.io/judarn/. It is set in Offentlig Sans.
+Open the explorer at https://rubenluthman.github.io/judarn/. It is set in [Offentlig Sans](https://github.com/rubenluthman/offentlig).
 
 The local file falls back to the system font unless Offentlig Sans is installed. Open `tools/wada-explorer/index.html` in any modern web browser or run:
 ```bash

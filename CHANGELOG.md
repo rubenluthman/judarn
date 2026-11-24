@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.50] - 2026-11-24
+
+### Changed
+
+- The Wada explorer README links to the Offentlig Sans repository.
+
 ## [0.8.49] - 2026-11-23
 
 ### Changed
