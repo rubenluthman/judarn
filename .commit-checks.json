@@ -1,6 +1,6 @@
 {
-  "version": "v0.2.7",
-  "commit": "ca8609ff9033ca57265523d1316b18ae9f72f339",
+  "version": "v0.4.0",
+  "commit": "4e3b42c4db464db4bf185cc11a8e438c7ce14453",
   "source": "https://github.com/rubenluthman/commit-checks.git",
   "visibility": "public",
   "email_allow": [],
