@@ -1,6 +1,6 @@
 {
-  "version": "v0.4.0",
-  "commit": "4e3b42c4db464db4bf185cc11a8e438c7ce14453",
+  "version": "v0.4.1",
+  "commit": "2f14dafdd24780abe45293f87d532b9de6abd34d",
   "source": "https://github.com/rubenluthman/commit-checks.git",
   "visibility": "public",
   "email_allow": [],
@@ -29,6 +29,7 @@
       "platforms/web/src/*.css",
       "platforms/web/styles/*",
       "platforms/web/package.json",
+      "platforms/web/README.md",
       "platforms/web/package-lock.json",
       "platforms/web/.npmignore",
       "platforms/web/scripts/build.js",
@@ -41,6 +42,10 @@
       "Package.swift",
       "Package.resolved"
     ]
+  },
+  "docs_only": {
+    "paths": ["*.md"],
+    "except": ["platforms/*", "docs/DESIGN.md", "docs/claude-artifact/*", "docs/profiles/*", "templates/*"]
   },
   "subject_max": 72,
   "vale": {
