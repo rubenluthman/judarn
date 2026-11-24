@@ -24,9 +24,10 @@ const SKIP_DIRS = new Set(['.build', 'build', 'DerivedData', 'node_modules', 'sc
 const PIN_FILES = new Set(['package-lock.json', 'package.json', 'Package.resolved', 'Package.swift', 'project.yml', 'project.xcproj', 'project.pbxproj']);
 const SCAN_DEPTH = 2; // the consumer folder plus two levels of subfolders
 const RANK = { none: 0, code: 1, visible: 2 };
-// What each kind of consumer loads from Judarn.
+// What each kind of consumer loads from Judarn. A test checks that each path exists, so a moved folder can't
+// turn every update into "none" (it did: the Swift path once named a root `Sources` that never existed).
 const LOADED_PATHS = {
-  swift: ['Sources', 'Package.swift'],
+  swift: ['platforms/apple/Sources', 'Package.swift'],
   npm: ['platforms/web/src', 'platforms/web/package.json', 'tokens']
 };
 const URL_RE = /[/:][\w.-]+\/judarn(?:\.git)?(?=["'\s,)]|$)/i;
@@ -638,10 +639,14 @@ function buildGate(report, repo = ROOT, exec = defaultExec) {
   if (!tagExists(repo, report.target, exec)) throw new Error(`tag ${report.target} not found in the Judarn repository`);
   const gate = {};
   for (const r of report.rows) {
-    if (r.change === 'visible') gate[r.name] = { decision: 'hold', reason: 'visible change' };
-    else if (r.blockers.length) gate[r.name] = { decision: 'hold', reason: r.blockers.join('; ') };
-    else if (r.change === 'none' || r.change === 'code') gate[r.name] = { decision: 'go', reason: `${r.change} change` };
-    else gate[r.name] = { decision: 'hold', reason: `change is ${r.change}` };
+    // Name every cause, so a held app shows all it needs before an approval (visible change and an unpublished version, say).
+    const causes = [];
+    if (r.change === 'visible') causes.push('visible change');
+    else if (r.change !== 'none' && r.change !== 'code') causes.push(`change is ${r.change}`);
+    causes.push(...r.blockers);
+    gate[r.name] = causes.length
+      ? { decision: 'hold', reason: causes.join('; ') }
+      : { decision: 'go', reason: r.change === 'none' ? 'no change' : 'code-only change' };
   }
   return gate;
 }
@@ -822,7 +827,7 @@ function main(argv = process.argv.slice(2)) {
 module.exports = {
   loadList, collectPinFiles, parseResolved, parseSwiftFile, detectPin, checkNpm, checkRelease, consumerState,
   stripComments, classifyFile, flattenLeaves, diffTokens, snapshotFlat, tokenDiff, classifyChange,
-  findStaleLines, findUnlisted, newestTag, buildReport, buildGate, localDate, renderTable, renderPage, parseArgs, main
+  LOADED_PATHS, findStaleLines, findUnlisted, newestTag, buildReport, buildGate, localDate, renderTable, renderPage, parseArgs, main
 };
 
 if (require.main === module) process.exitCode = main();

@@ -29,16 +29,16 @@ function makeJudarn() {
   const pkg = (v, d = 'tokens') => JSON.stringify({ name: '@judarn/ui', version: v, description: d });
   commit('v0.1.0', {
     'scripts/lib/design-tokens.js': LOADER, 'tokens/flat.json': JSON.stringify(flat('#aa0000')),
-    'Sources/A.swift': '// header\nlet a = 1\n', 'Package.swift': '// swift-tools-version: 6.0\nlet p = 1\n',
+    'platforms/apple/Sources/A.swift': '// header\nlet a = 1\n', 'Package.swift': '// swift-tools-version: 6.0\nlet p = 1\n',
     'platforms/web/src/index.js': '/** doc */\nexport const a = 1;\n', 'platforms/web/src/types.d.ts': 'export type A = 1;\n',
     'platforms/web/package.json': pkg('0.1.0'), 'README.md': 'one\n'
   });
   commit('v0.1.1', { // docs only, comment edit, version and description bump: nothing consumers load
-    'README.md': 'two\n', 'Sources/A.swift': '// new header wording\nlet a = 1\n',
+    'README.md': 'two\n', 'platforms/apple/Sources/A.swift': '// new header wording\nlet a = 1\n',
     'platforms/web/src/index.js': '/** doc, reworded */\nexport const a = 1;\n', 'platforms/web/package.json': pkg('0.1.1', 'prose')
   });
   commit('v0.1.2', { 'platforms/web/src/types.d.ts': 'export type A = 1 | 2;\n' }); // type declaration only
-  commit('v0.1.3', { 'Sources/A.swift': '// new header wording\nlet a = 2\n' }); // real code
+  commit('v0.1.3', { 'platforms/apple/Sources/A.swift': '// new header wording\nlet a = 2\n' }); // real code
   commit('v0.1.4', { 'tokens/flat.json': JSON.stringify(flat('#bb0000', '16px')) }); // token values
   commit('v0.1.5', { 'tokens/flat.json': JSON.stringify({ ...flat('#bb0000', '16px'), extra: { $value: '1', $type: 'number' } }) }); // new token
   return repo;
@@ -253,8 +253,10 @@ test('gate: go for none and code, hold for visible and for a blocker', () => {
   assert.equal(g.Quiet.decision, 'hold');
   assert.equal(g.Quiet.reason, 'visible change');
   assert.equal(g.Dirty.decision, 'hold');
+  // Every cause is named, not only the first.
+  assert.match(g.Dirty.reason, /^visible change; .*uncommitted/);
   const ok = gateFor('v0.1.2', [['Calm', '0.1.0']]).gate();
-  assert.deepEqual(ok.Calm, { decision: 'go', reason: 'none change' });
+  assert.deepEqual(ok.Calm, { decision: 'go', reason: 'no change' });
   const blocked = gateFor('v0.1.2', [['Messy', '0.1.0', true]]).gate();
   assert.equal(blocked.Messy.decision, 'hold');
   assert.match(blocked.Messy.reason, /uncommitted/);
@@ -279,4 +281,11 @@ test('gate CLI: only JSON on stdout, nonzero for an unknown tag or a missing lis
   assert.notEqual(run('--to', 'v9.9.9').status, 0);
   assert.equal(run('--to', 'v9.9.9').stdout, '');
   assert.notEqual(cp.spawnSync('node', [path.join(__dirname, 'consumers.js'), '--gate', '--list', path.join(tmp, 'nope.json')], { encoding: 'utf8' }).status, 0);
+});
+
+test('every loaded path exists in this repository', () => {
+  const root = path.resolve(__dirname, '..');
+  for (const [kind, paths] of Object.entries(c.LOADED_PATHS)) {
+    for (const p of paths) assert.ok(fs.existsSync(path.join(root, p)), `${kind} path ${p} is missing`);
+  }
 });
