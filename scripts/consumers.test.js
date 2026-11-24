@@ -215,3 +215,68 @@ test('report end to end, JSON and page, without touching the consumer', () => {
   assert.doesNotMatch(page, /<script|https?:\/\//);
   assert.deepEqual(before, [npmApp, swiftApp, localApp].map((d) => cp.execFileSync('find', [d, '-type', 'f', '-newer', repo]).toString()));
 });
+
+// ---- local date, gate ------------------------------------------------------
+
+test('the page prints the local date of the timestamp; JSON keeps UTC', () => {
+  const prev = process.env.TZ;
+  process.env.TZ = 'Europe/Stockholm';
+  try {
+    assert.equal(c.localDate('2026-11-23T23:30:00.000Z'), '2026-11-24');
+    const report = { target: 'v0.1.4', offline: false, generated: '2026-11-23T23:30:00.000Z', rows: [], unlisted: [] };
+    const page = c.renderPage(report, require('./lib/design-tokens.js').loadFlatOrThrow());
+    assert.match(page, /Generated 2026-11-24/);
+    assert.equal(report.generated, '2026-11-23T23:30:00.000Z');
+  } finally {
+    if (prev === undefined) delete process.env.TZ; else process.env.TZ = prev;
+  }
+});
+
+function gateFor(to, rows) {
+  const dirs = rows.map(([name, version, extra]) => {
+    const d = path.join(tmp, `gate-${to}-${name.replace(/\W/g, '')}`);
+    write(path.join(d, 'Package.resolved'), JSON.stringify({ pins: [{ identity: 'judarn', state: { version } }], version: 3 }));
+    write(path.join(d, 'Package.swift'), `.package(url: "https://example.test/o/judarn", exact: "${version}")`);
+    if (extra) write(path.join(d, 'dirty.txt'), 'x');
+    git(d, 'init', '-q');
+    if (!extra) { git(d, 'add', '-A'); git(d, 'commit', '-q', '-m', 'init'); }
+    return { name, path: d };
+  });
+  const report = c.buildReport({ list: { scanRoot: null, consumers: dirs }, repo, to, exec: c.__exec, offline: true });
+  return { report, gate: () => c.buildGate(report, repo, c.__exec) };
+}
+
+test('gate: go for none and code, hold for visible and for a blocker', () => {
+  const { gate } = gateFor('v0.1.3', [['Quiet', '0.1.0'], ['Loud', '0.1.2'], ['Dirty', '0.1.2', true]]);
+  // Swift: 0.1.0 -> 0.1.3 is visible (Sources changed); 0.1.2 -> 0.1.3 is visible too
+  const g = gate();
+  assert.equal(g.Quiet.decision, 'hold');
+  assert.equal(g.Quiet.reason, 'visible change');
+  assert.equal(g.Dirty.decision, 'hold');
+  const ok = gateFor('v0.1.2', [['Calm', '0.1.0']]).gate();
+  assert.deepEqual(ok.Calm, { decision: 'go', reason: 'none change' });
+  const blocked = gateFor('v0.1.2', [['Messy', '0.1.0', true]]).gate();
+  assert.equal(blocked.Messy.decision, 'hold');
+  assert.match(blocked.Messy.reason, /uncommitted/);
+});
+
+test('gate: an unknown tag cannot be decided', () => {
+  const { gate } = gateFor('v9.9.9', [['Any', '0.1.0']]);
+  assert.throws(gate, /not found/);
+});
+
+test('gate CLI: only JSON on stdout, nonzero for an unknown tag or a missing list', () => {
+  const d = path.join(tmp, 'cli-gate');
+  write(path.join(d, 'Package.resolved'), JSON.stringify({ pins: [{ identity: 'judarn', state: { version: '0.1.0' } }], version: 3 }));
+  write(path.join(d, 'Package.swift'), '.package(url: "https://example.test/o/judarn", exact: "0.1.0")');
+  git(d, 'init', '-q'); git(d, 'add', '-A'); git(d, 'commit', '-q', '-m', 'init');
+  const listFile = path.join(tmp, 'cli-gate-list.json');
+  write(listFile, JSON.stringify({ consumers: [{ name: 'Cli app', path: d }] }));
+  const run = (...a) => cp.spawnSync('node', [path.join(__dirname, 'consumers.js'), '--gate', '--offline', '--repo', repo, '--list', listFile, ...a], { encoding: 'utf8' });
+  const ok = run('--to', 'v0.1.2');
+  assert.equal(ok.status, 0);
+  assert.equal(JSON.parse(ok.stdout)['Cli app'].decision, 'go');
+  assert.notEqual(run('--to', 'v9.9.9').status, 0);
+  assert.equal(run('--to', 'v9.9.9').stdout, '');
+  assert.notEqual(cp.spawnSync('node', [path.join(__dirname, 'consumers.js'), '--gate', '--list', path.join(tmp, 'nope.json')], { encoding: 'utf8' }).status, 0);
+});

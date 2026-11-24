@@ -2,7 +2,6 @@
 
 ## Active
 
-- Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
 - Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
 
 ## Icebox

@@ -13,7 +13,7 @@
 - **External Consumption Audit**: `node scripts/verify-consumption.js`
 - **Token Presence Check**: `node platforms/web/scripts/verify-token-presence.js`
 - **Shared commit checks** (decision records, links, version guard, house style, secrets): `scripts/commit-checks verify`
-- **Consumer Status** (read-only; needs the private list `docs/private/consumers.json`, see ARCHITECTURE.md): `node scripts/consumers.js [--to vX.Y.Z] [--json] [--page build/consumers.html]`. Tests: `node --test scripts/consumers.test.js`
+- **Consumer Status** (read-only; needs the private list `docs/private/consumers.json`, see ARCHITECTURE.md): `node scripts/consumers.js [--to vX.Y.Z] [--json] [--page build/consumers.html] [--gate]`. `--gate` prints the go/hold JSON that the commit-checks roll-out reads; wire it in the list with `"gate": ["node", "<path to judarn>/scripts/consumers.js", "--gate", "--to", "{tag}"]`. Tests: `node --test scripts/consumers.test.js`
 - **Docs-only fast path**: when every changed file is a doc (`docs_only` in `.commit-checks.json`), `./scripts/verify_commit.sh` skips the Swift, iOS and web suites. Every doc a build reads or a package ships must sit under `docs_only.except`.
 - **Hook Test**: `.githooks/commit-msg <msg-file>`
 - **Monorepo Pre-Commit Suite**: `./scripts/verify_commit.sh` (requires `vale` and `gitleaks`: `brew install vale gitleaks`; the house-style package is fetched on first run). Run `scripts/install-hooks.sh` once after cloning. Generic commit checks (secrets, home paths, emails, private names) come from the shared commit-checks package at the release pinned in `.commit-checks.json`; `commit-checks.yml` runs them on GitHub

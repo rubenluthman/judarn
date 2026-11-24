@@ -3,11 +3,12 @@
  * Judarn consumer status. Read-only: for each app that loads Judarn it reports which version the app
  * holds and what updating it to a target tag would change, limited to what that app loads.
  *
- *   node scripts/consumers.js [--list <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline]
+ *   node scripts/consumers.js [--list <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline] [--gate]
  *
  * The consumer list is private (`docs/private/consumers.json`, gitignored):
  *   { "scanRoot": "<folder>", "consumers": [ { "name": "...", "path": "..." } ] }
  * Relative paths resolve against the list file's folder. Nothing here writes to a consumer folder.
+ * `--gate` prints the decision the commit-checks roll-out reads: { "<name>": { "decision": "go" | "hold", "reason": "..." } }.
  */
 
 'use strict';
@@ -622,6 +623,29 @@ function buildReport({ list, repo = ROOT, to = null, offline = false, exec = def
   return { target, offline, generated: new Date().toISOString(), rows, unlisted };
 }
 
+/** The calendar date of an ISO timestamp in the machine's local time zone, as YYYY-MM-DD. */
+function localDate(iso) {
+  const d = new Date(iso);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+/**
+ * The roll-out gate: hold an app when the update is visible, can't be judged, or the app has any blocker.
+ * Throws when the target tag is not in the Judarn repository, so the caller can hold everyone.
+ */
+function buildGate(report, repo = ROOT, exec = defaultExec) {
+  if (!tagExists(repo, report.target, exec)) throw new Error(`tag ${report.target} not found in the Judarn repository`);
+  const gate = {};
+  for (const r of report.rows) {
+    if (r.change === 'visible') gate[r.name] = { decision: 'hold', reason: 'visible change' };
+    else if (r.blockers.length) gate[r.name] = { decision: 'hold', reason: r.blockers.join('; ') };
+    else if (r.change === 'none' || r.change === 'code') gate[r.name] = { decision: 'go', reason: `${r.change} change` };
+    else gate[r.name] = { decision: 'hold', reason: `change is ${r.change}` };
+  }
+  return gate;
+}
+
 function renderTable(report) {
   const head = ['Consumer', 'Holds', 'Target', 'Change', 'Blockers', 'Stale doc lines'];
   const body = report.rows.map((r) => [
@@ -728,7 +752,7 @@ th,td{padding:${px('1')} ${px('1')} ${px('1')} 0;vertical-align:top;border-botto
 .cap{font-size:14px;line-height:16px}
 </style></head><body><main>
 <h1>Judarn consumer status</h1>
-<p class="quiet">Updating to ${esc(report.target)}. Generated ${esc(report.generated.slice(0, 10))}${report.offline ? ', offline' : ''}.</p>
+<p class="quiet">Updating to ${esc(report.target)}. Generated ${esc(localDate(report.generated))}${report.offline ? ', offline' : ''}.</p>
 ${summary}
 ${sections}
 ${report.unlisted.length ? `<section><h2>Unlisted consumers</h2><ul>${report.unlisted.map((u) => `<li>${esc(u.name)} (${esc(u.kind)})</li>`).join('')}</ul></section>` : ''}
@@ -741,7 +765,7 @@ ${report.unlisted.length ? `<section><h2>Unlisted consumers</h2><ul>${report.unl
 // ---------------------------------------------------------------------------
 
 function parseArgs(argv) {
-  const o = { list: DEFAULT_LIST, to: null, json: false, page: null, offline: false, repo: ROOT, help: false };
+  const o = { list: DEFAULT_LIST, to: null, json: false, page: null, offline: false, gate: false, repo: ROOT, help: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const val = () => { if (i + 1 >= argv.length) throw new Error(`${a} needs a value`); return argv[++i]; };
@@ -751,18 +775,20 @@ function parseArgs(argv) {
     else if (a === '--repo') o.repo = path.resolve(val());
     else if (a === '--json') o.json = true;
     else if (a === '--offline') o.offline = true;
+    else if (a === '--gate') o.gate = true;
     else if (a === '--help' || a === '-h') o.help = true;
     else throw new Error(`Unknown argument ${a}`);
   }
   return o;
 }
 
-const USAGE = `Usage: node scripts/consumers.js [--list <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline]
+const USAGE = `Usage: node scripts/consumers.js [--list <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline] [--gate]
   --list     consumer list (default docs/private/consumers.json)
   --to       target tag (default: newest vX.Y.Z tag)
   --json     print the report as JSON
   --page     write a self-contained HTML review page, for example build/consumers.html
-  --offline  skip npm and GitHub checks (reported as unknown)`;
+  --offline  skip npm and GitHub checks (reported as unknown)
+  --gate     print only the roll-out gate JSON (go or hold per consumer); exits 1 when it cannot decide`;
 
 function main(argv = process.argv.slice(2)) {
   let opts;
@@ -772,6 +798,13 @@ function main(argv = process.argv.slice(2)) {
   try { list = loadList(opts.list); } catch (e) { console.error(e.message); return 1; }
   let report;
   try { report = buildReport({ list, repo: opts.repo, to: opts.to, offline: opts.offline }); } catch (e) { console.error(e.message); return 1; }
+
+  if (opts.gate) {
+    let gate;
+    try { gate = buildGate(report, opts.repo); } catch (e) { console.error(e.message); return 1; }
+    console.log(JSON.stringify(gate, null, 2));
+    return 0;
+  }
 
   if (opts.page) {
     const { loadFlatOrThrow } = require('./lib/design-tokens.js');
@@ -789,7 +822,7 @@ function main(argv = process.argv.slice(2)) {
 module.exports = {
   loadList, collectPinFiles, parseResolved, parseSwiftFile, detectPin, checkNpm, checkRelease, consumerState,
   stripComments, classifyFile, flattenLeaves, diffTokens, snapshotFlat, tokenDiff, classifyChange,
-  findStaleLines, findUnlisted, newestTag, buildReport, renderTable, renderPage, parseArgs, main
+  findStaleLines, findUnlisted, newestTag, buildReport, buildGate, localDate, renderTable, renderPage, parseArgs, main
 };
 
 if (require.main === module) process.exitCode = main();
