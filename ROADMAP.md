@@ -3,12 +3,12 @@
 ## Active
 
 - Date the `--page` review page in local time, not UTC, so a run after midnight shows the right day.
-- Decide whether Offentlig Sans should become the `font.sans` default. Today Judarn uses it only in its own presentation (such as the Wada explorer) and in artifacts. Compare the projects that use Judarn, set in their current font and in Offentlig Sans, before any token change.
 - Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
 - Draw a Judarn focus ring around the whole `judarnFieldWell()` on iOS. With a hardware keyboard and Full Keyboard Access, iOS already draws its own blue ring, but only around the text line inside the well, and it follows the system accent.
 
 ## Icebox
 
+- Decide whether Offentlig Sans should become the `font.sans` default for web. Wait until the owner says Offentlig is finished and no longer updated. Then compare the projects that use Judarn, set in their current font and in Offentlig Sans, before any token change. A switch ships the token, an `@font-face` snippet and the rewritten artifact rule together; native Apple and the cloud document templates stay as they are.
 - Bring the explorer's labels in line with Judarn's uppercase-label rule: uppercase only for labels of at most two words with no digit or mixed-case term; set others as written, for example "2 colors", "Saved Favorites 0", "CIE L*a*b*", "OKLCh (Judarn Native)", "Judarn Design System".
 - Add a shared search-field style: two apps that use Judarn hand-build capsule search wells.
 - Define semantic tokens for toggle/switch, segmented control, and slider inputs.
