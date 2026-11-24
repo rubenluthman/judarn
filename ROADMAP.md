@@ -2,8 +2,6 @@
 
 ## Active
 
-- Consumer status: bring `scripts/consumers.js` into the shared roll-out in commit-checks once that exists, as the gate that stops before a visible update is committed.
-
 ## Icebox
 
 - Decide whether Offentlig Sans should become the `font.sans` default for web. Wait until the owner says Offentlig is finished and no longer updated. Then compare the projects that use Judarn, set in their current font and in Offentlig Sans, before any token change. A switch ships the token, an `@font-face` snippet and the rewritten artifact rule together; native Apple and the cloud document templates stay as they are.
