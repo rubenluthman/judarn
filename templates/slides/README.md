@@ -26,7 +26,7 @@
 
 ---
 
-## 10 Production slide archetypes
+## Ten production slide archetypes
 
 1. **Cover / Focus Headline Slide (Dark)**: Uppercase tracked eyebrow (`#a5c8d1`), 40 pt IBM Plex Serif title with inline Light Glaucous Blue accent run, upright IBM Plex Sans subtitle in `#8AA3BA`, and a 3-figure row (`348 Combinations`, `159 Colors`, `2 Compiled hosts`).
 2. **Section Divider / Chapter Break (Dark)**: Oversized monospace chapter index (`01` in `#a5c8d1`), 34 pt IBM Plex Serif chapter title, and 15 pt scoping summary in `#8AA3BA`.

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.51] - 2026-11-25
+
+### Changed
+
+- The slides template README spells out the number of archetypes in its heading.
+
 ## [0.8.50] - 2026-11-24
 
 ### Changed
