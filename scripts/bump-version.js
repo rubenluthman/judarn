@@ -160,4 +160,6 @@ execSync(`node "${path.join(__dirname, 'sync-version.js')}" ${targetVersion}`, {
 updateChangelog(targetVersion);
 
 console.log(`\n✓ Next version ${targetVersion} fully prepared.`);
-console.log(`  To complete release:\n    git add -A && git commit -m "chore(release): cut version ${targetVersion}" && git tag -a v${targetVersion} -m "Release v${targetVersion}"`);
+// The release rides on the change's own commit; the tag waits for that commit, so a rejected one never gets tagged.
+console.log(`  To complete release, stage files by name, then on one line:`);
+console.log(`    git commit -m "<subject>, ${targetVersion}" && git tag -a v${targetVersion} -m "<subject>, ${targetVersion}" && git push origin HEAD v${targetVersion}`);
