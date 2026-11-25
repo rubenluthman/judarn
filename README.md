@@ -18,9 +18,9 @@ The Wada color explorer is online at https://rubenluthman.github.io/judarn/.
 Every color token is defined in OKLCh (`oklch(L C H)`) and resolves across standard and high-contrast light and dark schemes:
 - **Substrate / Paper**: `#FFFFFF` (light), `#171717` (dark)
 - **Surface Elevated**: `#F8F8F8` (light), `#222222` (dark)
-- **Primary Ink (`ink100`)**: `#020202` (light), `#F8F8F8` (dark) with a contrast of at least 15.0:1 (AAA) on every surface
-- **Secondary Ink (`ink60`)**: At least 4.8:1 (AA) on every surface, and at least 15.0:1 under high-contrast modes, where it takes the primary ink
-- **Signal Error (`signalError`)**: At least 5.0:1 (AA) on every surface, and at least 7.0:1 (AAA) under high-contrast modes
+- **Primary Ink (`ink100`)**: `#020202` (light), `#F8F8F8` (dark)
+
+The contrast each ink reaches is in the [WCAG accessibility matrix](#wcag-accessibility-matrix).
 
 ### 2. 8pt macro grid / 4pt micro subgrid
 - **Micro subgrid** (`4pt`): Typographic leading, hairline offsets, and micro cell insets.
@@ -49,44 +49,13 @@ Judarn never fights platform curves or physics:
 
 ---
 
-## Monorepo topology
-
-```text
-judarn/
-├── tokens/                     # Design Tokens Format Module 2025.10
-│   ├── judarn-tokens.json      # Foundation set
-│   ├── judarn.resolver.json    # Resolver: foundation plus one colour context per appearance
-│   └── modes/                  # Colour values: light, dark, and high-contrast overrides
-├── platforms/
-│   ├── apple/                  # Native SwiftUI package (iOS 17+, macOS 14+)
-│   │   ├── Sources/Judarn/
-│   │   └── Tests/JudarnTests/  # Swift Testing test suite
-│   └── web/                    # @judarn/ui React components & CSS
-│       ├── src/
-│       └── styles/
-├── docs/                       # Architecture decisions and generated DESIGN.md for AI coding tools
-├── templates/                  # Presentation & document starters
-│   ├── docs/                   # 8.5 × 11 in vertical specification starter
-│   └── slides/                 # 16:9 dark focus & light data starters
-├── tools/                      # Judarn Color Dictionary & MCP server
-│   └── wada-explorer/          # 348 combinations gallery, 159 colors & MCP server
-├── scripts/                    # Token compiler and verification scripts
-├── Package.swift               # Root SwiftPM manifest
-├── ARCHITECTURE.md             # System architecture
-├── ROADMAP.md                  # Roadmap
-├── CHANGELOG.md                # Release history
-└── AGENTS.md                   # CLI workflows & verification suites
-```
-
----
-
 ## Quickstart
 
 Judarn is in beta. The Apple package integrates through SwiftPM from GitHub. The web package is published to npm as `@judarn/ui`.
 
 ### Apple native (SwiftUI)
 
-Add Judarn to your `Package.swift` dependencies:
+The package needs iOS 17 or macOS 14. Add Judarn to your `Package.swift` dependencies:
 
 ```swift
 dependencies: [
@@ -149,18 +118,6 @@ Each row is the lowest ratio over light and dark on `substrate`, `surfaceElevate
 | `signalError` | at least 5.0:1 | at least 7.0:1 | AA (4.5:1), AAA under high contrast |
 
 Two accepted trade-offs sit outside this matrix. White ink on a mid-tone fill can fall to 1.91:1 at the crossover, below the 4.5:1 AA floor for small text, because Judarn prefers white ink to what contrast math alone suggests. Paragraph line spacing is tighter than 1.5, so Judarn text does not meet WCAG 2.2 SC 1.4.8, a AAA criterion.
-
----
-
-## Testing
-
-```bash
-# Apple Native (SwiftPM)
-swift test
-
-# Web (@judarn/ui)
-npm --prefix platforms/web test
-```
 
 ---
 
