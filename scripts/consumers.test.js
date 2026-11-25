@@ -72,6 +72,38 @@ test('swift pin from GitHub: resolved version plus floor from an Xcode project, 
   assert.match(pin.mismatch, /resolved 0\.1\.3 differs from floor 0\.1\.1/);
 });
 
+// An app whose Xcode project is generated and ignored by Git: its stale resolved file must not beat the tracked root one.
+function generatedProjectApp(name, useGit) {
+  const d = path.join(tmp, name);
+  const resolved = (v) => JSON.stringify({ pins: [{ identity: 'judarn', state: { version: v } }], version: 3 });
+  write(path.join(d, 'Package.swift'), '.package(url: "https://example.test/o/judarn", exact: "0.1.3")');
+  write(path.join(d, 'Package.resolved'), resolved('0.1.3'));
+  write(path.join(d, '.gitignore'), '*.xcodeproj\n');
+  // "App" sorts before "Package", so an untracked copy would win the alphabetical pick.
+  write(path.join(d, 'App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'), resolved('0.1.2'));
+  if (useGit) { git(d, 'init', '-q'); git(d, 'add', '.gitignore', 'Package.swift', 'Package.resolved'); git(d, 'commit', '-q', '-m', 'init'); }
+  return d;
+}
+
+test('pin detection reads only files Git tracks: an ignored Xcode copy is skipped', () => {
+  const d = generatedProjectApp('ignored-xcode', true);
+  const pin = c.detectPin(d);
+  assert.deepEqual([pin.version, pin.mismatch, pin.resolvedFile], ['0.1.3', null, 'Package.resolved']);
+  assert.deepEqual(c.collectPinFiles(d).map((f) => path.relative(d, f)), ['Package.resolved', 'Package.swift']);
+  const report = c.buildReport({ list: { scanRoot: null, consumers: [{ name: 'Gen', path: d }] }, repo, to: 'v0.1.3', exec: c.__exec, offline: true });
+  assert.equal(report.rows[0].pin.version, '0.1.3');
+  assert.equal(c.buildGate(report, repo, c.__exec).Gen.decision, 'go');
+});
+
+test('outside a Git work tree every pin file counts, as before', () => {
+  const d = generatedProjectApp('no-git-xcode', false);
+  const pin = c.detectPin(d);
+  assert.equal(pin.resolvedFile, 'App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved');
+  assert.equal(pin.version, '0.1.2');
+  const files = c.collectPinFiles(d).map((f) => path.relative(d, f));
+  assert.equal(files.length, new Set(files).size);
+});
+
 test('swift requirements are read from Package.swift, project.yml and pbxproj', () => {
   const ps = c.parseSwiftFile('Package.swift', '.package(url: "https://example.test/o/judarn.git", exact: "0.1.2"),\n.package(url: "https://example.test/o/other", from: "1.0.0"),');
   assert.deepEqual(ps.remote, [{ type: 'exact', version: '0.1.2' }]);
@@ -159,6 +191,7 @@ test('unlisted consumers are found under the scan root', () => {
   for (const n of ['listed', 'unlisted', 'innocent']) { fs.mkdirSync(path.join(root, n), { recursive: true }); git(path.join(root, n), 'init', '-q'); }
   write(path.join(root, 'listed/Package.swift'), '.package(path: "../judarn")');
   write(path.join(root, 'unlisted/Package.swift'), '.package(path: "../judarn")');
+  for (const n of ['listed', 'unlisted']) git(path.join(root, n), 'add', 'Package.swift'); // detection reads tracked files only
   const found = c.findUnlisted(root, [path.join(root, 'listed')]);
   assert.deepEqual(found.map((f) => [f.name, f.kind]), [['unlisted', 'unpinned']]);
 });
@@ -239,7 +272,8 @@ function gateFor(to, rows) {
     write(path.join(d, 'Package.swift'), `.package(url: "https://example.test/o/judarn", exact: "${version}")`);
     if (extra) write(path.join(d, 'dirty.txt'), 'x');
     git(d, 'init', '-q');
-    if (!extra) { git(d, 'add', '-A'); git(d, 'commit', '-q', '-m', 'init'); }
+    git(d, 'add', 'Package.resolved', 'Package.swift'); // the dirty file stays untracked
+    if (!extra) git(d, 'commit', '-q', '-m', 'init');
     return { name, path: d };
   });
   const report = c.buildReport({ list: { scanRoot: null, consumers: dirs }, repo, to, exec: c.__exec, offline: true });

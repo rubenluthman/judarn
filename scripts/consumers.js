@@ -86,25 +86,37 @@ function listDirs(dir) {
   try { return fs.readdirSync(dir, { withFileTypes: true }); } catch { return []; }
 }
 
-/** Pin-bearing files in the top levels of a consumer, plus Xcode's resolved file below its project folders. */
+/** Paths Git tracks in a folder, as absolute paths; null when the folder is not a Git work tree. */
+function trackedFiles(root) {
+  const r = cp.spawnSync('git', ['-C', root, 'ls-files', '-z'], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+  if (r.error || r.status !== 0) return null;
+  return new Set(r.stdout.split('\0').filter(Boolean).map((f) => path.join(root, f)));
+}
+
+/**
+ * Pin-bearing files in the top levels of a consumer, plus Xcode's resolved file below its project folders.
+ * Only files Git tracks count: an ignored build leftover (a generated Xcode project) can hold a stale pin.
+ * A folder that is not a Git work tree keeps every file.
+ */
 function collectPinFiles(root) {
-  const found = [];
+  const found = new Set();
   const visit = (dir, depth) => {
     for (const e of listDirs(dir)) {
       const abs = path.join(dir, e.name);
-      if (e.isFile() && PIN_FILES.has(e.name)) found.push(abs);
+      if (e.isFile() && PIN_FILES.has(e.name)) found.add(abs);
       else if (e.isDirectory() && !e.name.startsWith('.') && !SKIP_DIRS.has(e.name)) {
         if (/\.(xcodeproj|xcworkspace)$/.test(e.name)) {
           const nested = e.name.endsWith('.xcodeproj') ? path.join(abs, 'project.xcworkspace') : abs;
           const resolved = path.join(nested, 'xcshareddata/swiftpm/Package.resolved');
-          if (fs.existsSync(resolved)) found.push(resolved);
+          if (fs.existsSync(resolved)) found.add(resolved);
         }
         if (depth < SCAN_DEPTH) visit(abs, depth + 1);
       }
     }
   };
   visit(root, 0);
-  return found.sort();
+  const tracked = trackedFiles(root);
+  return [...found].filter((f) => !tracked || tracked.has(f)).sort();
 }
 
 function parseResolved(text) {
