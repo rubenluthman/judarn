@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const { oklchToHex } = require('../../../scripts/lib/design-tokens.js');
+const { normalizeSearchText } = require('../search-text.js');
 
 const catalog = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/wada-catalog.json'), 'utf8'));
 const colors = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/wada-colors.json'), 'utf8'));
@@ -300,7 +301,7 @@ function requireInteger(value, label, min, max) {
 function handleToolCall(name, args) {
   switch (name) {
     case "search_colors": {
-      const q = String(args.query || "").toLowerCase().trim();
+      const q = normalizeSearchText(args.query);
       const results = enrichedColors.filter(c =>
         c.name.toLowerCase().includes(q) ||
         c.hex.toLowerCase().includes(q) ||
@@ -318,7 +319,7 @@ function handleToolCall(name, args) {
     }
 
     case "get_color": {
-      const idStr = String(args.identifier ?? "").toLowerCase().trim();
+      const idStr = normalizeSearchText(args.identifier);
       if (!idStr) throw new ToolError("identifier is required.");
       let match = null;
       if (/^\d+$/.test(idStr)) {
@@ -336,7 +337,7 @@ function handleToolCall(name, args) {
       let list = catalog;
       if (args.size !== undefined) list = list.filter(p => p.colors.length === requireInteger(args.size, "size", 2, 4));
       if (args.colorName) {
-        const q = args.colorName.toLowerCase().trim();
+        const q = normalizeSearchText(args.colorName);
         list = list.filter(p => p.colors.some(c => c.name.toLowerCase().includes(q) || c.hex.toLowerCase() === q));
       }
       return list.map(p => ({
@@ -484,7 +485,7 @@ function handleRequest(req) {
       return reply({
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "judarn-color-dictionary", version: "0.8.51" }
+        serverInfo: { name: "judarn-color-dictionary", version: "0.8.52" }
       });
     case "ping":
       return reply({});

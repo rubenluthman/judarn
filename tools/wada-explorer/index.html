@@ -1979,8 +1979,12 @@ function setCombSizeFilter(size, tabElem) {
   renderCombinationsGrid();
 }
 
+function normalizeSearchText(value) {
+  return String(value ?? '').trim().toLowerCase().replace(/[‘’ʼ′]/g, "'");
+}
+
 function onCombSearchInput(val) {
-  combSearchQuery = val.trim().toLowerCase();
+  combSearchQuery = normalizeSearchText(val);
   const clearBtn = document.getElementById('combSearchClearBtn');
   clearBtn.style.display = combSearchQuery ? 'block' : 'none';
   renderCombinationsGrid();
@@ -2274,7 +2278,7 @@ function populateSelect(list) {
 // 159 Colors Catalog Grid Engine (Search, Filter, Sort)
 // -------------------------------------------------------------
 function onColorSearchInput(val) {
-  colorSearchQuery = val.trim().toLowerCase();
+  colorSearchQuery = normalizeSearchText(val);
   const clearBtn = document.getElementById('searchClearBtn');
   clearBtn.style.display = colorSearchQuery ? 'block' : 'none';
   renderColorsGrid();

@@ -5,6 +5,7 @@ const catalog = JSON.parse(fs.readFileSync(path.join(__dirname, '../tools/wada-e
 const colors = JSON.parse(fs.readFileSync(path.join(__dirname, '../tools/wada-explorer/data/wada-colors.json'), 'utf8'));
 // Resolved, validated Judarn tokens (tokens/judarn.resolver.json), flat view.
 const judarnTokens = require('./lib/design-tokens').loadFlatOrThrow();
+const { normalizeSearchText } = require('../tools/wada-explorer/search-text');
 
 console.log(`Loaded ${catalog.length} combinations and ${colors.length} individual colors.`);
 
@@ -1999,8 +2000,10 @@ function setCombSizeFilter(size, tabElem) {
   renderCombinationsGrid();
 }
 
+${normalizeSearchText.toString()}
+
 function onCombSearchInput(val) {
-  combSearchQuery = val.trim().toLowerCase();
+  combSearchQuery = normalizeSearchText(val);
   const clearBtn = document.getElementById('combSearchClearBtn');
   clearBtn.style.display = combSearchQuery ? 'block' : 'none';
   renderCombinationsGrid();
@@ -2294,7 +2297,7 @@ function populateSelect(list) {
 // 159 Colors Catalog Grid Engine (Search, Filter, Sort)
 // -------------------------------------------------------------
 function onColorSearchInput(val) {
-  colorSearchQuery = val.trim().toLowerCase();
+  colorSearchQuery = normalizeSearchText(val);
   const clearBtn = document.getElementById('searchClearBtn');
   clearBtn.style.display = colorSearchQuery ? 'block' : 'none';
   renderColorsGrid();

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.52] - 2026-11-26
+
+### Fixed
+
+- Searching the color dictionary for a name with an apostrophe, such as Pale King's Blue, works when a phone types a curly apostrophe.
+
 ## [0.8.51] - 2026-11-25
 
 ### Changed

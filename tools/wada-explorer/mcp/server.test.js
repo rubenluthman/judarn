@@ -77,3 +77,24 @@ test('export_tokens follows the light polarity', async () => {
   }
   assert.ok(dark('surfaceRecessed') < dark('substrate') && dark('substrate') < dark('surfaceElevated'));
 });
+
+test('curly apostrophes match the straight ones in color names', async () => {
+  const replies = await exchange([
+    call(1, 'search_colors', { query: 'King’s' }),
+    call(2, 'get_color', { identifier: 'Hay’s Russet' }),
+    call(3, 'search_combinations', { colorName: 'Poel‘s' })
+  ]);
+  const [found, color, combos] = replies.map((r) => JSON.parse(r.result.content[0].text));
+  assert.deepEqual(found.map((c) => c.name), ["Pale King's Blue"]);
+  assert.equal(color.name, "Hay's Russet");
+  assert.ok(combos.length > 0);
+  for (const p of combos) assert.ok(p.colors.some((c) => c.name === "Vandar Poel's Blue"));
+});
+
+test('the explorer page inlines the same search normalizer', () => {
+  const fs = require('node:fs');
+  const { normalizeSearchText } = require('../search-text.js');
+  const page = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  assert.ok(page.includes(normalizeSearchText.toString()));
+  assert.equal(normalizeSearchText('  Pale King’S '), "pale king's");
+});
