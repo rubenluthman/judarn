@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
-# The shared commit checks validate the message (secrets, paths, Conventional Commits, 72-character subject).
-root_cc=$(git rev-parse --show-toplevel) || exit 1
-"$root_cc/scripts/commit-checks" commit-msg "$1" || exit 1
+#!/bin/sh
+root=$(git rev-parse --show-toplevel) || exit 1
+"$root/scripts/commit-checks" commit-msg "$1" || exit 1
+# --- repository checks ---
