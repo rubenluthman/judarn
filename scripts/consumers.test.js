@@ -47,18 +47,29 @@ const repo = makeJudarn();
 const noNet = () => ({ status: 1, stdout: '', stderr: 'offline', error: null });
 c.__exec = (cmd, args, opts) => { const r = cp.spawnSync(cmd, args, { encoding: 'utf8', maxBuffer: 1 << 28, ...opts }); return { status: r.status, stdout: r.stdout || '', stderr: r.stderr || '', error: r.error }; };
 
-// ---- pin detection ---------------------------------------------------------
+// ---- pin reading, through the commit-checks release this repository pins ----
+
+let listCount = 0;
+/** Writes a throwaway commit-checks list for the entries and reads their Judarn pins through consumers.js. */
+function readPinsFor(entries, extra = {}) {
+  const file = path.join(tmp, `list-${++listCount}.json`);
+  write(file, JSON.stringify({ ...extra, consumers: entries.map((e) => ({ packages: ['judarn'], ...e })) }));
+  return c.readPins({ list: file });
+}
+const pinsOf = (d) => c.pinsFromEntry(readPinsFor([{ name: 'app', path: d }]).consumers[0]);
 
 test('npm pin: lockfile version, exact requirement, mismatch flagged', () => {
   const d = path.join(tmp, 'npm-app');
   write(path.join(d, 'package.json'), JSON.stringify({ devDependencies: { '@judarn/ui': '0.1.2' } }));
   write(path.join(d, 'package-lock.json'), JSON.stringify({ packages: { 'node_modules/@judarn/ui': { version: '0.1.2' } } }));
-  const pin = c.detectPin(d);
-  assert.deepEqual([pin.kind, pin.version, pin.requirement.type, pin.mismatch], ['npm', '0.1.2', 'exact', null]);
+  const ok = pinsOf(d);
+  assert.deepEqual([ok.pins.length, ok.pins[0].kind, ok.pins[0].version, ok.pins[0].requirement.type, ok.problems], [1, 'npm', '0.1.2', 'exact', []]);
   write(path.join(d, 'package.json'), JSON.stringify({ dependencies: { '@judarn/ui': '^0.1.0' } }));
-  const loose = c.detectPin(d);
-  assert.equal(loose.requirement.type, 'range');
-  assert.match(loose.mismatch, /not an exact version/);
+  const loose = pinsOf(d);
+  assert.equal(loose.pins[0].requirement.type, 'range');
+  assert.match(loose.problems.join(';'), /not an exact version/);
+  write(path.join(d, 'package.json'), JSON.stringify({ dependencies: { '@judarn/ui': '0.1.1' } }));
+  assert.match(pinsOf(d).problems.join(';'), /lockfile holds 0\.1\.2, package\.json says 0\.1\.1/);
 });
 
 test('swift pin from GitHub: resolved version plus floor from an Xcode project, mismatch flagged', () => {
@@ -67,9 +78,9 @@ test('swift pin from GitHub: resolved version plus floor from an Xcode project, 
   write(path.join(d, 'App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'), JSON.stringify({ pins: [
     { identity: 'other', state: { version: '9.9.9' } },
     { identity: 'judarn', kind: 'remoteSourceControl', location: 'https://example.test/owner/judarn', state: { version: '0.1.3', revision: 'abc' } }], version: 3 }));
-  const pin = c.detectPin(d);
-  assert.deepEqual([pin.kind, pin.version, pin.requirement.type, pin.requirement.version], ['swift', '0.1.3', 'upToNextMinor', '0.1.1']);
-  assert.match(pin.mismatch, /resolved 0\.1\.3 differs from floor 0\.1\.1/);
+  const { pins, problems } = pinsOf(d);
+  assert.deepEqual([pins[0].kind, pins[0].version, pins[0].requirement.type, pins[0].requirement.version], ['swift', '0.1.3', 'upToNextMinor', '0.1.1']);
+  assert.match(problems.join(';'), /resolved 0\.1\.3 differs from floor 0\.1\.1/);
 });
 
 // An app whose Xcode project is generated and ignored by Git: its stale resolved file must not beat the tracked root one.
@@ -79,46 +90,36 @@ function generatedProjectApp(name, useGit) {
   write(path.join(d, 'Package.swift'), '.package(url: "https://example.test/o/judarn", exact: "0.1.3")');
   write(path.join(d, 'Package.resolved'), resolved('0.1.3'));
   write(path.join(d, '.gitignore'), '*.xcodeproj\n');
-  // "App" sorts before "Package", so an untracked copy would win the alphabetical pick.
   write(path.join(d, 'App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'), resolved('0.1.2'));
   if (useGit) { git(d, 'init', '-q'); git(d, 'add', '.gitignore', 'Package.swift', 'Package.resolved'); git(d, 'commit', '-q', '-m', 'init'); }
   return d;
 }
 
-test('pin detection reads only files Git tracks: an ignored Xcode copy is skipped', () => {
+test('pin reading uses only files Git tracks: an ignored Xcode copy is skipped', () => {
   const d = generatedProjectApp('ignored-xcode', true);
-  const pin = c.detectPin(d);
-  assert.deepEqual([pin.version, pin.mismatch, pin.resolvedFile], ['0.1.3', null, 'Package.resolved']);
-  assert.deepEqual(c.collectPinFiles(d).map((f) => path.relative(d, f)), ['Package.resolved', 'Package.swift']);
-  const report = c.buildReport({ list: { scanRoot: null, consumers: [{ name: 'Gen', path: d }] }, repo, to: 'v0.1.3', exec: c.__exec, offline: true });
-  assert.equal(report.rows[0].pin.version, '0.1.3');
+  const { pins, problems } = pinsOf(d);
+  assert.deepEqual([pins.length, pins[0].version, problems], [1, '0.1.3', []]);
+  assert.deepEqual(pins[0].files.sort(), ['Package.resolved', 'Package.swift']);
+  const report = c.buildReport({ pins: readPinsFor([{ name: 'Gen', path: d }]), repo, to: 'v0.1.3', exec: c.__exec, offline: true });
+  assert.equal(report.rows[0].pins[0].version, '0.1.3');
   assert.equal(c.buildGate(report, repo, c.__exec).Gen.decision, 'go');
 });
 
-test('outside a Git work tree every pin file counts, as before', () => {
+test('outside a Git work tree every pin file counts, and a disagreement is a problem, never a guess', () => {
   const d = generatedProjectApp('no-git-xcode', false);
-  const pin = c.detectPin(d);
-  assert.equal(pin.resolvedFile, 'App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved');
-  assert.equal(pin.version, '0.1.2');
-  const files = c.collectPinFiles(d).map((f) => path.relative(d, f));
-  assert.equal(files.length, new Set(files).size);
+  const { problems } = pinsOf(d);
+  assert.match(problems.join(';'), /disagree|differs/);
+  const report = c.buildReport({ pins: readPinsFor([{ name: 'Loose', path: d }]), repo, to: 'v0.1.3', exec: c.__exec, offline: true });
+  assert.equal(c.buildGate(report, repo, c.__exec).Loose.decision, 'hold');
 });
 
-test('swift requirements are read from Package.swift, project.yml and pbxproj', () => {
-  const ps = c.parseSwiftFile('Package.swift', '.package(url: "https://example.test/o/judarn.git", exact: "0.1.2"),\n.package(url: "https://example.test/o/other", from: "1.0.0"),');
-  assert.deepEqual(ps.remote, [{ type: 'exact', version: '0.1.2' }]);
-  const up = c.parseSwiftFile('Package.swift', '.package(url: "https://example.test/o/judarn", .upToNextMinor(from: "0.1.1"))');
-  assert.deepEqual(up.remote, [{ type: 'upToNextMinor', version: '0.1.1' }]);
-  const yml = c.parseSwiftFile('project.yml', 'packages:\n  Judarn:\n    url: https://example.test/o/judarn\n    exactVersion: 0.1.4\n  Other:\n    url: https://example.test/o/other\n    from: 2.0.0\n');
-  assert.deepEqual(yml.remote, [{ type: 'exact', version: '0.1.4' }]);
-  const pbx = c.parseSwiftFile('project.pbxproj', 'isa = XCRemoteSwiftPackageReference;\n repositoryURL = "https://example.test/o/judarn";\n requirement = {\n kind = upToNextMajorVersion;\n minimumVersion = 0.1.0;\n };\n};\n/* other */ isa = XCRemoteSwiftPackageReference; repositoryURL = "https://example.test/o/other"; requirement = { kind = exactVersion; version = 5.0.0; };');
-  assert.deepEqual(pbx.remote, [{ type: 'upToNextMajor', version: '0.1.0' }]);
+test('swift requirements are read from Package.swift, project.yml and an Xcode project', () => {
+  const kinds = (file, text) => { const d = path.join(tmp, `req-${file.replace(/\W/g, '')}-${++listCount}`); write(path.join(d, file), text); return pinsOf(d).pins.map((p) => [p.kind, p.requirement.type, p.requirement.version]); };
+  assert.deepEqual(kinds('Package.swift', '.package(url: "https://example.test/o/judarn.git", exact: "0.1.2"),\n.package(url: "https://example.test/o/other", from: "1.0.0"),'), [['swift', 'exact', '0.1.2']]);
+  assert.deepEqual(kinds('Package.swift', '.package(url: "https://example.test/o/judarn", .upToNextMinor(from: "0.1.1"))'), [['swift', 'upToNextMinor', '0.1.1']]);
+  assert.deepEqual(kinds('project.yml', 'packages:\n  Judarn:\n    url: https://example.test/o/judarn\n    exactVersion: 0.1.4\n  Other:\n    url: https://example.test/o/other\n    from: 2.0.0\n'), [['swift', 'exact', '0.1.4']]);
   // Xcode's project file has no exact key: an exact pin is a range up to the next patch
-  const xc = c.parseSwiftFile('project.xcproj', '{ "kind": "remote", "repository": "https://example.test/o/judarn", "version": { "version-range-min": "0.1.2", "version-range-max": "0.1.3", }, }, { "kind": "remote", "repository": "https://example.test/o/other", "version": { "up-to-next-major-version": "1.4.0" } }');
-  assert.deepEqual(xc.remote, [{ type: 'exact', version: '0.1.2' }]);
-  const wide = c.parseSwiftFile('project.xcproj', '{ "kind": "remote", "repository": "https://example.test/o/judarn", "version": { "version-range-min": "0.1.2", "version-range-max": "0.2.0" } }');
-  assert.deepEqual(wide.remote, [{ type: 'range', version: '0.1.2', max: '0.2.0' }]);
-  assert.deepEqual(c.parseSwiftFile('Package.swift', '.package(url: "https://example.test/o/judarn", "0.1.2"..<"0.1.3")').remote, [{ type: 'exact', version: '0.1.2' }]);
+  assert.deepEqual(kinds('App.xcodeproj/project.xcproj', '{ "kind": "remote", "repository": "https://example.test/o/judarn", "version": { "version-range-min": "0.1.2", "version-range-max": "0.1.3", }, }'), [['swift', 'exact', '0.1.2']]);
 });
 
 test('unpinned: a local path to the Judarn folder, in Package.swift, project.yml or an Xcode project', () => {
@@ -129,23 +130,40 @@ test('unpinned: a local path to the Judarn folder, in Package.swift, project.yml
   ]) {
     const d = path.join(tmp, `local-${file.replace(/\W/g, '')}`);
     write(path.join(d, file), text);
-    const pin = c.detectPin(d);
-    assert.equal(pin.kind, 'unpinned', file);
+    const r = pinsOf(d);
+    assert.deepEqual([r.local, r.pins.length], [true, 0], file);
+    assert.ok(r.problems.length, file);
   }
   const none = path.join(tmp, 'plain'); write(path.join(none, 'Package.swift'), '.package(path: "../judarn-tools")');
-  assert.equal(c.detectPin(none).kind, 'none');
+  const r = pinsOf(none);
+  assert.deepEqual([r.local, r.pins.length], [false, 0]);
+  assert.match(r.problems.join(';'), /no pin found/);
 });
 
-test('detection skips build folders, scripts/ and anything deeper than two levels', () => {
+test('reading skips build folders, scripts/ and anything deeper than two levels', () => {
   const d = path.join(tmp, 'skips');
   const local = '.package(path: "../../Packages/judarn"),';
   write(path.join(d, 'scripts/Tool/Package.swift'), local);
   write(path.join(d, '.build/Package.swift'), local);
   write(path.join(d, 'node_modules/x/Package.swift'), local);
   write(path.join(d, 'a/b/c/Package.swift'), local);
-  assert.equal(c.detectPin(d).kind, 'none');
+  assert.equal(pinsOf(d).local, false);
   write(path.join(d, 'a/b/Package.swift'), local);
-  assert.equal(c.detectPin(d).kind, 'unpinned');
+  assert.equal(pinsOf(d).local, true);
+});
+
+test('an app with both npm and Swift pins is judged on both, and the higher class wins', () => {
+  const d = path.join(tmp, 'both-forms');
+  write(path.join(d, 'package.json'), JSON.stringify({ dependencies: { '@judarn/ui': '0.1.1' } }));
+  write(path.join(d, 'package-lock.json'), JSON.stringify({ packages: { 'node_modules/@judarn/ui': { version: '0.1.1' } } }));
+  write(path.join(d, 'Package.swift'), '.package(url: "https://example.test/o/judarn", exact: "0.1.1")');
+  write(path.join(d, 'Package.resolved'), JSON.stringify({ pins: [{ identity: 'judarn', state: { version: '0.1.1' } }], version: 3 }));
+  assert.deepEqual(pinsOf(d).pins.map((p) => p.kind).sort(), ['npm', 'swift']);
+  const stub = (cmd, args, opts) => (cmd === 'git' ? c.__exec(cmd, args, opts) : { status: 0, stdout: '0.1.2\n', stderr: '' });
+  const row = (to) => c.buildReport({ pins: readPinsFor([{ name: 'Both', path: d }]), repo, to, exec: stub }).rows[0];
+  assert.equal(row('v0.1.2').change, 'code'); // npm loads the type file; Swift loads nothing that changed
+  assert.equal(row('v0.1.3').change, 'visible'); // Swift sources changed: the higher class wins
+  assert.match(c.renderTable({ rows: [row('v0.1.2')] }), /npm.*\+ .*swift/);
 });
 
 // ---- change classification -------------------------------------------------
@@ -186,14 +204,15 @@ test('stale doc lines need both Judarn and the pinned version; the changelog is 
   assert.deepEqual(hits.map((h) => `${h.file}:${h.line}`).sort(), ['README.md:1', 'docs/SPEC.md:1']);
 });
 
-test('unlisted consumers are found under the scan root', () => {
+test('unlisted consumers come from the reader, under the scan root of the list', () => {
   const root = path.join(tmp, 'apps');
   for (const n of ['listed', 'unlisted', 'innocent']) { fs.mkdirSync(path.join(root, n), { recursive: true }); git(path.join(root, n), 'init', '-q'); }
   write(path.join(root, 'listed/Package.swift'), '.package(path: "../judarn")');
   write(path.join(root, 'unlisted/Package.swift'), '.package(path: "../judarn")');
-  for (const n of ['listed', 'unlisted']) git(path.join(root, n), 'add', 'Package.swift'); // detection reads tracked files only
-  const found = c.findUnlisted(root, [path.join(root, 'listed')]);
-  assert.deepEqual(found.map((f) => [f.name, f.kind]), [['unlisted', 'unpinned']]);
+  for (const n of ['listed', 'unlisted']) git(path.join(root, n), 'add', 'Package.swift'); // the reader counts tracked files only
+  const pins = readPinsFor([{ name: 'listed', path: path.join(root, 'listed') }], { scanRoot: root });
+  const report = c.buildReport({ pins, repo, to: 'v0.1.3', exec: c.__exec, offline: true });
+  assert.deepEqual(report.unlisted.map((u) => u.name), ['unlisted']);
 });
 
 test('consumer state reports uncommitted files and branch', () => {
@@ -217,11 +236,57 @@ test('reachability: unknown, never a failure, when offline or the tools fail; 40
 
 // ---- list, report, CLI -----------------------------------------------------
 
-test('a missing list explains how to make one and the CLI exits non-zero', () => {
-  assert.throws(() => c.loadList(path.join(tmp, 'nope.json')), /Make one/);
-  const r = cp.spawnSync('node', [path.join(__dirname, 'consumers.js'), '--list', path.join(tmp, 'nope.json')], { encoding: 'utf8' });
-  assert.notEqual(r.status, 0);
-  assert.match(r.stderr, /consumers/);
+const CLI = path.join(__dirname, 'consumers.js');
+const runCli = (args, env = {}) => cp.spawnSync('node', [CLI, ...args], { encoding: 'utf8', env: { ...process.env, ...env } });
+
+test('a missing list explains how to set one and exits 1, in the report and in the gate', () => {
+  const noConfig = { GIT_CONFIG_GLOBAL: path.join(tmp, 'empty-gitconfig') };
+  write(noConfig.GIT_CONFIG_GLOBAL, '');
+  for (const args of [['--offline'], ['--gate', '--offline']]) {
+    const r = runCli(args, noConfig);
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /--list <file>.*commit-checks\.list/s);
+    assert.equal(r.stdout, '');
+  }
+});
+
+test('the list can come from git config commit-checks.list', () => {
+  const cfg = path.join(tmp, 'listcfg-gitconfig');
+  const listFile = path.join(tmp, 'listcfg.json');
+  write(listFile, JSON.stringify({ consumers: [] }));
+  write(cfg, `[commit-checks]
+	list = ${listFile}
+`);
+  assert.equal(c.findList(null, (cmd, args) => c.__exec(cmd, args, { env: { ...process.env, GIT_CONFIG_GLOBAL: cfg } })), listFile);
+});
+
+test('an unknown pin format, a failing commit-checks and invalid JSON all exit 1', () => {
+  const bad = path.join(tmp, 'pins-format-2.json');
+  write(bad, JSON.stringify({ format: 2, consumers: [], unlisted: [] }));
+  const junk = path.join(tmp, 'pins-junk.json');
+  write(junk, 'not json');
+  const brokenList = path.join(tmp, 'broken-list.json');
+  write(brokenList, '{ nope'); // commit-checks cannot read it and exits non-zero
+  const cases = [
+    ['--gate', '--offline', '--to', 'v0.1.2', '--repo', repo, '--pins', bad, '--list', brokenList],
+    ['--gate', '--offline', '--to', 'v0.1.2', '--repo', repo, '--pins', junk],
+    ['--gate', '--offline', '--to', 'v0.1.2', '--repo', repo, '--list', brokenList],
+    ['--offline', '--to', 'v0.1.2', '--repo', repo, '--list', brokenList]
+  ];
+  for (const args of cases) {
+    const r = runCli(args);
+    assert.equal(r.status, 1, args.join(' '));
+    assert.equal(r.stdout, '');
+  }
+  assert.match(runCli(cases[0]).stderr, /pin format 2/);
+  assert.match(runCli(cases[1]).stderr, /not valid JSON/);
+  assert.match(runCli(cases[2]).stderr, /commit-checks pins failed/);
+});
+
+test('every problem the reader names shows as a blocker', () => {
+  const pins = { consumers: [{ name: 'Odd', path: tmp, exists: true, packages: { judarn: { declared: true, detected: true, forms: [], version: null, problems: ['first problem', 'second problem'] } } }], unlisted: [] };
+  const row = c.buildReport({ pins, repo, to: 'v0.1.2', exec: c.__exec, offline: true }).rows[0];
+  assert.ok(row.blockers.includes('first problem') && row.blockers.includes('second problem'));
 });
 
 test('report end to end, JSON and page, without touching the consumer', () => {
@@ -232,16 +297,16 @@ test('report end to end, JSON and page, without touching the consumer', () => {
   write(path.join(swiftApp, 'Package.swift'), '.package(url: "https://example.test/o/judarn", exact: "0.1.0")');
   write(path.join(localApp, 'Package.swift'), '.package(path: "../judarn")');
   const before = [npmApp, swiftApp, localApp].map((d) => cp.execFileSync('find', [d, '-type', 'f', '-newer', repo]).toString());
-  const list = { scanRoot: null, consumers: [{ name: 'Web app', path: npmApp }, { name: 'Phone app', path: swiftApp }, { name: 'Desk app', path: localApp }] };
+  const pins = readPinsFor([{ name: 'Web app', path: npmApp }, { name: 'Phone app', path: swiftApp }, { name: 'Desk app', path: localApp }]);
   const stub = (cmd, args, opts) => (cmd === 'git' ? c.__exec(cmd, args, opts) : { status: 1, stdout: '', stderr: 'E404 no match found' });
-  const report = c.buildReport({ list, repo, to: 'v0.1.4', exec: stub });
+  const report = c.buildReport({ pins, repo, to: 'v0.1.4', exec: stub });
   const by = Object.fromEntries(report.rows.map((r) => [r.name, r]));
   assert.equal(by['Web app'].change, 'visible');
   assert.ok(by['Web app'].blockers.some((b) => /not on npm/.test(b)));
   assert.equal(by['Phone app'].change, 'visible');
   assert.equal(by['Desk app'].change, 'n/a');
   assert.match(c.renderTable(report), /Desk app\s+unpinned/);
-  assert.equal(c.buildReport({ list, repo, exec: stub, offline: true }).target, 'v0.1.5');
+  assert.equal(c.buildReport({ pins, repo, exec: stub, offline: true }).target, 'v0.1.5');
   const page = c.renderPage(report, require('./lib/design-tokens.js').loadFlatOrThrow());
   assert.match(page, /#bb0000/);
   assert.match(page, /<style>/);
@@ -276,7 +341,7 @@ function gateFor(to, rows) {
     if (!extra) git(d, 'commit', '-q', '-m', 'init');
     return { name, path: d };
   });
-  const report = c.buildReport({ list: { scanRoot: null, consumers: dirs }, repo, to, exec: c.__exec, offline: true });
+  const report = c.buildReport({ pins: readPinsFor(dirs), repo, to, exec: c.__exec, offline: true });
   return { report, gate: () => c.buildGate(report, repo, c.__exec) };
 }
 
@@ -307,14 +372,25 @@ test('gate CLI: only JSON on stdout, nonzero for an unknown tag or a missing lis
   write(path.join(d, 'Package.swift'), '.package(url: "https://example.test/o/judarn", exact: "0.1.0")');
   git(d, 'init', '-q'); git(d, 'add', '-A'); git(d, 'commit', '-q', '-m', 'init');
   const listFile = path.join(tmp, 'cli-gate-list.json');
-  write(listFile, JSON.stringify({ consumers: [{ name: 'Cli app', path: d }] }));
-  const run = (...a) => cp.spawnSync('node', [path.join(__dirname, 'consumers.js'), '--gate', '--offline', '--repo', repo, '--list', listFile, ...a], { encoding: 'utf8' });
-  const ok = run('--to', 'v0.1.2');
+  write(listFile, JSON.stringify({ consumers: [{ name: 'Cli app', path: d, packages: ['judarn'] }] }));
+  const run = (...a) => runCli(['--gate', '--offline', '--repo', repo, '--list', listFile, ...a]);
+  const ok = run('--to', 'v0.1.2'); // the gate calls commit-checks pins itself without --pins
   assert.equal(ok.status, 0);
   assert.equal(JSON.parse(ok.stdout)['Cli app'].decision, 'go');
   assert.notEqual(run('--to', 'v9.9.9').status, 0);
   assert.equal(run('--to', 'v9.9.9').stdout, '');
-  assert.notEqual(cp.spawnSync('node', [path.join(__dirname, 'consumers.js'), '--gate', '--list', path.join(tmp, 'nope.json')], { encoding: 'utf8' }).status, 0);
+});
+
+test('gate with --pins FILE judges the pins in that file and does not call commit-checks', () => {
+  const file = path.join(tmp, 'given-pins.json');
+  const entry = (name, version) => ({ name, path: path.join(tmp, 'not-a-real-folder'), exists: false, packages: { judarn: { declared: true, detected: true, forms: [{ kind: 'swift', file: 'Package.swift', requirement: { type: 'exact', version }, resolved: { file: 'Package.resolved', version }, editable: true }], version, problems: [] } } });
+  write(file, JSON.stringify({ format: 1, consumers: [entry('Given', '0.1.0')], unlisted: [] }));
+  // --list names a file commit-checks cannot read: only a run that never calls it can succeed
+  const r = runCli(['--gate', '--offline', '--to', 'v0.1.2', '--repo', repo, '--pins', file, '--list', path.join(tmp, 'no-such-list.json')]);
+  assert.equal(r.status, 0, r.stderr);
+  const gate = JSON.parse(r.stdout);
+  assert.equal(gate.Given.decision, 'hold');
+  assert.match(gate.Given.reason, /folder not found/);
 });
 
 test('every loaded path exists in this repository', () => {

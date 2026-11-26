@@ -18,7 +18,7 @@ Judarn's rules live in `docs/DESIGN.md`, how the code works in `ARCHITECTURE.md`
 - The release commit is the change's own commit with `, X.Y.Z` added to the end of its subject. The whole subject stays at 72 characters or fewer, so leave room for the version.
 - Create and push the tag only after the commit succeeds, chained with `&&` on one line. Otherwise a rejected commit leaves the tag on the commit before it.
 - Every version gets a tag. A GitHub release, and so an npm version (ADR-0013), comes only when an app that loads `@judarn/ui` needs it, with the owner's yes.
-- `node scripts/consumers.js --to vX.Y.Z` reports what a release changes for each app that loads Judarn. It needs a private list; see ARCHITECTURE.md.
+- `node scripts/consumers.js --to vX.Y.Z` reports what a release changes for each app that loads Judarn. The pins and the private consumer list come from commit-checks (`--list FILE`, or `git config --global commit-checks.list`); see ARCHITECTURE.md.
 
 ## Boundaries
 - Nothing in this repository writes to an agent's global configuration. The `judarn` skill lives outside it (ADR-0008).

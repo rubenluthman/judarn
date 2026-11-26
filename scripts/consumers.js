@@ -3,11 +3,12 @@
  * Judarn consumer status. Read-only: for each app that loads Judarn it reports which version the app
  * holds and what updating it to a target tag would change, limited to what that app loads.
  *
- *   node scripts/consumers.js [--list <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline] [--gate]
+ *   node scripts/consumers.js [--list <file>] [--pins <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline] [--gate]
  *
- * The consumer list is private (`docs/private/consumers.json`, gitignored):
- *   { "scanRoot": "<folder>", "consumers": [ { "name": "...", "path": "..." } ] }
- * Relative paths resolve against the list file's folder. Nothing here writes to a consumer folder.
+ * Which apps load Judarn, and which version each pins, come from the shared commit-checks package: this script runs
+ * Judarn's own `scripts/commit-checks pins` (or reads `--pins <file>`, the same JSON that the roll-out wrote) and
+ * judges the update. The private consumer list is the commit-checks list: `--list <file>`, else
+ * `git config --global commit-checks.list`. Nothing here parses a pin file or writes to a consumer folder.
  * `--gate` prints the decision the commit-checks roll-out reads: { "<name>": { "decision": "go" | "hold", "reason": "..." } }.
  */
 
@@ -19,10 +20,7 @@ const path = require('path');
 const cp = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const DEFAULT_LIST = path.join(ROOT, 'docs/private/consumers.json');
 const SKIP_DIRS = new Set(['.build', 'build', 'DerivedData', 'node_modules', 'scripts', 'Pods']);
-const PIN_FILES = new Set(['package-lock.json', 'package.json', 'Package.resolved', 'Package.swift', 'project.yml', 'project.xcproj', 'project.pbxproj']);
-const SCAN_DEPTH = 2; // the consumer folder plus two levels of subfolders
 const RANK = { none: 0, code: 1, visible: 2 };
 // What each kind of consumer loads from Judarn. A test checks that each path exists, so a moved folder can't
 // turn every update into "none" (it did: the Swift path once named a root `Sources` that never existed).
@@ -30,8 +28,6 @@ const LOADED_PATHS = {
   swift: ['platforms/apple/Sources', 'Package.swift'],
   npm: ['platforms/web/src', 'platforms/web/package.json', 'tokens']
 };
-const URL_RE = /[/:][\w.-]+\/judarn(?:\.git)?(?=["'\s,)]|$)/i;
-const LOCAL_RE = /(?:relativePath|path)["']?\s*[:=]\s*\(?\s*["']?([^"';,\n)]*[/\\]judarn)[/\\]?["']?/gi;
 
 // ---------------------------------------------------------------------------
 // Small helpers
@@ -43,7 +39,6 @@ function defaultExec(cmd, args, opts = {}) {
 }
 
 const readText = (file) => { try { return fs.readFileSync(file, 'utf8'); } catch { return null; } };
-const isExact = (v) => /^\d+\.\d+\.\d+$/.test(v);
 const cmpVersion = (a, b) => {
   const pa = a.split('.').map(Number), pb = b.split('.').map(Number);
   for (let i = 0; i < 3; i++) if (pa[i] !== pb[i]) return pa[i] - pb[i];
@@ -52,264 +47,81 @@ const cmpVersion = (a, b) => {
 const expandHome = (p) => (p === '~' || p.startsWith('~/') ? path.join(os.homedir(), p.slice(1)) : p);
 
 // ---------------------------------------------------------------------------
-// Step 1: the consumer list
+// Step 1: the pins, read by the shared commit-checks reader
 // ---------------------------------------------------------------------------
 
-function loadList(file) {
-  const text = readText(file);
-  if (text === null) {
-    throw Object.assign(new Error(
-      `No consumer list at ${file}.\n` +
-      'Make one (the folder docs/private/ is gitignored, never commit it):\n' +
-      '  { "scanRoot": "<folder holding your apps>",\n' +
-      '    "consumers": [ { "name": "<app name>", "path": "<app folder>" } ] }\n' +
-      'Relative paths resolve against the list file\'s folder. Use --list <file> for another place.'
-    ), { code: 'NO_LIST' });
-  }
-  let doc;
-  try { doc = JSON.parse(text); } catch (e) { throw Object.assign(new Error(`${file} is not valid JSON: ${e.message}`), { code: 'BAD_LIST' }); }
-  if (!doc || !Array.isArray(doc.consumers)) throw Object.assign(new Error(`${file} needs a "consumers" array`), { code: 'BAD_LIST' });
-  const base = path.dirname(path.resolve(file));
-  const resolve = (p) => path.resolve(base, expandHome(String(p)));
-  const consumers = doc.consumers.map((c, i) => {
-    if (!c || typeof c.name !== 'string' || typeof c.path !== 'string') throw Object.assign(new Error(`${file}: consumer ${i + 1} needs "name" and "path"`), { code: 'BAD_LIST' });
-    return { name: c.name, path: resolve(c.path) };
-  });
-  return { scanRoot: doc.scanRoot ? resolve(doc.scanRoot) : null, consumers };
+const PINS_FORMAT = 1;
+
+const NO_LIST_HELP =
+  'No consumer list given.\n' +
+  'Pass --list <file>, or set one once: git config --global commit-checks.list <file>\n' +
+  '(a private file; the commit-checks package describes its format).';
+
+/** The list file: --list, else `git config --global commit-checks.list`. Writes no path of its own. */
+function findList(explicit, exec = defaultExec) {
+  if (explicit) return path.resolve(expandHome(explicit));
+  const r = exec('git', ['config', '--global', '--get', 'commit-checks.list']);
+  const configured = r.status === 0 ? r.stdout.trim() : '';
+  if (!configured) throw new Error(NO_LIST_HELP);
+  return path.resolve(expandHome(configured));
 }
 
-// ---------------------------------------------------------------------------
-// Step 2: pin detection
-// ---------------------------------------------------------------------------
+/** Checks the shape of a commit-checks `pins --json` document; throws on anything this script cannot judge. */
+function parsePins(text, source) {
+  let doc;
+  try { doc = JSON.parse(text); } catch (e) { throw new Error(`${source} is not valid JSON: ${e.message}`); }
+  if (!doc || doc.format !== PINS_FORMAT) throw new Error(`${source} has pin format ${doc && doc.format}, this script reads format ${PINS_FORMAT}`);
+  if (!Array.isArray(doc.consumers)) throw new Error(`${source} has no "consumers" array`);
+  return { consumers: doc.consumers, unlisted: Array.isArray(doc.unlisted) ? doc.unlisted : [] };
+}
+
+/**
+ * The pin report: from --pins FILE (the roll-out wrote it), else from Judarn's own `scripts/commit-checks pins`,
+ * so the reader is the release this repository pins.
+ */
+function readPins({ list = null, pinsFile = null, exec = defaultExec, root = ROOT }) {
+  if (pinsFile) {
+    const text = readText(pinsFile);
+    if (text === null) throw new Error(`Cannot read the pins file ${pinsFile}`);
+    return parsePins(text, pinsFile);
+  }
+  const listFile = findList(list, exec);
+  const r = exec(path.join(root, 'scripts/commit-checks'), ['pins', '--list', listFile, '--package', 'judarn', '--json'], { cwd: root, timeout: 120000 });
+  if (r.error || r.status !== 0) {
+    const why = r.error ? r.error.message : (r.stderr.trim() || r.stdout.trim() || `exit ${r.status}`);
+    throw new Error(`commit-checks pins failed: ${why}`);
+  }
+  return parsePins(r.stdout, 'commit-checks pins output');
+}
+
+/**
+ * The pins one list entry holds, one per kind ('npm' | 'swift'), plus local-path forms.
+ * Returns { pins: [{ kind, version, requirement, files }], local: boolean, problems: [..] }.
+ */
+function pinsFromEntry(entry) {
+  const pkg = (entry.packages && entry.packages.judarn) || { forms: [], problems: [] };
+  const byKind = new Map();
+  let local = false;
+  for (const f of pkg.forms || []) {
+    if (f.requirement && f.requirement.type === 'local') { local = true; continue; }
+    if (!byKind.has(f.kind)) byKind.set(f.kind, []);
+    byKind.get(f.kind).push(f);
+  }
+  const pins = [];
+  for (const [kind, forms] of byKind) {
+    const req = forms.find((f) => f.requirement && f.requirement.version) || forms[0];
+    const versions = [...new Set(forms.map((f) => (f.resolved && f.resolved.version) || (f.requirement && f.requirement.type === 'exact' ? f.requirement.version : null)).filter(Boolean))];
+    const requirement = req && req.requirement ? { type: req.requirement.type, version: req.requirement.version || null, ...(req.requirement.max ? { max: req.requirement.max } : {}) } : null;
+    const files = [...new Set(forms.flatMap((f) => [f.file, f.resolved && f.resolved.file].filter(Boolean)))];
+    pins.push({ kind, version: versions[0] || null, requirement, files });
+  }
+  return { pins, local, problems: pkg.problems || [] };
+}
 
 function listDirs(dir) {
   try { return fs.readdirSync(dir, { withFileTypes: true }); } catch { return []; }
 }
 
-/** Paths Git tracks in a folder, as absolute paths; null when the folder is not a Git work tree. */
-function trackedFiles(root) {
-  const r = cp.spawnSync('git', ['-C', root, 'ls-files', '-z'], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
-  if (r.error || r.status !== 0) return null;
-  return new Set(r.stdout.split('\0').filter(Boolean).map((f) => path.join(root, f)));
-}
-
-/**
- * Pin-bearing files in the top levels of a consumer, plus Xcode's resolved file below its project folders.
- * Only files Git tracks count: an ignored build leftover (a generated Xcode project) can hold a stale pin.
- * A folder that is not a Git work tree keeps every file.
- */
-function collectPinFiles(root) {
-  const found = new Set();
-  const visit = (dir, depth) => {
-    for (const e of listDirs(dir)) {
-      const abs = path.join(dir, e.name);
-      if (e.isFile() && PIN_FILES.has(e.name)) found.add(abs);
-      else if (e.isDirectory() && !e.name.startsWith('.') && !SKIP_DIRS.has(e.name)) {
-        if (/\.(xcodeproj|xcworkspace)$/.test(e.name)) {
-          const nested = e.name.endsWith('.xcodeproj') ? path.join(abs, 'project.xcworkspace') : abs;
-          const resolved = path.join(nested, 'xcshareddata/swiftpm/Package.resolved');
-          if (fs.existsSync(resolved)) found.add(resolved);
-        }
-        if (depth < SCAN_DEPTH) visit(abs, depth + 1);
-      }
-    }
-  };
-  visit(root, 0);
-  const tracked = trackedFiles(root);
-  return [...found].filter((f) => !tracked || tracked.has(f)).sort();
-}
-
-function parseResolved(text) {
-  let doc;
-  try { doc = JSON.parse(text); } catch { return null; }
-  const pins = doc.pins || (doc.object && doc.object.pins) || [];
-  for (const p of pins) {
-    const id = String(p.identity || p.package || '').toLowerCase();
-    if (id === 'judarn' || URL_RE.test(p.location || p.repositoryURL || '')) {
-      const s = p.state || {};
-      return { version: s.version || null, branch: s.branch || null, revision: s.revision || null };
-    }
-  }
-  return null;
-}
-
-/** Text between the first `(` after `from` and its matching `)`. */
-function balanced(text, from) {
-  const open = text.indexOf('(', from);
-  if (open < 0) return '';
-  let depth = 0;
-  for (let i = open; i < text.length; i++) {
-    if (text[i] === '(') depth++;
-    else if (text[i] === ')' && --depth === 0) return text.slice(open + 1, i);
-  }
-  return text.slice(open + 1);
-}
-
-/** A range from one version up to the next patch admits exactly one version: Xcode's project file has no exact key, so this is how an exact pin is written there. */
-function rangeRequirement(min, max) {
-  const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(min || '');
-  if (m && max === `${m[1]}.${m[2]}.${Number(m[3]) + 1}`) return { type: 'exact', version: min };
-  return { type: 'range', version: min, max };
-}
-
-function requirementFromKeys(pairs) {
-  // pairs: [key, value] as found in a manifest or project file
-  let min = null, max = null;
-  for (const [k, v] of pairs) {
-    const key = k.toLowerCase().replace(/[-_ ]/g, '');
-    if (/^(exact|exactversion|version)$/.test(key) && isExact(v)) return { type: 'exact', version: v };
-    if (/upto.*minor|^minorversion$/.test(key)) return { type: 'upToNextMinor', version: v };
-    if (/upto.*major|^majorversion$|^from$/.test(key)) return { type: 'upToNextMajor', version: v };
-    if (/^(minimumversion|minversion|versionrangemin)$/.test(key)) min = v;
-    if (/^(maximumversion|maxversion|versionrangemax)$/.test(key)) max = v;
-    if (key === 'branch') return { type: 'branch', version: v };
-    if (key === 'revision') return { type: 'revision', version: v };
-  }
-  return min ? (max ? rangeRequirement(min, max) : { type: 'upToNextMajor', version: min }) : null;
-}
-
-/** Judarn requirements and local paths named in one manifest or project file. */
-function parseSwiftFile(name, text) {
-  const out = { remote: [], local: false };
-  if (name === 'Package.swift') {
-    for (let i = text.indexOf('.package('); i >= 0; i = text.indexOf('.package(', i + 1)) {
-      const args = balanced(text, i);
-      if (/path:\s*"[^"]*[/\\]?judarn[/\\]?"/i.test(args)) out.local = true;
-      else if (URL_RE.test(args)) {
-        let req = null, m;
-        if ((m = args.match(/exact:\s*"([^"]+)"|\.exact\(\s*"([^"]+)"/))) req = { type: 'exact', version: m[1] || m[2] };
-        else if ((m = args.match(/\.upToNextMinor\(\s*from:\s*"([^"]+)"/))) req = { type: 'upToNextMinor', version: m[1] };
-        else if ((m = args.match(/\.upToNextMajor\(\s*from:\s*"([^"]+)"|from:\s*"([^"]+)"/))) req = { type: 'upToNextMajor', version: m[1] || m[2] };
-        else if ((m = args.match(/"([^"]+)"\s*\.\.[.<]\s*"([^"]+)"/))) req = rangeRequirement(m[1], m[2]);
-        else if ((m = args.match(/branch:\s*"([^"]+)"/))) req = { type: 'branch', version: m[1] };
-        else if ((m = args.match(/revision:\s*"([^"]+)"/))) req = { type: 'revision', version: m[1] };
-        out.remote.push(req || { type: 'unknown', version: null });
-      }
-    }
-    return out;
-  }
-  if (name === 'project.yml') {
-    const lines = text.split('\n');
-    const indent = (l) => l.match(/^\s*/)[0].length;
-    lines.forEach((line, i) => {
-      const isUrl = /^\s*url:\s*\S*judarn(\.git)?\s*$/i.test(line) && URL_RE.test(line);
-      const isPath = /^\s*path:\s*\S*[/\\]judarn[/\\]?\s*$/i.test(line);
-      if (isPath) out.local = true;
-      if (!isUrl) return;
-      const ind = indent(line);
-      const pairs = [];
-      for (let j = i; j >= 0 && indent(lines[j]) >= ind && lines[j].trim(); j--) pairs.push(lines[j]);
-      for (let j = i + 1; j < lines.length && indent(lines[j]) >= ind && lines[j].trim(); j++) pairs.push(lines[j]);
-      const kv = pairs.map((l) => l.trim().match(/^(\w+):\s*"?([^"\s]+)"?$/)).filter(Boolean).map((m) => [m[1], m[2]]);
-      out.remote.push(requirementFromKeys(kv.filter(([k]) => k !== 'url')) || { type: 'unknown', version: null });
-    });
-    return out;
-  }
-  // project.xcproj (JSON-like) and project.pbxproj
-  LOCAL_RE.lastIndex = 0;
-  if (LOCAL_RE.test(text)) out.local = true;
-  const urlRe = /(?:"repository"|"repositoryURL"|repositoryURL)\s*[:=]\s*"?([^"\s;,]+)/g;
-  for (let m; (m = urlRe.exec(text));) {
-    if (!URL_RE.test(m[1])) continue;
-    const rest = text.slice(m.index + m[0].length, m.index + m[0].length + 400);
-    const cut = rest.search(/"kind"|isa\s*=|XCRemoteSwiftPackageReference|XCLocalSwiftPackageReference/);
-    const win = cut < 0 ? rest : rest.slice(0, cut);
-    const kv = [...win.matchAll(/"?([A-Za-z][\w-]*)"?\s*[:=]\s*"?([\w.-]+)"?/g)].map((x) => [x[1], x[2]]);
-    const kindKey = kv.find(([k]) => k === 'kind');
-    const pbxKinds = { exactVersion: 'exact', upToNextMinorVersion: 'upToNextMinor', upToNextMajorVersion: 'upToNextMajor', versionRange: 'range' };
-    let req = null;
-    if (kindKey && pbxKinds[kindKey[1]]) {
-      const ver = kv.find(([k]) => /^(version|minimumVersion)$/.test(k));
-      const max = kv.find(([k]) => k === 'maximumVersion');
-      req = !ver ? null : pbxKinds[kindKey[1]] === 'range' && max ? rangeRequirement(ver[1], max[1]) : { type: pbxKinds[kindKey[1]], version: ver[1], ...(max ? { max: max[1] } : {}) };
-    } else if (kindKey && (kindKey[1] === 'branch' || kindKey[1] === 'revision')) {
-      const v = kv.find(([k]) => k === kindKey[1]);
-      req = { type: kindKey[1], version: v ? v[1] : null };
-    } else {
-      req = requirementFromKeys(kv);
-    }
-    out.remote.push(req || { type: 'unknown', version: null });
-  }
-  return out;
-}
-
-function parseNpm(consumerDir, files) {
-  const out = { lockVersion: null, spec: null, local: false, files: [] };
-  for (const f of files) {
-    const base = path.basename(f);
-    const text = base === 'package-lock.json' || base === 'package.json' ? readText(f) : null;
-    if (!text) continue;
-    let doc; try { doc = JSON.parse(text); } catch { continue; }
-    if (base === 'package-lock.json') {
-      const entry = (doc.packages && doc.packages['node_modules/@judarn/ui']) || (doc.dependencies && doc.dependencies['@judarn/ui']);
-      if (entry && entry.version && out.lockVersion === null) { out.lockVersion = entry.version; out.files.push(path.relative(consumerDir, f)); }
-    } else {
-      for (const group of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
-        const spec = doc[group] && doc[group]['@judarn/ui'];
-        if (typeof spec !== 'string') continue;
-        out.files.push(path.relative(consumerDir, f));
-        if (/^(file|link):/.test(spec) || /[/\\]judarn/i.test(spec)) out.local = true;
-        else if (out.spec === null) out.spec = spec;
-      }
-    }
-  }
-  return out;
-}
-
-/**
- * Which Judarn pin a consumer holds, found without configuration.
- * kind: 'npm' | 'swift' | 'unpinned' | 'none'.
- */
-function detectPin(consumerDir) {
-  const files = collectPinFiles(consumerDir);
-  const rel = (f) => path.relative(consumerDir, f);
-  const npm = parseNpm(consumerDir, files);
-
-  let resolved = null, resolvedFile = null, local = npm.local;
-  const remote = [];
-  const swiftFiles = [];
-  for (const f of files) {
-    const base = path.basename(f);
-    if (base === 'package.json' || base === 'package-lock.json') continue;
-    const text = readText(f);
-    if (text === null) continue;
-    if (base === 'Package.resolved') {
-      const pin = parseResolved(text);
-      if (pin && !resolved) { resolved = pin; resolvedFile = rel(f); swiftFiles.push(rel(f)); }
-      continue;
-    }
-    const parsed = parseSwiftFile(base, text);
-    if (parsed.remote.length) { remote.push(...parsed.remote.map((r) => ({ ...r, file: rel(f) }))); swiftFiles.push(rel(f)); }
-    if (parsed.local) { local = true; swiftFiles.push(rel(f)); }
-  }
-
-  if (npm.lockVersion || npm.spec) {
-    const exactSpec = npm.spec && isExact(npm.spec);
-    const requirement = npm.spec ? { type: exactSpec ? 'exact' : 'range', version: npm.spec } : null;
-    const version = npm.lockVersion || (exactSpec ? npm.spec : null);
-    let mismatch = null;
-    if (requirement && !exactSpec) mismatch = `range "${npm.spec}", not an exact version`;
-    else if (exactSpec && npm.lockVersion && npm.lockVersion !== npm.spec) mismatch = `lockfile holds ${npm.lockVersion}, package.json says ${npm.spec}`;
-    return { kind: 'npm', version, requirement, mismatch, files: [...new Set(npm.files)], alsoLocalPath: local };
-  }
-  if (resolved || remote.length) {
-    const requirement = remote.length ? { type: remote[0].type, version: remote[0].version, ...(remote[0].max ? { max: remote[0].max } : {}) } : null;
-    let mismatch = null;
-    const v = resolved && resolved.version;
-    if (requirement && v && requirement.version) {
-      if (requirement.type === 'exact' && v !== requirement.version) mismatch = `resolved ${v} differs from exact ${requirement.version}`;
-      else if ((requirement.type === 'upToNextMinor' || requirement.type === 'upToNextMajor' || requirement.type === 'range') && v !== requirement.version) {
-        mismatch = `resolved ${v} differs from floor ${requirement.version}`;
-      }
-    }
-    return {
-      kind: 'swift', version: v || (requirement && requirement.type === 'exact' ? requirement.version : null),
-      requirement, mismatch, resolvedFile, files: [...new Set(swiftFiles)], alsoLocalPath: local
-    };
-  }
-  if (local) return { kind: 'unpinned', version: null, requirement: null, mismatch: null, files: [...new Set([...npm.files, ...swiftFiles])], alsoLocalPath: true };
-  return { kind: 'none', version: null, requirement: null, mismatch: null, files: [], alsoLocalPath: false };
-}
 
 // ---------------------------------------------------------------------------
 // Steps 3 and 4: reachability, consumer state
@@ -536,30 +348,6 @@ function findStaleLines(consumerDir, version) {
 }
 
 // ---------------------------------------------------------------------------
-// Step 8: unlisted consumers
-// ---------------------------------------------------------------------------
-
-function findUnlisted(scanRoot, listedPaths) {
-  if (!scanRoot || !fs.existsSync(scanRoot)) return [];
-  const real = (p) => { try { return fs.realpathSync(p); } catch { return p; } };
-  const listed = new Set(listedPaths.map(real));
-  const found = [];
-  const visit = (dir, depth) => {
-    for (const e of listDirs(dir)) {
-      if (!e.isDirectory() || e.name.startsWith('.') || SKIP_DIRS.has(e.name)) continue;
-      const abs = path.join(dir, e.name);
-      if (fs.existsSync(path.join(abs, '.git'))) {
-        if (listed.has(real(abs)) || fs.existsSync(path.join(abs, 'tokens/judarn.resolver.json'))) continue;
-        const pin = detectPin(abs);
-        if (pin.kind !== 'none') found.push({ name: e.name, path: abs, kind: pin.kind, version: pin.version });
-      } else if (depth < 1) visit(abs, depth + 1);
-    }
-  };
-  visit(scanRoot, 0);
-  return found;
-}
-
-// ---------------------------------------------------------------------------
 // Step 9: report
 // ---------------------------------------------------------------------------
 
@@ -573,14 +361,17 @@ function tagExists(repo, tag, exec) {
   return gitIn(repo, ['rev-parse', '-q', '--verify', `refs/tags/${tag}^{commit}`], exec).status === 0;
 }
 
+function describePins(row) {
+  if (!row.pins || !row.pins.length) return row.local ? 'unpinned (local path)' : 'no pin found';
+  return row.pins.map(describePin).join(' + ');
+}
+
 function describePin(pin) {
-  if (pin.kind === 'unpinned') return 'unpinned (local path)';
-  if (pin.kind === 'none') return 'no pin found';
   const req = pin.requirement ? `${pin.requirement.type === 'upToNextMinor' ? 'up to next minor' : pin.requirement.type === 'upToNextMajor' ? 'up to next major' : pin.requirement.type} ${pin.requirement.version || ''}`.trim() : null;
   return `${pin.version || '?'} (${pin.kind === 'npm' ? 'npm' : 'swift'}${req ? `, ${req}` : ''})`;
 }
 
-function buildReport({ list, repo = ROOT, to = null, offline = false, exec = defaultExec }) {
+function buildReport({ pins, repo = ROOT, to = null, offline = false, exec = defaultExec }) {
   const target = to || newestTag(repo, exec);
   if (!target) throw new Error('No vX.Y.Z tag found in the Judarn repository.');
   if (!/^v\d+\.\d+\.\d+$/.test(target)) throw new Error(`--to needs a tag like v0.8.29, got "${target}"`);
@@ -588,51 +379,52 @@ function buildReport({ list, repo = ROOT, to = null, offline = false, exec = def
   const cache = new Map();
   let npmCache = null, releaseCache;
 
-  const rows = list.consumers.map((c) => {
-    const row = { name: c.name, path: c.path, exists: fs.existsSync(c.path), pin: null, target, change: 'n/a', changeDetail: null, blockers: [], state: null, stale: [] };
-    if (!row.exists) { row.blockers.push('folder not found'); row.pin = { kind: 'none' }; return row; }
-    const pin = detectPin(c.path);
-    row.pin = pin;
+  // Only the apps the list says load Judarn, or whose pins the reader found.
+  const entries = pins.consumers.filter((c) => c.packages && c.packages.judarn && (c.packages.judarn.declared || c.packages.judarn.detected));
+  const rows = entries.map((c) => {
+    const found = pinsFromEntry(c);
+    const row = { name: c.name, path: c.path, exists: c.exists !== false, pins: found.pins, local: found.local, pin: found.pins[0] || null, target, change: 'n/a', changeDetail: null, blockers: [], state: null, stale: [] };
+    if (!row.exists) { row.blockers.push('folder not found'); row.blockers.push(...found.problems); return row; }
     row.state = consumerState(c.path, exec);
     if (row.state.dirty) row.blockers.push(`${row.state.dirty} uncommitted file${row.state.dirty === 1 ? '' : 's'}${row.state.branch ? ` on ${row.state.branch}` : ''}`);
-    if (pin.mismatch) row.blockers.push(pin.mismatch);
-    if (pin.kind === 'unpinned') row.blockers.push('unpinned: builds whatever the Judarn folder holds');
-    else if (pin.kind === 'none') row.blockers.push('no Judarn pin found');
-    if (pin.alsoLocalPath && pin.kind !== 'unpinned') row.blockers.push('also loads a local Judarn path');
+    row.blockers.push(...found.problems); // every problem the reader names blocks: mismatches, local paths, a missing pin
 
-    if (pin.kind === 'npm') {
-      if (!npmCache) npmCache = checkNpm(targetVersion, exec, offline);
-      if (releaseCache === undefined) releaseCache = checkRelease(target, exec, offline, repo);
-      row.reach = { onNpm: npmCache.onNpm, newestOnNpm: npmCache.newest, githubRelease: releaseCache };
-      if (npmCache.onNpm === false) {
-        row.blockers.push(npmCache.newest ? `not on npm past ${npmCache.newest}` : 'not on npm');
-        if (releaseCache === false) row.blockers.push(`no GitHub release ${target} (publishing needs the owner's yes)`);
-        else if (releaseCache === true) row.blockers.push(`GitHub release ${target} exists but npm lacks it; check the publish workflow`);
-      } else if (npmCache.onNpm === null) row.blockers.push('npm availability unknown');
-    } else if (pin.kind === 'swift') {
-      row.reach = { githubRelease: undefined };
-    }
-
-    if ((pin.kind === 'npm' || pin.kind === 'swift')) {
-      if (!pin.version) row.blockers.push('no resolved version found');
-      else {
-        const heldTag = `v${pin.version}`;
-        if (cmpVersion(pin.version, targetVersion) > 0) { row.change = 'none'; row.changeDetail = { note: 'pin is newer than the target' }; row.blockers.push('pin is newer than the target'); }
-        else if (!tagExists(repo, heldTag, exec)) { row.change = 'unknown'; row.blockers.push(`tag ${heldTag} not found in the Judarn repository`); }
-        else if (!tagExists(repo, target, exec)) { row.change = 'unknown'; row.blockers.push(`tag ${target} not found in the Judarn repository`); }
-        else {
-          const ch = classifyChange(repo, pin.kind, heldTag, target, exec, cache);
-          row.change = ch.class;
-          row.changeDetail = ch;
-          if (ch.error) row.blockers.push(ch.error);
-        }
+    let level = -1;
+    for (const pin of found.pins) {
+      if (pin.kind === 'npm') {
+        if (!npmCache) npmCache = checkNpm(targetVersion, exec, offline);
+        if (releaseCache === undefined) releaseCache = checkRelease(target, exec, offline, repo);
+        row.reach = { onNpm: npmCache.onNpm, newestOnNpm: npmCache.newest, githubRelease: releaseCache };
+        if (npmCache.onNpm === false) {
+          row.blockers.push(npmCache.newest ? `not on npm past ${npmCache.newest}` : 'not on npm');
+          if (releaseCache === false) row.blockers.push(`no GitHub release ${target} (publishing needs the owner's yes)`);
+          else if (releaseCache === true) row.blockers.push(`GitHub release ${target} exists but npm lacks it; check the publish workflow`);
+        } else if (npmCache.onNpm === null) row.blockers.push('npm availability unknown');
+      } else if (!row.reach) {
+        row.reach = { githubRelease: undefined };
       }
-      row.stale = findStaleLines(c.path, pin.version);
+
+      if (!pin.version) { row.blockers.push(`no resolved version found (${pin.kind})`); continue; }
+      let ch = null, cls;
+      const heldTag = `v${pin.version}`;
+      if (cmpVersion(pin.version, targetVersion) > 0) { cls = 'none'; ch = { note: 'pin is newer than the target' }; row.blockers.push('pin is newer than the target'); }
+      else if (!tagExists(repo, heldTag, exec)) { cls = 'unknown'; row.blockers.push(`tag ${heldTag} not found in the Judarn repository`); }
+      else if (!tagExists(repo, target, exec)) { cls = 'unknown'; row.blockers.push(`tag ${target} not found in the Judarn repository`); }
+      else {
+        ch = classifyChange(repo, pin.kind, heldTag, target, exec, cache);
+        cls = ch.class;
+        if (ch.error) row.blockers.push(ch.error);
+      }
+      // An app judged on both kinds takes the higher class; an unknown beats them all, so it holds.
+      const rank = cls === 'unknown' ? 3 : RANK[cls];
+      if (rank > level) { level = rank; row.change = cls; row.changeDetail = ch; }
     }
+    const versions = [...new Set(found.pins.map((p) => p.version).filter(Boolean))];
+    row.stale = versions.flatMap((v) => findStaleLines(c.path, v));
     return row;
   });
 
-  const unlisted = findUnlisted(list.scanRoot, list.consumers.map((c) => c.path));
+  const unlisted = pins.unlisted.filter((u) => (u.loads || []).includes('judarn')).map((u) => ({ name: path.basename(u.path), path: u.path }));
   return { target, offline, generated: new Date().toISOString(), rows, unlisted };
 }
 
@@ -667,7 +459,7 @@ function renderTable(report) {
   const head = ['Consumer', 'Holds', 'Target', 'Change', 'Blockers', 'Stale doc lines'];
   const body = report.rows.map((r) => [
     r.name,
-    r.pin ? describePin(r.pin) : '',
+    describePins(r),
     r.target,
     r.change,
     r.blockers.join('; ') || '–',
@@ -684,7 +476,7 @@ function renderTable(report) {
       if (t.changed.length > 40) out.push(`  ... ${t.changed.length - 40} more (see --json or --page)`);
     }
     if (r.stale.length) {
-      out.push('', `${r.name}: stale doc lines naming ${r.pin.version}`);
+      out.push('', `${r.name}: stale doc lines naming ${r.pins.map((p) => p.version).filter(Boolean).join(', ')}`);
       for (const s of r.stale.slice(0, 10)) out.push(`  ${s.file}:${s.line}`);
     }
   }
@@ -715,7 +507,7 @@ function renderPage(report, flat) {
   const sections = report.rows.map((r) => {
     const t = r.changeDetail && r.changeDetail.tokens;
     const files = (r.changeDetail && r.changeDetail.files) || [];
-    let html = `<section><h2>${esc(r.name)}</h2><p>Holds ${esc(describePin(r.pin))}. Updating to ${esc(r.target)}: <strong>${esc(r.change)}</strong>.${r.blockers.length ? ` Blockers: ${esc(r.blockers.join('; '))}.` : ''}</p>`;
+    let html = `<section><h2>${esc(r.name)}</h2><p>Holds ${esc(describePins(r))}. Updating to ${esc(r.target)}: <strong>${esc(r.change)}</strong>.${r.blockers.length ? ` Blockers: ${esc(r.blockers.join('; '))}.` : ''}</p>`;
     if (files.length) html += `<ul>${files.map((f) => `<li><code>${esc(f.file)}</code> (${esc(f.class)})</li>`).join('')}</ul>`;
     if (t && t.changed.length) {
       const byName = new Map();
@@ -738,7 +530,7 @@ function renderPage(report, flat) {
     return `${html}</section>`;
   }).join('\n');
 
-  const summary = `<table><thead><tr><th>Consumer</th><th>Holds</th><th>Change</th><th>Blockers</th></tr></thead><tbody>${report.rows.map((r) => `<tr><td>${esc(r.name)}</td><td>${esc(describePin(r.pin))}</td><td>${esc(r.change)}</td><td>${esc(r.blockers.join('; ') || '–')}</td></tr>`).join('')}</tbody></table>`;
+  const summary = `<table><thead><tr><th>Consumer</th><th>Holds</th><th>Change</th><th>Blockers</th></tr></thead><tbody>${report.rows.map((r) => `<tr><td>${esc(r.name)}</td><td>${esc(describePins(r))}</td><td>${esc(r.change)}</td><td>${esc(r.blockers.join('; ') || '–')}</td></tr>`).join('')}</tbody></table>`;
 
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -772,7 +564,7 @@ th,td{padding:${px('1')} ${px('1')} ${px('1')} 0;vertical-align:top;border-botto
 <p class="quiet">Updating to ${esc(report.target)}. Generated ${esc(localDate(report.generated))}${report.offline ? ', offline' : ''}.</p>
 ${summary}
 ${sections}
-${report.unlisted.length ? `<section><h2>Unlisted consumers</h2><ul>${report.unlisted.map((u) => `<li>${esc(u.name)} (${esc(u.kind)})</li>`).join('')}</ul></section>` : ''}
+${report.unlisted.length ? `<section><h2>Unlisted consumers</h2><ul>${report.unlisted.map((u) => `<li>${esc(u.name)}</li>`).join('')}</ul></section>` : ''}
 </main></body></html>
 `;
 }
@@ -782,11 +574,12 @@ ${report.unlisted.length ? `<section><h2>Unlisted consumers</h2><ul>${report.unl
 // ---------------------------------------------------------------------------
 
 function parseArgs(argv) {
-  const o = { list: DEFAULT_LIST, to: null, json: false, page: null, offline: false, gate: false, repo: ROOT, help: false };
+  const o = { list: null, pins: null, to: null, json: false, page: null, offline: false, gate: false, repo: ROOT, help: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const val = () => { if (i + 1 >= argv.length) throw new Error(`${a} needs a value`); return argv[++i]; };
     if (a === '--list') o.list = path.resolve(val());
+    else if (a === '--pins') o.pins = path.resolve(val());
     else if (a === '--to') o.to = val();
     else if (a === '--page') o.page = path.resolve(val());
     else if (a === '--repo') o.repo = path.resolve(val());
@@ -799,8 +592,9 @@ function parseArgs(argv) {
   return o;
 }
 
-const USAGE = `Usage: node scripts/consumers.js [--list <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline] [--gate]
-  --list     consumer list (default docs/private/consumers.json)
+const USAGE = `Usage: node scripts/consumers.js [--list <file>] [--pins <file>] [--to vX.Y.Z] [--json] [--page <file>] [--offline] [--gate]
+  --list     the commit-checks consumer list (default: git config --global commit-checks.list)
+  --pins     with --gate: read this commit-checks "pins --json" file instead of calling commit-checks
   --to       target tag (default: newest vX.Y.Z tag)
   --json     print the report as JSON
   --page     write a self-contained HTML review page, for example build/consumers.html
@@ -811,10 +605,9 @@ function main(argv = process.argv.slice(2)) {
   let opts;
   try { opts = parseArgs(argv); } catch (e) { console.error(`${e.message}\n${USAGE}`); return 2; }
   if (opts.help) { console.log(USAGE); return 0; }
-  let list;
-  try { list = loadList(opts.list); } catch (e) { console.error(e.message); return 1; }
-  let report;
-  try { report = buildReport({ list, repo: opts.repo, to: opts.to, offline: opts.offline }); } catch (e) { console.error(e.message); return 1; }
+  let pins, report;
+  try { pins = readPins({ list: opts.list, pinsFile: opts.gate ? opts.pins : null }); } catch (e) { console.error(e.message); return 1; }
+  try { report = buildReport({ pins, repo: opts.repo, to: opts.to, offline: opts.offline }); } catch (e) { console.error(e.message); return 1; }
 
   if (opts.gate) {
     let gate;
@@ -831,15 +624,15 @@ function main(argv = process.argv.slice(2)) {
   }
   console.log(opts.json ? JSON.stringify(report, null, 2) : renderTable(report));
   for (const u of report.unlisted) {
-    console.error(`warning: ${u.name} loads Judarn (${u.kind}${u.version ? ` ${u.version}` : ''}) but is not on the consumer list`);
+    console.error(`warning: ${u.name} loads Judarn but is not on the consumer list`);
   }
   return 0;
 }
 
 module.exports = {
-  loadList, collectPinFiles, parseResolved, parseSwiftFile, detectPin, checkNpm, checkRelease, consumerState,
+  findList, parsePins, readPins, pinsFromEntry, checkNpm, checkRelease, consumerState,
   stripComments, classifyFile, flattenLeaves, diffTokens, snapshotFlat, tokenDiff, classifyChange,
-  LOADED_PATHS, findStaleLines, findUnlisted, newestTag, buildReport, buildGate, localDate, renderTable, renderPage, parseArgs, main
+  LOADED_PATHS, findStaleLines, newestTag, buildReport, buildGate, localDate, renderTable, renderPage, parseArgs, main
 };
 
 if (require.main === module) process.exitCode = main();
