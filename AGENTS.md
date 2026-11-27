@@ -19,6 +19,7 @@ Judarn's rules live in `docs/DESIGN.md`, how the code works in `ARCHITECTURE.md`
 - Create and push the tag only after the commit succeeds, chained with `&&` on one line. Otherwise a rejected commit leaves the tag on the commit before it.
 - Every version gets a tag. A GitHub release, and so an npm version (ADR-0013), comes only when an app that loads `@judarn/ui` needs it, with the owner's yes.
 - `node scripts/consumers.js --to vX.Y.Z` reports what a release changes for each app that loads Judarn. The pins and the private consumer list come from commit-checks (`--list FILE`, or `git config --global commit-checks.list`); see ARCHITECTURE.md.
+- Releases reach consumers through the shared commit-checks roll-out; never edit a consumer or file an item there.
 
 ## Boundaries
 - Nothing in this repository writes to an agent's global configuration. The `judarn` skill lives outside it (ADR-0008).
