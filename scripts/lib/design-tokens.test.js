@@ -52,8 +52,10 @@ test('every role keeps web line-height and Apple leading from its token', () => 
   for (const [key, spec] of Object.entries(flat.typography)) {
     const block = css.match(new RegExp(`\\.t-${kebab(key)} \\{([^}]*)\\}`));
     assert.ok(block, `.t-${kebab(key)} exists`);
-    const lh = Number(block[1].match(/line-height:\s*([\d.]+);/)[1]);
-    assert.ok(Math.abs(lh - spec.lineHeightRatio) < 1e-9, `${key} line-height ${lh} equals token ${spec.lineHeightRatio}`);
+    assert.match(block[1], new RegExp(`line-height: var\\(--jd-lh-${kebab(key)}\\);`), `.t-${kebab(key)} reads its line-height variable`);
+    const lh = Number(css.match(new RegExp(`--jd-lh-${kebab(key)}: ([\\d.]+)px;`))[1]);
+    assert.strictEqual(lh, parseFloat(spec.lineHeight), `${key} --jd-lh ${lh}px equals token ${spec.lineHeight}`);
+    assert.ok(Math.abs(lh / parseFloat(spec.fontSize) - spec.lineHeightRatio) < 1e-9, `${key} ratio unchanged`);
     assert.ok(['tight', 'standard'].includes(spec.appleLeading), `${key} appleLeading`);
   }
   for (const [k, v] of Object.entries({ tight: 'display', head: 'h1', body: 'body' })) {

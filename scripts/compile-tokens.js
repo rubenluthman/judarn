@@ -3,7 +3,7 @@
  * Canonical Design Token Compiler for Judarn
  * Translates the Design Tokens Format Module 2025.10 sources (tokens/judarn-tokens.json, resolved
  * through tokens/judarn.resolver.json) into:
- *  - Apple Native Swift (JudarnColors.swift, JudarnSpacing.swift)
+ *  - Apple Native Swift (JudarnColors.swift, JudarnSpacing.swift, JudarnWebCSS.swift)
  *  - Web CSS custom properties (colors_and_type.css)
  *
  * Usage:
@@ -1476,7 +1476,7 @@ function generateWebCss() {
       `  font-family: ${cssFontVar[spec.slot] || 'var(--jd-font-body)'};`,
       `  font-weight: ${cssWeightVar[spec.fontWeight] || 'var(--jd-weight-regular)'};`,
       `  font-size: var(--jd-size-${k});`,
-      `  line-height: ${spec.lineHeightRatio};`,
+      `  line-height: var(--jd-lh-${k});`,
       `  letter-spacing: ${key === 'mono' ? '0em' : `var(--jd-track-${spec.trackingToken})`};`
     ];
     if (spec.textWrap) lines.push(`  text-wrap: ${spec.textWrap};`);
@@ -1718,6 +1718,9 @@ function generateWebCss() {
   --size-micro: var(--jd-size-micro);
   --size-data: var(--jd-size-data);
   --size-mono: var(--jd-size-mono);
+
+  /* Line height per text style, in the token's px value */
+${Object.keys(t).map((key) => `  --jd-lh-${cssKey(key)}: ${t[key].lineHeight};`).join('\n')}
 
   --lh-tight: ${t.display.lineHeightRatio};
   --lh-head: ${t.h1.lineHeightRatio};
@@ -2133,6 +2136,7 @@ Apple and web take their values from \`tokens/judarn-tokens.json\`, with zero dr
   - Figures are proportional and lining by default. Old-style figures (\`onum\`) are opt-in, for editorial prose only.
   - Set \`font-optical-sizing: auto\` so variable fonts pick their optical size, and \`font-variant-ligatures: none\` on monospace.
   - Uppercase labels take the OpenType case-sensitive forms (\`"case" 1\`).
+  - Apple hosts that render HTML (a WebKit preview, PDF export) load \`JudarnWebCSS.variables\`, the web custom properties including \`--jd-lh-*\` line heights, and never copy a value.
   - Apple takes leading from the role's \`appleLeading\` through \`Font.leading\`, never \`lineSpacing\`, so text styles and Dynamic Type stay intact. Roles for running text and headings are \`tight\`, and \`label\`, \`micro\`, \`data\`, and \`mono\` are \`standard\`. Tight leading removes 2pt per line break and leaves single-line text unchanged (measured on iOS 27.2 and macOS, 2026-11-09).
   - Apple roles never set a fixed point size. A role names \`appleTextStyleMacOS\` only where its own style would render at the same size on macOS as a smaller role (\`.footnote\`, \`.caption\`, and \`.caption2\` are all 10pt there), so each role keeps its size rank on every Apple host.
   - Web sets the space around headings with \`.flow\`, a class on the container that spaces its direct children: \`space2\` (${s['2'].$value}) between items, \`space4\` (${s['4'].$value}) above a heading, and \`space1\` (${s['1'].$value}) below a heading, which wins when a heading follows a heading. Headings are \`h1\` to \`h6\` and the \`.t-display\` and \`.t-h1\` to \`.t-h4\` classes. Top-level sections sit \`space6\` (${s['6'].$value}) apart. Never combine \`.flow\` with \`gap\` on the same container, because the two add up.
@@ -2219,6 +2223,65 @@ ${themesSection}` : ''}
 `;
 }
 
+// Swift string of the web custom properties, for Apple hosts that render HTML (WebKit previews, PDF export).
+// Cut from the generated web CSS so the two cannot drift: only top-level rules whose selectors are
+// :root, [data-theme], [data-contrast] or .palette-dark and whose declarations are all custom properties
+// survive. The :root rule's non-variable declarations are dropped, so a host page can load the string
+// without side effects.
+function generateSwiftWebCss() {
+  const css = generateWebCss().replace(/\/\*[\s\S]*?\*\//g, '');
+  const scopeOk = (sel) => sel.split(',').every((x) => /^\s*(:root|\[data-theme|\[data-contrast|\.palette-dark)/.test(x));
+  const parseDecls = (body) => body.split(';').map((d) => d.trim()).filter(Boolean);
+  const keepVars = (body) => parseDecls(body).filter((d) => d.startsWith('--'));
+  const rule = (sel, decls, indent) => {
+    const pad = ' '.repeat(indent);
+    const selectors = sel.split(',').map((x) => x.trim()).join(`,\n${pad}`);
+    return `${pad}${selectors} {\n${decls.map((d) => `${pad}  ${d.replace(/\s+/g, ' ')};`).join('\n')}\n${pad}}`;
+  };
+  const out = [];
+  const rulesIn = (text) => {
+    const found = [];
+    let k = 0;
+    while (k < text.length) {
+      const open = text.indexOf('{', k);
+      if (open < 0) break;
+      const sel = text.slice(k, open).trim();
+      let depth = 0, end = open;
+      for (; end < text.length; end++) {
+        if (text[end] === '{') depth++;
+        else if (text[end] === '}' && --depth === 0) break;
+      }
+      found.push({ sel, body: text.slice(open + 1, end) });
+      k = end + 1;
+    }
+    return found;
+  };
+  for (const { sel, body } of rulesIn(css)) {
+    if (sel.startsWith('@media')) {
+      const inner = rulesIn(body)
+        .filter((r) => scopeOk(r.sel) && keepVars(r.body).length === parseDecls(r.body).length)
+        .map((r) => rule(r.sel, keepVars(r.body), 2));
+      if (inner.length) out.push(`${sel} {\n${inner.join('\n')}\n}`);
+    } else if (scopeOk(sel)) {
+      const decls = keepVars(body);
+      if (decls.length) out.push(rule(sel, decls, 0));
+    }
+  }
+  const text = out.join('\n\n');
+  if (text.includes('"""') || text.includes('\\')) throw new Error('Generated CSS cannot sit in a Swift raw string');
+  return `/// CSS custom properties of the Judarn web tokens, for Apple hosts that render HTML (a WebKit preview, PDF export).
+/// Generated from tokens/judarn-tokens.json  –  do not edit directly.
+public enum JudarnWebCSS {
+    /// Only custom-property declarations inside \`:root\`, \`[data-theme]\`, \`[data-contrast]\`, \`.palette-dark\`
+    /// and the color-scheme and contrast media queries. It styles no element, so a host page can add it
+    /// to its style sheet and refer to \`var(--jd-…)\`.
+    public static let variables: String = """
+${text.split('\n').map((l) => (l ? '    ' + l : l)).join('\n')}
+    """
+}
+`;
+}
+
 // -------------------------------------------------------------
 // Targets Mapping
 // -------------------------------------------------------------
@@ -2243,6 +2306,11 @@ const targets = [
     path: path.join(rootDir, 'platforms/apple/Sources/Judarn/JudarnTypography.swift'),
     name: 'Apple Native JudarnTypography.swift',
     generate: generateSwiftTypography
+  },
+  {
+    path: path.join(rootDir, 'platforms/apple/Sources/Judarn/JudarnWebCSS.swift'),
+    name: 'Apple Native JudarnWebCSS.swift',
+    generate: generateSwiftWebCss
   },
   {
     path: path.join(rootDir, 'platforms/web/styles/colors_and_type.css'),

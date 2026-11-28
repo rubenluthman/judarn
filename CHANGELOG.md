@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.53] - Unreleased
 
+### Added
+
+- Apple apps that render HTML can load Judarn's CSS variables from `JudarnWebCSS.variables`, including a line height per text style (`--jd-lh-*`).
+
 ## [0.8.52] - 2026-11-26
 
 ### Fixed

@@ -31,6 +31,7 @@
   - Color Tokens & Contrast Engine (`JudarnColors.swift`, `JudarnContrastVerifier.swift`): Dual-tier OKLCh color models, Display P3 gamut support, dynamic light/dark trait adaptation, mathematical WCAG 2.1/2.2 AAA/AA relative luminance verification.
   - Typography (`JudarnTypography.swift`): Pluggable font slots (`JudarnFontConfig`), `JudarnTypographyStyle.nsFont` for AppKit labels and fields on macOS, semantic `Font.TextStyle` mapping with native platform density, tracking calibration, reading measure limits, tabular numeric data formatting.
   - Layout & Radii (`JudarnSpacing.swift`): 8/4 spatial grid, continuous squircle radii (`JudarnRadius`).
+  - Web CSS variables (`JudarnWebCSS.swift`): `JudarnWebCSS.variables`, the custom-property rules of `colors_and_type.css` cut from the same generator output, for hosts that render HTML in WebKit. It styles no element.
   - Components (`JudarnButton.swift`, `JudarnBadge.swift`, `JudarnCard.swift`, `JudarnTextField.swift`, `JudarnFieldWell.swift`, `JudarnTextList.swift`, `JudarnDataMatrix.swift`): Accessible tabular matrices, HIG touch target compliance, VoiceOver rotor navigation.
   - Test Suite (`Tests/JudarnTests/`): Swift Testing suite (`import Testing`, `@Suite`, `@Test`) covering color conversions, contrast verifier matrix, spatial rhythm, dynamic type, and component layouts.
 - **web (`platforms/web`)**:
@@ -57,7 +58,7 @@ flowchart TD
     end
 
     subgraph Targets["Platform Implementations"]
-        Apple["platforms/apple<br/>Swift Package (iOS 17+, macOS 14+)<br/>JudarnColors, JudarnSpacing, JudarnTypography<br/>JudarnCard, JudarnButton, JudarnBadge<br/>JudarnTextField, JudarnFieldWell, JudarnTextList, JudarnDataMatrix"]
+        Apple["platforms/apple<br/>Swift Package (iOS 17+, macOS 14+)<br/>JudarnColors, JudarnSpacing, JudarnTypography<br/>JudarnWebCSS<br/>JudarnCard, JudarnButton, JudarnBadge<br/>JudarnTextField, JudarnFieldWell, JudarnTextList, JudarnDataMatrix"]
         Web["platforms/web<br/>@judarn/ui (React & CSS)<br/>CSS custom properties, Tailwind v4 @theme, SDUI"]
         AIDoc["docs/DESIGN.md<br/>Generated spec for AI tools"]
     end

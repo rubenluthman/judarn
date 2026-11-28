@@ -205,6 +205,20 @@
   --size-data: var(--jd-size-data);
   --size-mono: var(--jd-size-mono);
 
+  /* Line height per text style, in the token's px value */
+  --jd-lh-display: 96px;
+  --jd-lh-h1: 68px;
+  --jd-lh-h2: 48px;
+  --jd-lh-h3: 36px;
+  --jd-lh-h4: 28px;
+  --jd-lh-body-lg: 24px;
+  --jd-lh-body: 20px;
+  --jd-lh-small: 16px;
+  --jd-lh-label: 16px;
+  --jd-lh-micro: 12px;
+  --jd-lh-data: 20px;
+  --jd-lh-mono: 16px;
+
   --lh-tight: 1;
   --lh-head: 1.0625;
   --lh-body: 1.25;
@@ -217,7 +231,7 @@
   font-family: var(--jd-font-display);
   font-weight: var(--jd-weight-black);
   font-size: var(--jd-size-display);
-  line-height: 1;
+  line-height: var(--jd-lh-display);
   letter-spacing: var(--jd-track-display);
   text-wrap: balance;
   color: var(--jd-ink-100);
@@ -226,7 +240,7 @@
   font-family: var(--jd-font-display);
   font-weight: var(--jd-weight-bold);
   font-size: var(--jd-size-h1);
-  line-height: 1.0625;
+  line-height: var(--jd-lh-h1);
   letter-spacing: var(--jd-track-head);
   text-wrap: balance;
   color: var(--jd-ink-100);
@@ -235,7 +249,7 @@
   font-family: var(--jd-font-display);
   font-weight: var(--jd-weight-bold);
   font-size: var(--jd-size-h2);
-  line-height: 1.0909090909090908;
+  line-height: var(--jd-lh-h2);
   letter-spacing: var(--jd-track-head);
   text-wrap: balance;
   color: var(--jd-ink-100);
@@ -244,7 +258,7 @@
   font-family: var(--jd-font-display);
   font-weight: var(--jd-weight-bold);
   font-size: var(--jd-size-h3);
-  line-height: 1.125;
+  line-height: var(--jd-lh-h3);
   letter-spacing: var(--jd-track-head);
   text-wrap: balance;
   color: var(--jd-ink-100);
@@ -253,7 +267,7 @@
   font-family: var(--jd-font-body);
   font-weight: var(--jd-weight-bold);
   font-size: var(--jd-size-h4);
-  line-height: 1.1666666666666667;
+  line-height: var(--jd-lh-h4);
   letter-spacing: var(--jd-track-head);
   text-wrap: balance;
   color: var(--jd-ink-100);
@@ -262,7 +276,7 @@
   font-family: var(--jd-font-body);
   font-weight: var(--jd-weight-regular);
   font-size: var(--jd-size-body-lg);
-  line-height: 1.2;
+  line-height: var(--jd-lh-body-lg);
   letter-spacing: var(--jd-track-body);
   text-wrap: pretty;
   color: var(--jd-ink-100);
@@ -271,7 +285,7 @@
   font-family: var(--jd-font-body);
   font-weight: var(--jd-weight-regular);
   font-size: var(--jd-size-body);
-  line-height: 1.25;
+  line-height: var(--jd-lh-body);
   letter-spacing: var(--jd-track-body);
   text-wrap: pretty;
   color: var(--jd-ink-100);
@@ -280,7 +294,7 @@
   font-family: var(--jd-font-body);
   font-weight: var(--jd-weight-regular);
   font-size: var(--jd-size-small);
-  line-height: 1.1428571428571428;
+  line-height: var(--jd-lh-small);
   letter-spacing: var(--jd-track-body);
   color: var(--jd-ink-60);
 }
@@ -288,7 +302,7 @@
   font-family: var(--jd-font-body);
   font-weight: var(--jd-weight-bold);
   font-size: var(--jd-size-label);
-  line-height: 1.3333333333333333;
+  line-height: var(--jd-lh-label);
   letter-spacing: var(--jd-track-label);
   text-transform: uppercase;
   font-feature-settings: "case" 1;
@@ -298,7 +312,7 @@
   font-family: var(--jd-font-body);
   font-weight: var(--jd-weight-medium);
   font-size: var(--jd-size-micro);
-  line-height: 1.2;
+  line-height: var(--jd-lh-micro);
   letter-spacing: var(--jd-track-micro);
   text-transform: uppercase;
   font-feature-settings: "case" 1;
@@ -308,7 +322,7 @@
   font-family: var(--jd-font-data);
   font-weight: var(--jd-weight-regular);
   font-size: var(--jd-size-data);
-  line-height: 1.4285714285714286;
+  line-height: var(--jd-lh-data);
   letter-spacing: var(--jd-track-body);
   font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: "tnum" 1, "lnum" 1;
@@ -318,7 +332,7 @@
   font-family: var(--jd-font-mono);
   font-weight: var(--jd-weight-regular);
   font-size: var(--jd-size-mono);
-  line-height: 1.3333333333333333;
+  line-height: var(--jd-lh-mono);
   letter-spacing: 0em;
   font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: "tnum" 1, "lnum" 1;
